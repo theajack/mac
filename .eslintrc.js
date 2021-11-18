@@ -13,6 +13,7 @@ module.exports = {
         'node': true,
     },
     rules: {
+        'vue/multi-word-component-names': 'off',
         'no-var': 'error',
         'vue/no-unused-vars': 'error',
         '@typescript-eslint/consistent-type-definitions': [
@@ -60,5 +61,6 @@ module.exports = {
         'space-infix-ops': 2,
         'no-irregular-whitespace': 2, // 不规则的空白不允许
         'no-trailing-spaces': 2, // 一行结束后面有空格就发出警告
+        'vue/require-default-prop': 'off',
     }
 };
