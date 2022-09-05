@@ -1,9 +1,20 @@
+/*
+ * @Author: tackchen
+ * @Date: 2022-09-04 08:16:09
+ * @Description: Coding something
+ */
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Home from '../views/home.vue';
+import Desktop from '../views/desktop.vue';
 
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
+        name: 'Desktop',
+        component: Desktop
+    },
+    {
+        path: '/home',
         name: 'Home',
         component: Home
     },

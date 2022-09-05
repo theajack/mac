@@ -7,6 +7,7 @@
  */
 import { useStore, mapState } from 'vuex';
 import { computed } from 'vue';
+import { IJson } from '@/types';
 /**
  * 封装一个拿到指定属性的函数，返回值是计算属性的对象
  *
@@ -14,7 +15,7 @@ import { computed } from 'vue';
  * @param {*} mapper 对象或者数组 {} || [] 两种写法都支持
  * @return {*} 返回值就是封装好的对象，对象的属性是计算属性对象
  */
-export default function (mapper) {
+export default function (mapper: IJson) {
     // 拿到 $store 对象
     const $store = useStore();
     // 获取到对应的对象的所有函数
@@ -27,7 +28,7 @@ export default function (mapper) {
   */
     const storeStateFns = mapState(mapper);
     // 对数据进行转换
-    const storeState = {};
+    const storeState: IJson = {};
     Object.keys(storeStateFns).forEach(fnKey => {
     // 绑定我们的对象，并在函数上赋值我们的 $store属性
     // 返回的函数就是一个能拿到 $store 属性的函数了

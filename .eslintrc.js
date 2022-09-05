@@ -1,3 +1,8 @@
+/*
+ * @Author: tackchen
+ * @Date: 2022-09-04 08:02:56
+ * @Description: Coding something
+ */
 module.exports = {
     // 'parser': '@typescript-eslint/parser',
     // "parser": "vue-eslint-parser",

@@ -1,5 +1,14 @@
+<!--
+ * @Author: tackchen
+ * @Date: 2022-09-05 08:46:06
+ * @Description: Coding something
+-->
 <script lang='ts' setup>
-import HelloWorld from '../components/HelloWorld.vue'; </script>
+import HelloWorld from '../components/HelloWorld.vue';
+
+</script>
+
+
 <template>
   <div class="about">
     <h1>This is an about page</h1>
