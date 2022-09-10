@@ -5,8 +5,8 @@
 -->
 
 <script setup lang="ts">
-import { desktop } from '@/core/desktop/desktop';
-import { Dock } from '@/core/desktop/dock';
+import { desktop } from '@/ui/desktop/desktop';
+import { Dock } from '@/ui/desktop/dock';
 import DockItem from './dock-item.vue';
 
 new Dock();

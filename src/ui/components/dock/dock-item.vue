@@ -4,8 +4,8 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { desktop } from '@/core/desktop/desktop';
-import { DockItem } from '@/core/desktop/dock-item';
+import { desktop } from '@/ui/desktop/desktop';
+import { DockItem } from '@/ui/desktop/dock-item';
 // import { ref } from 'vue';
 const props = defineProps<{
     name: string;
@@ -19,7 +19,7 @@ console.warn(desktop.dock);
 
 <template>
   <div class="dock-item">
-    <img src="@/assets/icons/app-store.png">
+    <img src="@/ui/assets/icons/app-store.png">
   </div>
 </template>
 
