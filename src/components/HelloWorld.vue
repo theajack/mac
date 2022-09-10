@@ -1,6 +1,12 @@
+<!--
+ * @Author: tackchen
+ * @Date: 2022-09-05 19:40:29
+ * @Description: Coding something
+-->
 <script setup lang="ts">
 import { ref } from 'vue';
 import { a } from './a';
+
 console.log(a);
 defineProps({
     msg: String

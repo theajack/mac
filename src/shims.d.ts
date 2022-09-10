@@ -8,3 +8,7 @@ declare module '*.vue' {
   const component: DefineComponent<object, object, unknown>;
   export default component;
 }
+
+declare module 'filer' {
+  export const fs: any;
+}

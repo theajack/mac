@@ -27,6 +27,7 @@ body {
   margin: 0;
 }
 * {
+  box-sizing: border-box;
   font-family: -apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif
 }
 #app {
@@ -41,5 +42,8 @@ body {
   height: 100%;
   left: 0;
   top: 0;
+}
+:root{
+  --color-white-200: rgba(255, 255, 255, 0.2);
 }
 </style>

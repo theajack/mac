@@ -7,11 +7,15 @@ import { StatusBar } from './status-bar';
  * @Date: 2022-09-04 17:06:26
  * @Description: 桌面入口
  */
-export class Desktop {
+class Desktop {
+    static instance: Desktop;
     dock: Dock;
     statusBar: StatusBar;
 
     constructor () {
+        if (Desktop.instance) {
+            return Desktop.instance;
+        }
         this.dock = new Dock();
         this.statusBar = new StatusBar();
     }
@@ -21,3 +25,5 @@ export class Desktop {
         console.log(app);
     }
 }
+
+export const desktop = new Desktop();
