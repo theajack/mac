@@ -12,3 +12,8 @@ declare module '*.vue' {
 declare module 'filer' {
   export const fs: any;
 }
+declare module 'filer.js' {
+  export class Filer {}
+
+  export default Filer;
+}
