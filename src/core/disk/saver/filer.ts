@@ -5,6 +5,7 @@
  */
 
 import Filer from 'filer.js';
+import { FileBase } from '../files/base';
 import { Dir } from '../files/dir';
 
 function onError (err: any): void {
@@ -17,10 +18,12 @@ export class DiskFiler {
 
     constructor ({
         persistent = false,
-        size = 1024 * 1024
+        size = 1024 * 1024,
+        onready,
     }: {
         persistent?: boolean,
         size?: number,
+        onready?: ()=>void
     } = {}) {
         if (DiskFiler.instance) return DiskFiler.instance;
         this.filer = new Filer();
@@ -30,16 +33,22 @@ export class DiskFiler {
             // filer.isOpen == true
             // filer.fs == fs
             console.log(fs);
+            if (onready) onready();
         }, (e: any) => {
             console.error(e);
         });
         DiskFiler.instance = this;
     }
 
-    initFiles (parent: Dir) {
-        this._traverseDir({
-            path: parent.path,
-            parent,
+    async initFiles (parent: Dir) {
+        return new Promise<FileBase[]>((resolve) => {
+            this._traverseDir({
+                path: parent.path,
+                parent,
+                onresult (files) {
+                    resolve(files);
+                }
+            });
         });
     }
 
@@ -60,28 +69,33 @@ export class DiskFiler {
     private _traverseDir ({
         name = '',
         path,
-        parent
+        parent,
+        onresult
     }: {
         name?: string;
         path: string;
-        parent: Dir
+        parent: Dir;
+        onresult?: (files: FileBase[])=>void;
     }) {
         this.filer.ls(path, (files: any[]) => {
-            files.forEach(item => {
+            const result = files.map(item => {
                 const isDir = item.isDirectory;
                 if (isDir) {
+                    const dir = parent.createDir({ name });
                     this._traverseDir({
                         name: item.name,
                         path: item.fullPath,
-                        parent: parent.createDir({ name })
+                        parent: dir
                     });
+                    return dir;
                 } else {
-                    parent.createFile({
+                    return parent.createFile({
                         name,
                         // todo content
                     });
                 }
             });
+            if (onresult) onresult(result);
         });
     }
 }

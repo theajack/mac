@@ -4,16 +4,25 @@
  * @Description: Coding something
  */
 
+import { Disk } from '../disk';
+import { FileBase } from '../files/base';
 import { DiskFiler } from './filer';
 
 export function fs () {
     return DiskFiler.instance;
 }
 
-export function initFilerSaver () {
-    new DiskFiler();
+export function initFilerSaver (disk: Disk) {
+    return new Promise<FileBase[]>((resolve) => {
+        new DiskFiler({
+            onready () {
+                fs().initFiles(disk).then(files => {
+                    resolve(files);
+                });
+            }
+        });
+    });
 
-    return fs().initFiles();
 }
 
 
