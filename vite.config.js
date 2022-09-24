@@ -19,6 +19,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': '/src/',      // 格式一定要写对喽不然没有代码提示或者报错
+            '@core': '/src/core/',
         }
     }
 });

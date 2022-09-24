@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="Opiuae8TiBRxoM94_RdU" name="第 1 页">
-        <mxGraphModel dx="676" dy="457" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="345" dy="508" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -19,7 +19,7 @@
                 <mxCell id="15" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="201" y="507" width="500" height="90" as="geometry"/>
                 </mxCell>
-                <mxCell id="50" style="edgeStyle=none;html=1;entryX=0.123;entryY=0.613;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="16" target="43">
+                <mxCell id="50" style="edgeStyle=none;html=1;entryX=0.123;entryY=0.613;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="16" target="43" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="16" value="&lt;span style=&quot;font-size: 14px&quot;&gt;disk&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
@@ -69,7 +69,7 @@
                 <mxCell id="30" value="finder" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="211" y="372" width="99" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="31" value="waste&lt;br&gt;basket" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="31" value="trash" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="329" y="372" width="99" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="32" value="launcher" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">

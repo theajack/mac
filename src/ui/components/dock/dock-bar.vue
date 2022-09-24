@@ -45,7 +45,7 @@ console.warn(DockItem, desktop.dock);
   backdrop-filter: blur(20px);
   border: 1px solid var(--color-white-200);
   border-radius: 14px;
-  box-shadow: 0 0 30px rgb(0 0 0 / 56%);
+  box-shadow: var(--box-shadow);
   z-index: 10;
 }
 </style>

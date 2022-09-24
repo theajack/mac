@@ -8,10 +8,6 @@ import Filer from 'filer.js';
 import { FileBase } from '../files/base';
 import { Dir } from '../files/dir';
 
-function onError (err: any): void {
-    console.error(err);
-}
-
 export class DiskFiler {
     static instance: DiskFiler;
     filer: any;
@@ -53,49 +49,76 @@ export class DiskFiler {
     }
 
     createFile (path: string) {
+        console.trace(path);
         this.filer.create(path, true, function (fileEntry: any) {
             // fileEntry.name == 'myFile.txt'
             console.log(fileEntry);
-        }, onError);
+        }, (err: any) => {
+            console.error(err);
+        });
     }
 
     mkdir (path: string) {
         this.filer.mkdir(path, true, function (fileEntry: any) {
             // fileEntry.name == 'myFile.txt'
             console.log(fileEntry);
-        }, onError);
+        }, (err: any) => {
+            console.error(err);
+        });
     }
 
     private _traverseDir ({
-        name = '',
         path,
         parent,
         onresult
     }: {
-        name?: string;
         path: string;
         parent: Dir;
         onresult?: (files: FileBase[])=>void;
     }) {
+        // console.warn('travese');
         this.filer.ls(path, (files: any[]) => {
-            const result = files.map(item => {
-                const isDir = item.isDirectory;
-                if (isDir) {
-                    const dir = parent.createDir({ name });
-                    this._traverseDir({
-                        name: item.name,
-                        path: item.fullPath,
-                        parent: dir
-                    });
-                    return dir;
-                } else {
-                    return parent.createFile({
-                        name,
-                        // todo content
-                    });
+            // console.log('[ls] ', parent.path, path, files);
+
+            const result: FileBase[] = [];
+
+            let loadedNumber = 0;
+            const checkLoaded = () => {
+                loadedNumber ++;
+                // console.warn('checkLoaded', path, loadedNumber, files.length);
+                if (loadedNumber >= files.length) {
+                    if (onresult) onresult(result);
                 }
-            });
-            if (onresult) onresult(result);
+            };
+
+            if (files.length === 0) {
+                if (onresult) onresult(result);
+            } else {
+                files.forEach(item => {
+                    // console.warn('---', path, item);
+                    const { isDirectory, name } = item;
+                    if (isDirectory) {
+                        const dir = parent.createDir({ name }, true);
+                        result.push(dir);
+                        this._traverseDir({
+                            path: item.fullPath,
+                            parent: dir,
+                            onresult: () => {
+                                // console.warn('start check', path, loadedNumber, files.length);
+                                checkLoaded();
+                            }
+                        });
+                    } else {
+                        result.push(parent.createFile({
+                            name,
+                            // todo content
+                        }, true));
+                        console.warn('start check', path, loadedNumber, files.length);
+                        checkLoaded();
+                    }
+                });
+            }
+
         });
     }
 }

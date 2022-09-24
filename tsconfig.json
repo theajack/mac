@@ -25,6 +25,7 @@
         "noEmit": false,
         "paths": {
             "@/*": ["src/*"],
+            "@core/*": ["src/core/*"],
         }
     },
     "include": [

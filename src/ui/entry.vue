@@ -7,18 +7,6 @@
 </script>
 
 <template>
-  <!-- <img
-    alt="Vue logo"
-    src="./assets/logo.png"
-  >
-  <div id="nav">
-    <router-link to="/">
-      Home
-    </router-link> |
-    <router-link to="/about">
-      About
-    </router-link>
-  </div> -->
   <router-view />
 </template>
 
@@ -45,5 +33,6 @@ body {
 }
 :root{
   --color-white-200: rgba(255, 255, 255, 0.2);
+  --box-shadow: 0 0 30px rgb(0 0 0 / 56%);
 }
 </style>
