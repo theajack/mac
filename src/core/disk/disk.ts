@@ -4,10 +4,10 @@
  * @Description: Coding something
  */
 
-import { Dir, IDirOption } from './files/dir';
+import { Dir } from './files/dir';
 import { initFilerSaver } from './saver/saver';
 
-export interface IDiskOption extends IDirOption {
+export interface IDiskOption {
     capacity?: number;
     onready?: () => void;
 }
@@ -36,5 +36,11 @@ export class Disk extends Dir {
             this.children = files;
             if (onready) onready();
         });
+    }
+
+    clear () {
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            this.children[i].remove();
+        }
     }
 }

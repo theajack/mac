@@ -4,6 +4,8 @@
  * @Description: Coding something
  */
 
+import { createLoadedChecker } from '@/lib/create';
+import { log, promiseify } from '@/lib/utils';
 import Filer from 'filer.js';
 import { FileBase } from '../files/base';
 import { Dir } from '../files/dir';
@@ -23,6 +25,7 @@ export class DiskFiler {
     } = {}) {
         if (DiskFiler.instance) return DiskFiler.instance;
         this.filer = new Filer();
+        (window as any).filer = this.filer;
 
         this.filer.init({ persistent, size }, function (fs: any) {
             // filer.size == Filer.DEFAULT_FS_SIZE
@@ -39,86 +42,93 @@ export class DiskFiler {
     async initFiles (parent: Dir) {
         return new Promise<FileBase[]>((resolve) => {
             this._traverseDir({
-                path: parent.path,
+                path: parent.path || '/',
                 parent,
-                onresult (files) {
-                    resolve(files);
-                }
+            }, (files) => {
+                resolve(files);
             });
         });
     }
 
     createFile (path: string) {
-        console.trace(path);
-        this.filer.create(path, true, function (fileEntry: any) {
-            // fileEntry.name == 'myFile.txt'
-            console.log(fileEntry);
-        }, (err: any) => {
-            console.error(err);
-        });
+        return promiseify(this.filer.create)(path, true);
     }
 
     mkdir (path: string) {
-        this.filer.mkdir(path, true, function (fileEntry: any) {
-            // fileEntry.name == 'myFile.txt'
-            console.log(fileEntry);
-        }, (err: any) => {
-            console.error(err);
+        return new Promise((resolve, reject) => {
+            const index = path.lastIndexOf('/');
+            const dir = path.substring(0, index) || '/';
+            const name = path.substring(index + 1);
+            // ! 先进入父目录再mkdir，直接根据绝对路径mkdir无法拿到success回调
+            this.cd(dir).then(() => {
+                this.filer.mkdir((name), true, () => {
+                    resolve(true);
+                }, () => {
+                    reject();
+                });
+            });
+
         });
+        // return promiseify(this.filer.mkdir)(path, true);
     }
 
-    private _traverseDir ({
+    cd (path: string) {
+        return promiseify(this.filer.cd)(path);
+    }
+
+    rm (path: string, isDir: boolean) {
+        log('warn', 'rm ' + path, isDir);
+        return promiseify(this.filer.rm.bind(this.filer))(path);
+    }
+
+    private async _traverseDir ({
         path,
         parent,
-        onresult
     }: {
         path: string;
         parent: Dir;
-        onresult?: (files: FileBase[])=>void;
-    }) {
-        // console.warn('travese');
-        this.filer.ls(path, (files: any[]) => {
-            // console.log('[ls] ', parent.path, path, files);
+    }, onsuccess?: (files: FileBase[])=>void) {
+        log('travese', path);
 
-            const result: FileBase[] = [];
+        const files = await promiseify<any[]>(this.filer.ls)(path);
+        const result: FileBase[] = [];
 
-            let loadedNumber = 0;
-            const checkLoaded = () => {
-                loadedNumber ++;
-                // console.warn('checkLoaded', path, loadedNumber, files.length);
-                if (loadedNumber >= files.length) {
-                    if (onresult) onresult(result);
-                }
-            };
-
-            if (files.length === 0) {
-                if (onresult) onresult(result);
-            } else {
-                files.forEach(item => {
-                    // console.warn('---', path, item);
-                    const { isDirectory, name } = item;
-                    if (isDirectory) {
-                        const dir = parent.createDir({ name }, true);
-                        result.push(dir);
-                        this._traverseDir({
-                            path: item.fullPath,
-                            parent: dir,
-                            onresult: () => {
-                                // console.warn('start check', path, loadedNumber, files.length);
-                                checkLoaded();
-                            }
-                        });
-                    } else {
-                        result.push(parent.createFile({
-                            name,
-                            // todo content
-                        }, true));
-                        console.warn('start check', path, loadedNumber, files.length);
-                        checkLoaded();
-                    }
-                });
-            }
-
+        const check = createLoadedChecker(files.length, () => {
+            if (onsuccess) onsuccess(result);
         });
+
+        if (files.length === 0) {
+            if (onsuccess) onsuccess(result);
+            return;
+        }
+
+        files.forEach(async item => {
+            // console.warn('---', path, item);
+            const { isDirectory, name } = item;
+            if (isDirectory) {
+                const dir = await parent.createDir({ name }, { fromInit: true });
+                if (!dir) {
+                    check();
+                    return;
+                }
+                result.push(dir);
+                this._traverseDir({
+                    path: item.fullPath,
+                    parent: dir,
+                }, check);
+            } else {
+                const file = await parent.createFile({
+                    name,
+                    // todo content
+                }, { fromInit: true });
+                if (!file) {
+                    check();
+                    return;
+                }
+                result.push(file);
+                check();
+            }
+        });
+
     }
 }

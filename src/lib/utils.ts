@@ -41,3 +41,28 @@ export function timeId () {
 export function random (a: number, b: number) {
     return (a + Math.round(Math.random() * (b - a)));
 }
+
+
+export function log (...args: any[]) {
+    const logType = args[0];
+    let fn = 'log';
+    if (typeof logType === 'string' && typeof (console as any)[logType] !== 'undefined') {
+        fn = logType;
+    }
+    (console as any)[fn]('[OS] ', ...args);
+}
+
+export function promiseify<T = any> (
+    func: (...args: any[]) => void
+) {
+    return (...args: any[]) => {
+        return new Promise<T>((resolve, reject) => {
+            func(...args, (data: T) => {
+                resolve(data);
+            }, (err: any) => {
+                reject(err);
+                console.error(err);
+            });
+        });
+    };
+}

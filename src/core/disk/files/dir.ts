@@ -5,6 +5,7 @@
  */
 
 import { IJson } from '@/core/type';
+import { log } from '@/lib/utils';
 import { fs } from '../saver/saver';
 import { trimPath } from '../utils';
 import { FileBase, IFileBaseOption } from './base';
@@ -12,6 +13,11 @@ import { File, IFileOption } from './file';
 
 export interface IDirOption extends IFileBaseOption {
     children?: FileBase[];
+}
+
+export interface ICreateConfig {
+    returnIfExists?: boolean;
+    fromInit?: boolean;
 }
 
 export class Dir extends FileBase {
@@ -34,22 +40,57 @@ export class Dir extends FileBase {
         return size;
     }
 
-    addChild<T extends FileBase> (file: T, fromInit = false): T {
+    async addChild<T extends FileBase> (file: T, fromInit = false): Promise<T> {
         file.setParent(this);
         this.children.push(file);
 
-        if (!fromInit)
-            fs()[file.isDir ? 'mkdir' : 'createFile'](file.path);
+        if (!fromInit) { // 初始化的时候是从fs里面拿的 所以不需要重复创建
+            await fs()[file.isDir ? 'mkdir' : 'createFile'](file.path);
+        }
 
         return file;
     }
 
-    createFile (options: IFileOption, fromInit = false) {
+    createFile (options: IFileOption, {
+        returnIfExists,
+        fromInit,
+    }: ICreateConfig = {
+        returnIfExists: false,
+        fromInit: false,
+    }) {
+        log('create file', options.name);
+        if (this.exists(options.name)) {
+            if (returnIfExists) {
+                const file = this.findFileByPath(options.name);
+                if (file && !file.isDir) return file as File;
+            }
+            log('warn', '文件已存在');
+            return null;
+        }
         return this.addChild(new File(options), fromInit);
     }
 
-    createDir (options: IDirOption, fromInit = false) {
+    createDir (options: IDirOption, {
+        returnIfExists,
+        fromInit,
+    }: ICreateConfig = {
+        returnIfExists: false,
+        fromInit: false,
+    }) {
+        log('create dir', options.name);
+        if (this.exists(options.name)) {
+            if (returnIfExists) {
+                const dir = this.findFileByPath(options.name);
+                if (dir && dir.isDir) return dir as Dir;
+            }
+            log('warn', '目录已经存在');
+            return null;
+        }
         return this.addChild(new Dir(options), fromInit);
+    }
+
+    exists (name: string) {
+        return !!this.children.find(item => item.name === name);
     }
 
     copy (): FileBase {

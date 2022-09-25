@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="Opiuae8TiBRxoM94_RdU" name="第 1 页">
-        <mxGraphModel dx="345" dy="508" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="511" dy="477" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -109,6 +109,18 @@
                 </mxCell>
                 <mxCell id="48" value="third theme" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="831.25" y="211.5" width="127.5" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="OS" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="290" y="760" width="99" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="Disk" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="182" y="840" width="99" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="AppManager" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="290" y="840" width="99" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="AppManager" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="399" y="840" width="99" height="50" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

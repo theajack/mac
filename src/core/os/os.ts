@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { IApp } from '../apps/type';
+import { AppManager } from '../apps/app-manager';
 import { Disk } from '../disk/disk';
 import './os.d';
 
@@ -12,10 +12,8 @@ const OsName = Symbol('os');
 
 export class OS {
     static OsName = OsName;
-    installedApps: IApp[];
-    runningApps: IApp[];
-    currentApp: IApp;
-    dockApps: IApp[];
+
+    appManager: AppManager;
 
     disk: Disk;
     constructor () {
@@ -30,5 +28,6 @@ export class OS {
     // 安装基础app
     private init () {
         console.log(this.disk.deepLs());
+        this.appManager = new AppManager(this);
     }
 }

@@ -5,10 +5,11 @@
  */
 
 import { timeId } from '@/lib/utils';
+import { fs } from '../saver/saver';
 import { Dir } from './dir';
 
 export interface IFileBaseOption {
-    name?: string,
+    name: string,
 }
 
 export abstract class FileBase {
@@ -18,7 +19,7 @@ export abstract class FileBase {
     isDir = false;
     path: string;
 
-    _size: number; // 当_size 为 -1 时，会重新计算 size
+    _size = -1; // 当_size 为 -1 时，会重新计算 size
     get size () {
         if (this._size < 0) {
             this._size = this.countSize();
@@ -42,7 +43,7 @@ export abstract class FileBase {
         }
     }
 
-    remove () {
+    async remove () {
         if (!this.parent) return false;
 
         const list = this.parent.children;
@@ -57,7 +58,8 @@ export abstract class FileBase {
         list.splice(index, 1);
 
         this.markParentClearSize();
-        return true;
+
+        return fs().rm(this.path, this.isDir);
     }
 
     private markParentClearSize () {
