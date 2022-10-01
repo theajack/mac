@@ -25,8 +25,9 @@ export class Dir extends FileBase {
     constructor ({
         name,
         children = [],
+        entry,
     }: IDirOption) {
-        super({ name });
+        super({ name, entry });
         this.type = 'dir';
         this.isDir = true;
         this.children = children;
@@ -45,13 +46,14 @@ export class Dir extends FileBase {
         this.children.push(file);
 
         if (!fromInit) { // 初始化的时候是从fs里面拿的 所以不需要重复创建
-            await fs()[file.isDir ? 'mkdir' : 'createFile'](file.path);
+            const entry = await fs()[file.isDir ? 'mkdir' : 'createFile'](file.path);
+            this.setEntry(entry);
         }
 
         return file;
     }
 
-    createFile (options: IFileOption, {
+    async createFile (options: IFileOption, {
         returnIfExists,
         fromInit,
     }: ICreateConfig = {
@@ -67,7 +69,12 @@ export class Dir extends FileBase {
             log('warn', '文件已存在');
             return null;
         }
-        return this.addChild(new File(options), fromInit);
+        const file = await this.addChild(new File(options), fromInit);
+
+        if (fromInit) {
+            await file.readFromDisk();
+        }
+        return file;
     }
 
     createDir (options: IDirOption, {

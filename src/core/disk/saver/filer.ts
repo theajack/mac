@@ -5,14 +5,18 @@
  */
 
 import { createLoadedChecker } from '@/lib/create';
-import { log, promiseify } from '@/lib/utils';
+import { log } from '@/lib/utils';
+import { promiseify } from '../saver/promiseify-map';
 import Filer from 'filer.js';
 import { FileBase } from '../files/base';
 import { Dir } from '../files/dir';
+import { FilerReader } from './reader';
 
 export class DiskFiler {
     static instance: DiskFiler;
     filer: any;
+
+    reader: FilerReader;
 
     constructor ({
         persistent = false,
@@ -25,6 +29,7 @@ export class DiskFiler {
     } = {}) {
         if (DiskFiler.instance) return DiskFiler.instance;
         this.filer = new Filer();
+        this.reader = new FilerReader(this.filer);
         (window as any).filer = this.filer;
 
         this.filer.init({ persistent, size }, function (fs: any) {
@@ -102,23 +107,24 @@ export class DiskFiler {
             return;
         }
 
-        files.forEach(async item => {
-            // console.warn('---', path, item);
-            const { isDirectory, name } = item;
+        files.forEach(async entry => {
+            console.warn('---', path, entry);
+            const { isDirectory, name } = entry;
             if (isDirectory) {
-                const dir = await parent.createDir({ name }, { fromInit: true });
+                const dir = await parent.createDir({ name, entry }, { fromInit: true });
                 if (!dir) {
                     check();
                     return;
                 }
                 result.push(dir);
                 this._traverseDir({
-                    path: item.fullPath,
+                    path: entry.fullPath,
                     parent: dir,
                 }, check);
             } else {
                 const file = await parent.createFile({
                     name,
+                    entry,
                     // todo content
                 }, { fromInit: true });
                 if (!file) {

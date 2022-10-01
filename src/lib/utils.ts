@@ -52,7 +52,7 @@ export function log (...args: any[]) {
     (console as any)[fn]('[OS] ', ...args);
 }
 
-export function promiseify<T = any> (
+export function basePromiseify<T = any> (
     func: (...args: any[]) => void
 ) {
     return (...args: any[]) => {
@@ -65,4 +65,27 @@ export function promiseify<T = any> (
             });
         });
     };
+}
+
+export function readFile (file:File, mimetype = 'text/plain') {
+    return new Promise<string|ArrayBuffer|null>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            resolve(e.target?.result || null);
+        };
+        if (mimetype === 'text/plain') {
+            reader.readAsText(file);
+        } else {
+            reader.readAsArrayBuffer(file);
+            // todo 其它类型
+        }
+    });
+}
+
+export function parseJson (str: string): object | null {
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        return null;
+    }
 }

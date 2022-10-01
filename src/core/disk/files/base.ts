@@ -10,6 +10,7 @@ import { Dir } from './dir';
 
 export interface IFileBaseOption {
     name: string,
+    entry?: any,
 }
 
 export abstract class FileBase {
@@ -18,6 +19,8 @@ export abstract class FileBase {
     type: 'file' | 'dir' | 'disk';
     isDir = false;
     path: string;
+
+    entry: any; // 第三方底层file对象，本项目中是filer中的entry
 
     _size = -1; // 当_size 为 -1 时，会重新计算 size
     get size () {
@@ -31,9 +34,15 @@ export abstract class FileBase {
 
     constructor ({
         name = '',
+        entry = null,
     }: IFileBaseOption) {
         this.id = timeId();
+        this.entry = entry;
         this.name = name;
+    }
+
+    setEntry (entry: any) {
+        this.entry = entry;
     }
 
     setParent (parent: Dir | null) {
