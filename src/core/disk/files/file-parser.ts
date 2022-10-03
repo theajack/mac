@@ -3,6 +3,7 @@
  * @Date: 2022-10-01 23:06:03
  * @Description: 文件内容解析器
  */
+import { TWriteType } from '../saver/reader';
 import { File } from './file';
 import { BaseParser } from './parser/base-parser';
 import { JsonParser } from './parser/json-parser';
@@ -32,7 +33,7 @@ const ParserMap: {
     'unknown': TextParser,
 };
 
-export class FilePaser {
+export class FileParser {
     file: File;
 
     parser: BaseParser;
@@ -46,8 +47,16 @@ export class FilePaser {
         this.parser = new ParserMap[this.fileType]();
     }
 
-    parse () {
-        return this.parser.parse(this.file.content);
+    parseRead (content: TWriteType) {
+        return this.parser.parse(content);
+    }
+
+    parseWrite () {
+        return this.parser.parseWrite(this.file.content);
+    }
+
+    merge (content: TWriteType) {
+        return this.parser.merge(this.file.content, content);
     }
 
     private geneSuffix () {

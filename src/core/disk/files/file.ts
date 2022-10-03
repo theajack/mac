@@ -5,23 +5,22 @@
  */
 
 import { countStringBytes } from '@/lib/utils';
+import { TWriteType } from '../saver/reader';
 import { fs } from '../saver/saver';
 import { FileBase, IFileBaseOption } from './base';
-import { FilePaser } from './file-parser';
-
-type TContentType = string | ArrayBuffer | null;
+import { FileParser } from './file-parser';
 
 export interface IFileOption extends IFileBaseOption {
-    content?: TContentType; // todo
+    content?: TWriteType; // todo
     mimetype?: string;
 }
 
 export class File extends FileBase {
 
-    content: TContentType; // ! 原始数据
+    content: TWriteType;
 
     mimetype: string;
-    fileParser: FilePaser;
+    fileParser: FileParser;
 
     constructor ({
         name,
@@ -33,13 +32,21 @@ export class File extends FileBase {
         this.mimetype = mimetype;
         this.type = 'file';
         this.content = content;
-        this.fileParser = new FilePaser(this);
+        this.fileParser = new FileParser(this);
     }
 
     countSize () {
-        if (this.content === null) return 0;
-        if (this.content instanceof ArrayBuffer) return this.content.byteLength / 1024;
-        return countStringBytes(this.content) / 1024; // kb
+        let byteLength = 0;
+        if (typeof this.content === 'string') {
+            byteLength = countStringBytes(this.content);
+        } else if (this.content === null) {
+            byteLength = 0;
+        } else if (this.content instanceof ArrayBuffer) {
+            byteLength = this.content.byteLength;
+        } else if (typeof this.content === 'object') {
+            byteLength = countStringBytes(JSON.stringify(this.content));
+        }
+        return byteLength / 1024; // kb
     }
 
     copy () {
@@ -49,25 +56,40 @@ export class File extends FileBase {
         });
     }
 
-    read () {
-        return this.fileParser.parse();
+    async read ({
+        refresh = false
+    }: {
+        refresh?: boolean
+    } = {}) {
+        if (refresh) {
+            // 同步fileSystem
+            this.content = this.fileParser.parseRead(await fs().reader.read({
+                path: this.path,
+                mimetype: this.mimetype,
+            }));
+        }
+        return this.content;
     }
 
-    // 同步file
-    async readFromDisk () {
-        this.content = await fs().reader.read({
-            path: this.path,
-            mimetype: this.mimetype,
-        });
-        return this.read();
-    }
+    async write ({
+        content,
+        append = false
+    }: {
+        content?: TWriteType,
+        append?: boolean,
+    } = {}) {
+        if (typeof content === 'undefined') {
+            content = this.content;
+        } else {
+            this.content = append ?
+                this.fileParser.merge(content) :
+                content;
+        }
 
-    async writeText (str: string, append = false) {
-        this.content = str; // todo
         await fs().reader.write({
             path: this.path,
-            data: str,
-            append,
+            content: this.fileParser.parseWrite(),
+            append: false, // ! 通过merge做过append了
         });
     }
 }

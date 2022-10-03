@@ -1,3 +1,5 @@
+import { TWriteType } from '@/core/disk/saver/reader';
+
 /*
  * @Author: tackchen
  * @Date: 2022-09-11 07:58:38
@@ -68,7 +70,7 @@ export function basePromiseify<T = any> (
 }
 
 export function readFile (file:File, mimetype = 'text/plain') {
-    return new Promise<string|ArrayBuffer|null>((resolve) => {
+    return new Promise<TWriteType>((resolve) => {
         const reader = new FileReader();
         reader.onload = function (e) {
             resolve(e.target?.result || null);

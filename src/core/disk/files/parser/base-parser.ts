@@ -4,8 +4,19 @@
  * @Description: Coding something
  */
 
+import { TWriteType } from '../../saver/reader';
+
 export class BaseParser {
-    parse (content: string | ArrayBuffer | null): string | object | null {
+    parse (content: TWriteType): string | object | null {
         return content;
+    }
+
+    parseWrite (content: TWriteType): TWriteType {
+        return content;
+    }
+
+    // eslint-disable-next-line
+    merge (before: TWriteType, content: TWriteType): TWriteType {
+        return before;
     }
 }

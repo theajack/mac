@@ -48,6 +48,9 @@ export class Dir extends FileBase {
         if (!fromInit) { // 初始化的时候是从fs里面拿的 所以不需要重复创建
             const entry = await fs()[file.isDir ? 'mkdir' : 'createFile'](file.path);
             this.setEntry(entry);
+            if (!file.isDir) {
+                await (file as any as File).write();
+            }
         }
 
         return file;
@@ -72,7 +75,7 @@ export class Dir extends FileBase {
         const file = await this.addChild(new File(options), fromInit);
 
         if (fromInit) {
-            await file.readFromDisk();
+            await file.read({ refresh: true });
         }
         return file;
     }

@@ -6,6 +6,7 @@
 
 import { Dir } from '../disk/files/dir';
 import { OS } from '../os/os';
+import { createDefaultApps } from './app-config';
 import { IApp } from './type';
 
 export class AppManager {
@@ -46,12 +47,13 @@ export class AppManager {
     private async initAppConfig () {
         this.appConfigFile = await this.appDir.createFile({
             name: AppManager.CONFIG_FILE_NAME,
+            content: createDefaultApps()
         }, {
             returnIfExists: true,
         }) as any as File;
     }
 
     private async initInstalledApps () {
-        // this.appConfigFil;
+        this.appConfigFile;
     }
 }

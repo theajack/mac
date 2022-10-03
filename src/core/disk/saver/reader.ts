@@ -7,6 +7,8 @@ import { readFile } from '@/lib/utils';
 import { promiseify } from './promiseify-map';
 import { File } from '../files/file';
 
+export type TWriteType = string|object|File|Blob|ArrayBuffer|null;
+
 interface IReaderBase {
     path: string;
     mimetype?: string; // mimetype https://blog.csdn.net/huyanpeng1988/article/details/47173385
@@ -28,15 +30,22 @@ export class FilerReader {
 
     async write ({
         path,
-        data = '',
+        content = '',
         mimetype = 'text/plain',
         append = false,
     }:{
-        data?: string|File|Blob|ArrayBuffer,
+        content?: TWriteType,
         append?: boolean
     } & IReaderBase) {
+
+        if (content === null) {
+            content = 'null';
+        } else if (content.toString() === '[object Object]') {
+            content = JSON.stringify(content);
+        }
+
         try {
-            await promiseify(this.filer.write)(path, { data, type: mimetype, append });
+            return await promiseify(this.filer.write)(path, { data: content, type: mimetype, append });
         } catch (e) {
             console.error(e);
             throw new Error('Write failed: ' + path);
