@@ -5,11 +5,11 @@
  */
 
 import { Finder } from './default/finder';
-import { SystemPreferences } from './default/prefer';
-import { Trash } from './default/trash';
+// import { SystemPreferences } from './default/prefer';
+// import { Trash } from './default/trash';
 
 export const DefaultApps = [ {
     Finder,
-    Trash,
-    SystemPreferences,
+    // Trash,
+    // SystemPreferences,
 } ];
