@@ -2,12 +2,12 @@
  * @Author: tackchen
  * @Date: 2022-04-06 09:14:55
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-10-06 19:07:46
+ * @LastEditTime: 2022-10-06 19:34:42
  * @FilePath: /cnchar/helper/push-release.js
  * @Description: Coding something
  */
 
-const { exec } = require('./build/utils');
+const { exec } = require('./utils');
 
 async function delTag (tagName) {
     await exec(`git tag -d ${tagName}`);

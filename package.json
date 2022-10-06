@@ -6,7 +6,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "lint": "eslint --fix",
-    "release": "node helper/push-release.js"
+    "release": "node helper/scripts/push-release.js"
   },
   "dependencies": {
     "tc-event": "^0.1.2",
