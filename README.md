@@ -11,5 +11,4 @@ Based on macOS Monterey version 12.5.1
 
 At present many features are still under development, welcome interested developers to participate in the development
 
-
-
+<img src='https://raw.githubusercontent.com/theajack/mac/master/helper/design.png' width='600px'/>
