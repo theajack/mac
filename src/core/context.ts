@@ -14,7 +14,6 @@ function getStore<T = any> (name: string, value: T): Ref<T> {
     if (!StoreMap[name]) {
         StoreMap[name] = ref(value);
     }
-
     return StoreMap[name];
 }
 
@@ -23,27 +22,27 @@ export function getOS () {
 }
 
 export function getDockApps () {
-    return getStore('dock-apps', getOSInstance().appManager.dockApps);
+    return getOS().value.appManager.dockApps;
 }
 
 export function getApps () {
-    return getStore('apps', getOSInstance().appManager.installedApps);
+    return getOS().value.appManager.installedApps;
 }
 
 export function getRunningApps () {
-    return getStore('running-apps', getOSInstance().appManager.runningApps);
+    return getOS().value.appManager.runningApps;
 }
 
 export function getAppConfig () {
-    return getStore('app-config', getOSInstance().appManager.appConfig);
+    return getOS().value.appManager.appConfig;
 }
 
 export function getAppManager () {
-    return getStore('app-manager', getOSInstance().appManager);
+    return getOS().value.appManager;
 }
 
 export function getFile (path: string) {
     // return getStore('app-config', getOS().appManager.appConfig);
     // todo
-    return getOSInstance().disk.findFileByPath(path);
+    return getOS().value.disk.findFileByPath(path);
 }

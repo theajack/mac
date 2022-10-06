@@ -28,6 +28,7 @@ defineProps({
 // const data2 = ref(origin);
 
 // (window as any).data = data;
+
 </script>
 
 <template>
