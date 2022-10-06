@@ -32,7 +32,7 @@ export class App implements IApp {
         onMessage?: (data: IAppMessage) => void;
     } = {}) {
         this.name = name;
-        this.icon = icon || `/assets/icons/${name}.png`;
+        this.icon = icon || `/mac/assets/icons/${name}.png`;
         this.title = title || appNameToTitle(name);
         this.status = status;
         this.onMessage = onMessage;
