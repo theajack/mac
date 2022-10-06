@@ -19,6 +19,24 @@ jobs:
           node-version: '16'
           registry-url: https://registry.npmjs.org
 
+      - name: Determine npm cache directory
+        id: npm-cache
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+
+      - name: Restore npm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.npm-cache.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Npm Install
+        run: |
+          npm install pnpm -g
+          pnpm install
+
       - name: Build docs # build npm
         run: npm run build
 
