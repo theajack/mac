@@ -70,7 +70,7 @@ export function createDefaultApps ():
     return {
         [AppNames.finder]: { name: AppNames.finder, dockIndex: 1 },
         [AppNames.appStore]: { name: AppNames.appStore, dockIndex: 2 },
-        [AppNames.systemPreferences]: { name: AppNames.systemPreferences },
-        [AppNames.trash]: { name: AppNames.trash, dockIndex: -1 },
+        [AppNames.systemPreferences]: { name: AppNames.systemPreferences, dockIndex: 3 },
+        [AppNames.trash]: { name: AppNames.trash, dockIndex: 1000 },
     };
 }

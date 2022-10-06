@@ -65,8 +65,8 @@ const {
         align-items: center;
         padding-left: 5px;
         .menu-bar-item{
-            padding: 0 12px;
-            font-size: 14px;
+            padding: 0 10px;
+            font-size: 13px;
             display: flex;
             align-items: center;
             cursor: default;

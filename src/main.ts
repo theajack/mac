@@ -23,6 +23,10 @@ function initDevHelper (os: OS) {
         ...Context,
         clearAppConfig () {
             os.disk.findFileByPath(`${StringText.appDir}/${StringText.appConfigFile}`)?.remove();
+        },
+        clear () {
+            os.disk.clear();
+            location.reload();
         }
     };
 }

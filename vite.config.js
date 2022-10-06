@@ -9,12 +9,14 @@ import vue from '@vitejs/plugin-vue';
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [ vue() ],
+    base: '/mac',
     build: {
         rollupOptions: {
             output: {
                 dir: 'docs'
             }
-        }
+        },
+        outDir: 'docs'
     },
     resolve: {
         alias: {

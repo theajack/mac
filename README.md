@@ -1,7 +1,16 @@
-# Vue 3 + Vite
+<!--
+ * @Author: tackchen
+ * @Date: 2022-10-03 15:30:44
+ * @Description: Coding something
+-->
+#  Build Amazing macOS in your browser
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+[Live Demo](https://theajack.github.io/mac)
 
-## Recommended IDE Setup
+Based on macOS Monterey version 12.5.1
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+At present many features are still under development, welcome interested developers to participate in the development
+
+
+
+
