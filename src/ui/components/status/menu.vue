@@ -6,17 +6,19 @@
 
 <script setup lang="ts">
 import { getAppManager } from '@/core/context';
-import { ref } from 'vue';
 import Select from '@/ui/components/common/select/index.vue';
 import { createMenuStatus } from './menu';
 
-const manager = ref(getAppManager());
-(window as any).manager = manager;
+const { list } = getAppManager().currentApp.status;
+
+const { mainStatus } = getAppManager();
+
 const {
     activeIndex,
     onClickTitle,
     onMouseEnter,
 } = createMenuStatus();
+
 </script>
 
 <template>
@@ -24,30 +26,30 @@ const {
     <div
       class="menu-bar-item"
       :class="{'active': -1 === activeIndex}"
-      @mouseenter="onMouseEnter"
+      @mouseenter="onMouseEnter(-1)"
     >
       <i
         class="ei-apple"
-        @click="() => {onClickTitle({item: manager.mainStatus, index: -1})}"
+        @click="onClickTitle(-1)"
       />
-      <!-- <div class="menu-select">
-        <Select :list="manager.currentApp.status.main.children" />
-      </div> -->
+      <div class="menu-select">
+        <Select :list="mainStatus" />
+      </div>
     </div>
 
     <div
-      v-for="item,index in manager.currentApp.status.list"
+      v-for="item,index in list"
       :key="item.title"
       class="menu-bar-item"
       :class="{'active': index === activeIndex}"
-      @mouseenter="onMouseEnter"
+      @mouseenter="onMouseEnter(index)"
     >
       <span
         class="menu-title"
         :class="{
           'menu-main': index === 0,
         }"
-        @click="() => {onClickTitle({item: item.children, index})}"
+        @click="onClickTitle(index)"
       >{{ item.title }}</span>
       <div class="menu-select">
         <Select :list="item.children" />
@@ -61,6 +63,7 @@ const {
     .menu-bar{
         display: flex;
         align-items: center;
+        padding-left: 5px;
         .menu-bar-item{
             padding: 0 12px;
             font-size: 14px;
@@ -69,12 +72,20 @@ const {
             cursor: default;
             height: 25px;
             border-radius: 4px;
-            &.active{
-                background-color: #fff3;
-            }
+            position: relative;
             .menu-select{
                 display: none;
                 position: absolute;
+                left: 0;
+                top: 100%;
+                margin-top: 8px;
+                font-size: 14px;
+            }
+            &.active{
+                background-color: #fff3;
+                .menu-select{
+                    display: block;
+                }
             }
             .menu-title{
                 &.menu-main{
@@ -84,8 +95,7 @@ const {
 
             &:first-child{
                 font-size: 16px;
-                padding: 0 15px;
-                padding-right: 7px;
+                padding: 0 10px;
             }
         }
     }

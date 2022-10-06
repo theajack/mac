@@ -10,20 +10,17 @@ import Center from './center.vue';
 </script>
 
 <template>
-  <div class="status-bar">
+  <div class="status-bar bg-blur-nb">
     <Menu />
     <Center />
   </div>
 </template>
 
 <style scoped lang="less">
-  @import '@/ui/style/common.less';
   .status-bar{
-    .common-bg;
-    .no-border;
     width: 100%;
     height: 40px;
     display: flex;
-    background-color: #2224;
   }
+  // background-color: #2224;
 </style>

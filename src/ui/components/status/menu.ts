@@ -4,7 +4,6 @@
  * @Description: Coding something
  */
 
-import { ISelectItem } from '@/core/types/component';
 import { ref } from 'vue';
 
 export function createMenuStatus () {
@@ -14,14 +13,25 @@ export function createMenuStatus () {
     function clearActive () {
         activeIndex.value = -2;
     }
-    const onClickTitle = ({ item, index }: {item: ISelectItem[], index: number}) => {
-        console.log(item, index);
+    const onClickTitle = (index: number) => {
+        if (index === activeIndex.value) {
+            clearActive();
+        } else {
+            activeIndex.value = index;
+        }
     };
-    const onMouseEnter = (e: MouseEvent) => {
-        console.log(e);
+    const onMouseEnter = (index: number) => {
+        if (activeIndex.value !== -2) {
+            activeIndex.value = index;
+        }
     };
 
-    window.addEventListener('click', () => {
+    window.addEventListener('click', (e) => {
+        const el = e.target as HTMLElement;
+        if (
+            el.classList.contains('menu-title') ||
+            el.parentElement?.classList.contains('menu-bar-item')
+        ) return;
         clearActive();
     }, false);
 

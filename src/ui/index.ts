@@ -7,6 +7,7 @@ import { createApp } from 'vue';
 import Entry from './entry.vue';
 import router from './router';
 import store from './store';
+import './style/common.less';
 
 export function initUI () {
     createApp(Entry)

@@ -34,8 +34,8 @@ defineProps({
 <template>
   <div class="desktop-container">
     <StatusBar />
-    <!-- <Select :list="selectList" />
-    <div>{{ count }}</div>
+    <!-- <Select :list="selectList" /> -->
+    <!-- <div>{{ count }}</div>
     <div>status bar: {{ data.a }}</div>
     <div>status bar: {{ data2.a }}</div> -->
     <DockBar />

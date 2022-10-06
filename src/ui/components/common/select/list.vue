@@ -13,7 +13,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="os-select-list">
+  <div class="os-select-list bg-blur">
     <Item
       v-for="item in list"
       :key="item.name"
@@ -24,15 +24,14 @@ defineProps<{
 </template>
 
 <style lang="less">
-  @import '@/ui/style/common.less';
   .os-select-list {
-    .common-bg;
     color: #fff;
     min-width: 100px;
     display: inline-block;
     .os-select-item {
       padding: 2px 5px;
       border-radius: 4px;
+      white-space: nowrap;
       &:hover {
         background-color: #3361c6;
       }

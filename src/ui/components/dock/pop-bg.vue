@@ -21,7 +21,16 @@
 </template>
 
 <style scoped lang="less">
-  @import '@/ui/style/common.less';
+
+  // todo 此部分为实现毛玻璃带尖角的气泡 有待优化
+  .common-bg{
+      backdrop-filter: blur(40px);
+      border: 1px solid var(--color-white-200);
+      border-radius: 5px;
+      box-shadow: var(--box-shadow-border);
+      background-color: #2229;
+      padding: 4px;
+  }
 
   .dock-title-bg{
     display: flex;
@@ -92,7 +101,6 @@
       transform: translateX(-50%);
       overflow: hidden;
       &:after {
-        content: " ";
         .common-bg;
         content: " ";
         transform: rotate(45deg) translateX(-50%);

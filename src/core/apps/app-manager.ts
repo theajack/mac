@@ -13,7 +13,44 @@ import { App } from './app';
 import { StringText } from '../string';
 import { ISelectItem } from '../types/component';
 
-const mainStatus: ISelectItem[] = [];
+const mainStatus: ISelectItem[] = [
+    {
+        name: 'About This Mac'
+    }, {
+        isSplit: true
+    }, {
+        name: 'System Preferences...'
+    }, {
+        name: 'App Store...'
+    }, {
+        isSplit: true
+    }, {
+        name: 'Recent Items',
+        children: [ {
+            name: 'test1'
+        }, {
+            name: 'test2'
+        } ]
+    }, {
+        isSplit: true
+    }, {
+        name: 'Force Quit...'
+    }, {
+        isSplit: true
+    }, {
+        name: 'Sleep'
+    }, {
+        name: 'Restart...'
+    }, {
+        name: 'Shut Down...'
+    }, {
+        isSplit: true
+    }, {
+        name: 'Lock Screen'
+    }, {
+        name: 'Log Out tackchen...'
+    }
+];
 
 export class AppManager {
     static DIR_NAME = StringText.appDir;

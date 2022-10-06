@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 export interface ISelectItem {
-    name: string;
+    name?: string;
     hotKey?: string[];
     icon?: string;
     tip?: string;
