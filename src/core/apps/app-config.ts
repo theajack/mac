@@ -11,6 +11,7 @@ import { AppStore } from './default/app-store';
 import { Finder } from './default/finder';
 import { SystemPreferences } from './default/prefer';
 import { Trash } from './default/trash';
+import { IAppStatus } from './type';
 
 export enum AppNames {
     finder = 'finder',
@@ -72,5 +73,34 @@ export function createDefaultApps ():
         [AppNames.appStore]: { name: AppNames.appStore, dockIndex: 2 },
         [AppNames.systemPreferences]: { name: AppNames.systemPreferences, dockIndex: 3 },
         [AppNames.trash]: { name: AppNames.trash, dockIndex: 1000 },
+    };
+}
+
+function createEmptyStatusItem (title = '') {
+    return {
+        title,
+        children: [ {
+            name: 'Nothing In Here...'
+        }, {
+            isSplit: true,
+        }, {
+            name: 'Still in developing'
+        } ]
+    };
+}
+
+export function createEmptyStatus (): IAppStatus {
+
+    return {
+        dock: createEmptyStatusItem('Finder'),
+        list: [
+            createEmptyStatusItem('Finder'),
+            createEmptyStatusItem('File'),
+            createEmptyStatusItem('Edit'),
+            createEmptyStatusItem('View'),
+            createEmptyStatusItem('Go'),
+            createEmptyStatusItem('Window'),
+            createEmptyStatusItem('Help'),
+        ]
     };
 }

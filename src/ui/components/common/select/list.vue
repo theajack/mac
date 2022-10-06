@@ -28,13 +28,5 @@ defineProps<{
     color: #fff;
     min-width: 100px;
     display: inline-block;
-    .os-select-item {
-      padding: 2px 5px;
-      border-radius: 4px;
-      white-space: nowrap;
-      &:hover {
-        background-color: #3361c6;
-      }
-    }
   }
 </style>
