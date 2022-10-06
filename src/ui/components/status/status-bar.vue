@@ -5,15 +5,25 @@
 -->
 
 <script setup lang="ts">
-
+import Menu from './menu.vue';
+import Center from './center.vue';
 </script>
 
 <template>
-  <h1>status bar</h1>
+  <div class="status-bar">
+    <Menu />
+    <Center />
+  </div>
 </template>
 
-<style scoped>
-a {
-  color: #42b983;
-}
+<style scoped lang="less">
+  @import '@/ui/style/common.less';
+  .status-bar{
+    .common-bg;
+    .no-border;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    background-color: #2224;
+  }
 </style>

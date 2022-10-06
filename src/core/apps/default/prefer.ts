@@ -4,7 +4,13 @@
  * @Description: Coding something
  */
 import { App } from '../app';
+import { AppNames } from '../app-config';
 
 export class SystemPreferences extends App {
-    name = 'systemPreferences';
+
+    constructor () {
+        super({
+            name: AppNames.systemPreferences
+        });
+    }
 }

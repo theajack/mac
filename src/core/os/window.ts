@@ -9,7 +9,6 @@ import { IApp } from '../apps/type';
 export class WindowHeader {
     buttons: {
         gap: number;
-
     } & {
         [key in 'close' | 'min' | 'full']: {
             active?: boolean;
@@ -40,6 +39,7 @@ export class Window {
     zIndex: number;
     isOnTop: boolean;
     status: 'min' | 'full' | 'normal';
+    isFullscreen = false;
 
     parent: IApp;
 

@@ -11,6 +11,8 @@ export const ApiSymbol = Symbol('api');
 
 export const AppEventModule = event.createModule('app');
 
+export const OSEventModule = event.createModule('os');
+
 export function sendMessageToApp ({
     from = ApiSymbol,
     to,

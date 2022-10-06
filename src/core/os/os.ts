@@ -11,23 +11,35 @@ import './os.d';
 const OsName = Symbol('os');
 
 export class OS {
+    static instance: OS;
     static OsName = OsName;
 
     appManager: AppManager;
 
     disk: Disk;
     constructor () {
-        this.disk = new Disk({
-            onready: () => {
-                this.init();
-            }
-        });
+        if (OS.instance) return OS.instance;
+        this.disk = new Disk();
+        this.appManager = new AppManager(this);
+        OS.instance = this;
     }
 
     // 初始化系统
     // 安装基础app
-    private init () {
+    async init () {
+        await this.disk.initFileSystem();
+        await this.appManager.initAppsDirectory();
         console.log(this.disk.deepLs());
-        this.appManager = new AppManager(this);
     }
+}
+
+export function getOSInstance () {
+    return OS.instance;
+}
+
+export async function createOS () {
+    if (OS.instance) return OS.instance;
+    const os = new OS();
+    await os.init();
+    return os;
 }

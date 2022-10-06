@@ -1,3 +1,4 @@
+
 /*
  * @Author: tackchen
  * @Date: 2022-09-04 08:04:01
@@ -17,4 +18,10 @@ declare module 'filer.js' {
   }
 
   export default Filer;
+}
+
+interface Window {
+    __THIRD__APPS__: {
+      [prop: string]: any;
+    };
 }

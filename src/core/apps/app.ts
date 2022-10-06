@@ -6,24 +6,34 @@
 import { Event } from '@core/enum';
 import { AppEventModule, sendMessageToApp } from '@core/os/event-bus';
 import { Window } from '@core/os/window';
+import { appNameToTitle } from './app-config';
 import { IAppStatus, IApp, IAppMessageBase, IAppMessage } from './type';
 export class App implements IApp {
     name: string;
+    icon: string;
+    title: string;
     status: IAppStatus;
+    isOpen = true;
     onMessage?: (data: IAppMessage) => void;
 
     windows: Window[] = [];
 
     constructor ({
-        name,
-        status,
+        name = '',
+        icon = '',
+        title = '',
+        status = {} as any,
         onMessage
     }: {
-        name: string;
-        status: IAppStatus
+        name?: string;
+        icon?: string;
+        title?: string;
+        status?: IAppStatus
         onMessage?: (data: IAppMessage) => void;
-    }) {
+    } = {}) {
         this.name = name;
+        this.icon = icon || `/assets/icons/${name}.png`;
+        this.title = title || appNameToTitle(name);
         this.status = status;
         this.onMessage = onMessage;
 
@@ -43,5 +53,13 @@ export class App implements IApp {
             to,
             data
         });
+    }
+
+    onOpen () {
+
+    }
+
+    initStatusBar () {
+
     }
 }

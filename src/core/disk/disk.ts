@@ -9,7 +9,6 @@ import { initFilerSaver } from './saver/saver';
 
 export interface IDiskOption {
     capacity?: number;
-    onready?: () => void;
 }
 export class Disk extends Dir {
 
@@ -18,7 +17,6 @@ export class Disk extends Dir {
 
     constructor ({
         capacity = 1024, // todo 容量
-        onready
     }: IDiskOption = {}) {
         if (Disk.instance) {
             return Disk.instance;
@@ -31,11 +29,10 @@ export class Disk extends Dir {
         this.path = '';
 
         Disk.instance = this;
+    }
 
-        initFilerSaver(this).then(files => {
-            this.children = files;
-            if (onready) onready();
-        });
+    async initFileSystem () {
+        this.children = await initFilerSaver(this);
     }
 
     clear () {

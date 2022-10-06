@@ -10,7 +10,7 @@
   <router-view />
 </template>
 
-<style>
+<style lang="less">
 body {
   margin: 0;
 }
@@ -34,5 +34,7 @@ body {
 :root{
   --color-white-200: rgba(255, 255, 255, 0.2);
   --box-shadow: 0 0 30px rgb(0 0 0 / 56%);
+  --box-shadow-border: 0 0 1px .5px #000;
+
 }
 </style>

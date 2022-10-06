@@ -91,3 +91,26 @@ export function parseJson (str: string): object | null {
         return null;
     }
 }
+
+export async function importScript (url: string) {
+    return new Promise<boolean>((resolve) => {
+
+        const script = document.createElement('script');
+
+        script.onload = () => {
+            resolve(true);
+        };
+
+        script.onerror = (e) => {
+            console.error(e);
+            throw new Error();
+        };
+
+        script.src = url;
+    });
+}
+
+export function charSplitToSpaceSplit (name: string, split = '-'): string {
+    const arr = name.split(split);
+    return arr.map(item => item[0].toUpperCase() + item.slice(1)).join(' ');
+}

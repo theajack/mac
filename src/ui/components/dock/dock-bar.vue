@@ -5,35 +5,27 @@
 -->
 
 <script setup lang="ts">
-import { desktop } from '@/ui/desktop/desktop';
-import { Dock } from '@/ui/desktop/dock';
+import { getDockApps } from '@/core/context';
 import DockItem from './dock-item.vue';
 
-new Dock();
+const apps = getDockApps();
 
-console.warn(DockItem, desktop.dock);
+(window as any).apps = apps;
+
 </script>
 
 <template>
   <div class="dock-bar">
     <DockItem
-      name=""
-      icon=""
-    />
-    <DockItem
-      name=""
-      icon=""
-    />
-    <DockItem
-      name=""
-      icon=""
+      v-for="item in apps"
+      :key="item.name"
+      :app="item"
     />
   </div>
 </template>
 
 <style scoped lang="less">
 .dock-bar {
-  color: #42b983;
   display: flex;
   position: fixed;
   left: 50%;

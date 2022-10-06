@@ -4,30 +4,22 @@
  * @Description: Coding something
  */
 
+import { ISelectItem } from '../types/component';
+
 export interface IApp {
     name: string;
     status: IAppStatus;
 }
 
-export interface IAppStatusBase {
-    name: string;
-    hotKey?: string[];
-    icon?: string;
-    tip?: string;
-    checked?: boolean;
-    disabled?: boolean;
-    isSearch?: boolean;
-    onClick?: (data: {app: IApp}) => void;
-    onSearchInput?: (data: {app: IApp, text: string}) => void;
-}
-
-export interface IAppStatusSingle extends IAppStatusBase {
-    children?: IAppStatusBase[];
+export interface IAppStatusTitle {
+    title?: string;
+    children: ISelectItem[];
 }
 
 export interface IAppStatus {
-    main: IAppStatusSingle;
-    [key: string]: IAppStatusSingle;
+    dock: IAppStatusTitle;
+    center?: IAppStatusTitle;
+    list: IAppStatusTitle[];
 }
 
 export interface IAppMessageBase {
