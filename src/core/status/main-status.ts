@@ -13,7 +13,7 @@ const onClick = function (this: ISelectItem) {
         from: getApps()[0],
         title: 'New Message',
         content: this.name || '',
-        buttonText: 'Reply'
+        buttonText: 'Button'
     });
 };
 

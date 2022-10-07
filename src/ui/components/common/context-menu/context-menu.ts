@@ -11,7 +11,7 @@ const onClick = function (this: ISelectItem) {
     toast({
         title: 'On ContextMenu',
         content: this.name || '',
-        buttonText: 'Reply'
+        buttonText: 'Button'
     });
 };
 

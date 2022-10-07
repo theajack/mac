@@ -34,7 +34,7 @@ function initDevHelper (os: OS) {
                 from: this.getApps()[0],
                 title: 'New Message',
                 content,
-                buttonText: 'Reply',
+                buttonText: 'Button',
                 duration
             });
         }
