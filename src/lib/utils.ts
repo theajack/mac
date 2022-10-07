@@ -1,10 +1,10 @@
-import { TWriteType } from '@/core/disk/saver/reader';
-
 /*
  * @Author: tackchen
  * @Date: 2022-09-11 07:58:38
  * @Description: Coding something
  */
+import { TWriteType } from '@/core/disk/saver/reader';
+
 export function countStringBytes (str: string): number {
     let totalLength = 0;
     let i;

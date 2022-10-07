@@ -45,3 +45,11 @@ jobs:
         with:
           branch: gh-pages
           folder: docs
+
+      - name: Release # release
+        uses: release-drafter/release-drafter@v5
+        with:
+          version: ${{ steps.version.outputs.version }}
+          publish: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}

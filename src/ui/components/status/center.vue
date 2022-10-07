@@ -8,5 +8,7 @@
 </script>
 
 <template>
-  <div />
+  <div class="center-bar">
+    <!-- <img src="/mac/assets/center-all.png" alt=""> -->
+  </div>
 </template>
