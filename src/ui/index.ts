@@ -5,11 +5,15 @@
  */
 import { createApp } from 'vue';
 import Entry from './entry.vue';
+import { initFullscreen } from './lib/fullscreen';
 import router from './router';
 import store from './store';
 import './style/common.less';
 
 export function initUI () {
+
+    initFullscreen();
+
     createApp(Entry)
         .use(store)
         .use(router)

@@ -17,7 +17,7 @@ async function main () {
 }
 
 function initDevHelper (os: OS) {
-    if (location.host.indexOf('localhost:') !== 0) return;
+    if (!Context.isDev) return;
     log(os);
     (window as any).os = os;
     (window as any).dev = {
@@ -29,10 +29,10 @@ function initDevHelper (os: OS) {
             os.disk.clear();
             location.reload();
         },
-        toast (content = 'content 内容') {
+        toast (content = 'Some content') {
             toast({
                 from: this.getApps()[0],
-                title: '收到一条消息',
+                title: 'New Message',
                 content,
                 buttonText: 'Reply'
             });

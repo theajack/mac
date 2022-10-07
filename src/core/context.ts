@@ -56,3 +56,5 @@ export function getFile (path: string) {
     // todo
     return getOS().value.disk.findFileByPath(path);
 }
+
+export const isDev = location.host.indexOf('localhost:') === 0;

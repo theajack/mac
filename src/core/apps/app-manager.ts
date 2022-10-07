@@ -18,7 +18,7 @@ import { getApps } from '../context';
 const onClick = function (this: ISelectItem) {
     toast({
         from: getApps()[0],
-        title: '收到一条消息',
+        title: 'New Message',
         content: this.name || '',
         buttonText: 'Reply'
     });

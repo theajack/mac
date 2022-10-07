@@ -80,7 +80,7 @@ function createEmptyStatusItem (title = '') {
     return {
         title,
         children: [ {
-            name: 'Nothing In Here...'
+            name: 'There is nothing...'
         }, {
             isSplit: true,
         }, {
