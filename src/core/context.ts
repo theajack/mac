@@ -4,8 +4,9 @@
  * @Description: Coding something
  */
 
+import { IToastData } from '@/ui/components/common/toast/toast';
 import { Ref, ref } from 'vue';
-import { getOSInstance } from './os/os';
+import { getOSInstance, OS } from './os/os';
 import { IJson } from './type';
 
 const StoreMap: IJson<Ref<any>> = {};
@@ -17,9 +18,18 @@ function getStore<T = any> (name: string, value: T): Ref<T> {
     return StoreMap[name];
 }
 
-export function getOS () {
-    return getStore('os', getOSInstance());
+function createGetStoreFunc<T = any> (name: string, func: ()=>T) {
+    return (): Ref<T> => {
+        if (StoreMap[name]) return StoreMap[name];
+        return getStore<T>(name, func());
+    };
 }
+
+export const getToast = createGetStoreFunc<IToastData>('toast', () => ({
+    content: '', visible: false
+}));
+
+export const getOS = createGetStoreFunc<OS>('os', getOSInstance);
 
 export function getDockApps () {
     return getOS().value.appManager.dockApps;

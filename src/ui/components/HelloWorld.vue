@@ -5,9 +5,7 @@
 -->
 <script setup lang="ts">
 import { ref } from 'vue';
-import { a } from './a';
 
-console.log(a);
 defineProps({
     msg: String
 });

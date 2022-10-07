@@ -12,43 +12,73 @@ import { IJson } from '../type';
 import { App } from './app';
 import { StringText } from '../string';
 import { ISelectItem } from '../types/component';
+import { toast } from '@/ui/components/common/toast/toast';
+import { getApps } from '../context';
+
+const onClick = function (this: ISelectItem) {
+    toast({
+        from: getApps()[0],
+        title: '收到一条消息',
+        content: this.name || '',
+        buttonText: 'Reply'
+    });
+};
 
 const mainStatus: ISelectItem[] = [
     {
-        name: 'About This Mac'
+        name: 'About This Mac',
+        onClick
     }, {
-        isSplit: true
+        isSplit: true,
     }, {
-        name: 'System Preferences...'
+        name: 'System Preferences...',
+        onClick
     }, {
-        name: 'App Store...'
-    }, {
-        isSplit: true
-    }, {
-        name: 'Recent Items',
+        name: 'App Store...',
+        onClick,
         children: [ {
-            name: 'test1'
+            name: 'test1',
+            onClick,
         }, {
-            name: 'test2'
+            name: 'test2',
+            onClick,
         } ]
     }, {
         isSplit: true
     }, {
-        name: 'Force Quit...'
+        name: 'Recent Items',
+        onClick,
+        children: [ {
+            name: 'test1',
+            onClick,
+        }, {
+            name: 'test2',
+            onClick,
+        } ]
     }, {
         isSplit: true
     }, {
-        name: 'Sleep'
-    }, {
-        name: 'Restart...'
-    }, {
-        name: 'Shut Down...'
+        name: 'Force Quit...',
+        onClick,
     }, {
         isSplit: true
     }, {
-        name: 'Lock Screen'
+        name: 'Sleep',
+        onClick,
     }, {
-        name: 'Log Out tackchen...'
+        name: 'Restart...',
+        onClick,
+    }, {
+        name: 'Shut Down...',
+        onClick,
+    }, {
+        isSplit: true
+    }, {
+        name: 'Lock Screen',
+        onClick,
+    }, {
+        name: 'Log Out tackchen...',
+        onClick,
     }
 ];
 

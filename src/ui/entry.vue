@@ -13,6 +13,7 @@
 <style lang="less">
 body {
   margin: 0;
+  font-size: 14px;
 }
 * {
   box-sizing: border-box;
@@ -35,6 +36,6 @@ body {
   --color-white-200: rgba(255, 255, 255, 0.2);
   --box-shadow: 0 0 30px rgb(0 0 0 / 56%);
   --box-shadow-border: 0 0 1px .5px #000;
-
+  --color-bg-gray: #5f5b65bb;
 }
 </style>

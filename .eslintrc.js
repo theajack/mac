@@ -68,5 +68,7 @@ module.exports = {
         'no-trailing-spaces': 2, // 一行结束后面有空格就发出警告
         'vue/require-default-prop': 'off',
         '@typescript-eslint/no-empty-function': 1,
+        'vue/max-attributes-per-line': 'off',
+        'vue/singleline-html-element-content-newline': 'off'
     }
 };

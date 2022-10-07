@@ -114,3 +114,11 @@ export function charSplitToSpaceSplit (name: string, split = '-'): string {
     const arr = name.split(split);
     return arr.map(item => item[0].toUpperCase() + item.slice(1)).join(' ');
 }
+
+export function delay (time = 1000) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(true);
+        }, time);
+    });
+}

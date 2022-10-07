@@ -25,6 +25,7 @@ defineProps<{
 
 <style lang="less">
   .os-select-list {
+    user-select: none;
     color: #fff;
     min-width: 100px;
     display: inline-block;

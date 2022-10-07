@@ -26,7 +26,8 @@ export function createMenuStatus () {
         }
     };
 
-    window.addEventListener('click', (e) => {
+    document.body.addEventListener('click', (e) => {
+        console.log('111');
         const el = e.target as HTMLElement;
         if (
             el.classList.contains('menu-title') ||

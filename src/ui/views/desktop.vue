@@ -6,6 +6,7 @@
 <script setup lang="ts">
 import StatusBar from '../components/status/status-bar.vue';
 import DockBar from '../components/dock/dock-bar.vue';
+import Toast from '../components/common/toast/toast.vue';
 // import Select from '../components/common/select/index.vue';
 // import { Ref, ref } from 'vue';
 // import { ISelectItem } from '@/core/types/component';
@@ -35,10 +36,11 @@ defineProps({
   <div class="desktop-container">
     <StatusBar />
     <!-- <Select :list="selectList" /> -->
-    <!-- <div>{{ count }}</div>
-    <div>status bar: {{ data.a }}</div>
-    <div>status bar: {{ data2.a }}</div> -->
+    <!-- <div>{{ count }}</div> -->
+    <!-- <div>status bar: {{ data.a }}</div> -->
+    <!-- <div>status bar: {{ data2.a }}</div> -->
     <DockBar />
+    <Toast />
   </div>
 </template>
 

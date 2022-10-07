@@ -8,6 +8,7 @@ import { StringText } from './core/string';
 import { log } from './lib/utils';
 import { initUI } from './ui';
 import * as Context from './core/context';
+import { toast } from './ui/components/common/toast/toast';
 
 async function main () {
     const os = await createOS();
@@ -27,6 +28,14 @@ function initDevHelper (os: OS) {
         clear () {
             os.disk.clear();
             location.reload();
+        },
+        toast (content = 'content 内容') {
+            toast({
+                from: this.getApps()[0],
+                title: '收到一条消息',
+                content,
+                buttonText: 'Reply'
+            });
         }
     };
 }

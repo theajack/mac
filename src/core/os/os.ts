@@ -5,6 +5,7 @@
  */
 
 import { AppManager } from '../apps/app-manager';
+import { initAudioPlayer } from '../audio';
 import { Disk } from '../disk/disk';
 import './os.d';
 
@@ -27,6 +28,7 @@ export class OS {
     // 初始化系统
     // 安装基础app
     async init () {
+        initAudioPlayer();
         await this.disk.initFileSystem();
         await this.appManager.initAppsDirectory();
         console.log(this.disk.deepLs());

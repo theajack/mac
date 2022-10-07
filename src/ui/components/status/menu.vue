@@ -43,15 +43,15 @@ const {
       class="menu-bar-item"
       :class="{'active': index === activeIndex}"
       @mouseenter="onMouseEnter(index)"
+      @click.stop="onClickTitle(index)"
     >
       <span
-        class="menu-title"
+        class="menu-title no-select"
         :class="{
           'menu-main': index === 0,
         }"
-        @click="onClickTitle(index)"
       >{{ item.title }}</span>
-      <div class="menu-select">
+      <div class="menu-select" @click.stop>
         <Select :list="item.children" />
       </div>
     </div>
