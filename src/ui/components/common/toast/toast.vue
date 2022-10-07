@@ -28,7 +28,7 @@ const {
       <img :src="toast.from?.icon">
     </div>
     <div class="ot-main">
-      <div class="font-bold">{{ toast.title }}</div>
+      <div class="font-bold mb-2">{{ toast.title }}</div>
       <div class="fs-13">{{ toast.content }}</div>
       <div class="ot-button text-right" :class="{exist: !!toast.buttonText}">
         <button class="os-button" @click.stop="onButtonClick">
@@ -58,11 +58,10 @@ const {
       transform: translateX(0%);
     }
     &:before{
-      border-radius: 15px;
+      border-radius: 12px;
     }
     .ot-icon{
-      width: 50px;
-      height: 50px;
+      height: 42px;
       margin: 0 5px;
       margin-right: 13px;
       img{
@@ -70,6 +69,7 @@ const {
       }
     }
     .ot-main{
+      margin-left: 5px;
       flex: 1;
 
       // .ot-title {

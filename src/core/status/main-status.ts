@@ -1,3 +1,8 @@
+/*
+ * @Author: tackchen
+ * @Date: 2022-10-07 20:48:25
+ * @Description: Coding something
+ */
 
 import { ISelectItem } from '../types/component';
 import { toast } from '@/ui/components/common/toast/toast';
@@ -24,13 +29,6 @@ export const mainStatus: ISelectItem[] = [
     }, {
         name: 'App Store...',
         onClick,
-        children: [ {
-            name: 'test1',
-            onClick,
-        }, {
-            name: 'test2',
-            onClick,
-        } ]
     }, {
         isSplit: true
     }, {

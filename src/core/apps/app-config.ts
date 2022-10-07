@@ -5,7 +5,10 @@
  */
 
 import { charSplitToSpaceSplit, importScript } from '@/lib/utils';
+import { toast } from '@/ui/components/common/toast/toast';
+import { getApps } from '../context';
 import { IJson } from '../type';
+import { ISelectItem } from '../types/component';
 import { App } from './app';
 import { AppStore } from './default/app-store';
 import { Finder } from './default/finder';
@@ -76,15 +79,26 @@ export function createDefaultApps ():
     };
 }
 
+function onClick (this: ISelectItem) {
+    toast({
+        from: getApps()[0],
+        title: 'New Message',
+        content: this.name || '',
+        buttonText: 'Reply'
+    });
+}
+
 function createEmptyStatusItem (title = '') {
     return {
         title,
         children: [ {
-            name: 'There is nothing...'
+            name: 'There is nothing...',
+            onClick,
         }, {
             isSplit: true,
         }, {
-            name: 'Still in developing'
+            name: 'Still in developing',
+            onClick,
         } ]
     };
 }

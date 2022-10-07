@@ -7,6 +7,7 @@
 import StatusBar from '../components/status/status-bar.vue';
 import DockBar from '../components/dock/dock-bar.vue';
 import Toast from '../components/common/toast/toast.vue';
+import ContextMenu from '../components/common/context-menu/context-menu.vue';
 // import Select from '../components/common/select/index.vue';
 // import { Ref, ref } from 'vue';
 // import { ISelectItem } from '@/core/types/component';
@@ -41,6 +42,7 @@ defineProps({
     <!-- <div>status bar: {{ data2.a }}</div> -->
     <DockBar />
     <Toast />
+    <ContextMenu />
   </div>
 </template>
 

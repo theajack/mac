@@ -122,3 +122,22 @@ export function delay (time = 1000) {
         }, time);
     });
 }
+
+
+// Fri Oct 7 21:40
+export function buildDate () {
+    const date = new Date();
+
+    const day = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat' ][date.getDay()];
+
+    const month = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ][date.getMonth()];
+
+    return {
+        date: `${day} ${month} ${date.getDate()}`,
+        time: `${fixNumber(date.getHours())}:${fixNumber(date.getMinutes())}`
+    };
+}
+
+export function fixNumber (number: number) {
+    return number < 10 ? `0${number}` : number;
+}

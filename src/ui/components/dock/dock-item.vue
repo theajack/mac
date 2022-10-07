@@ -5,16 +5,24 @@
 -->
 <script setup lang="ts">
 import { App } from '@/core/apps/app';
+import { toast } from '../common/toast/toast';
 import PopBg from './pop-bg.vue';
-defineProps<{
+const props = defineProps<{
     app: App
 }>();
+
+const onClick = () => {
+    toast({
+        from: props.app,
+        content: 'In developing...'
+    });
+};
 
 </script>
 
 <template>
   <div class="dock-item">
-    <img :src="app.icon">
+    <img :src="app.icon" @click="onClick">
     <div class="dock-title">
       <!-- 简单方案 会看到箭头后面有横线 但是兼容性比较好 -->
       <!-- <div class="dock-title-bg-angle" /> -->

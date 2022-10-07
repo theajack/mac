@@ -37,7 +37,7 @@ function startToastTimer () {
 
 export async function toast ({
     from,
-    title = 'Message',
+    title,
     content,
     onClick,
     onButtonClick,
@@ -45,6 +45,10 @@ export async function toast ({
     duration = 3000,
 }: IToastMessage) {
     const toast = getToast();
+
+    if (!title && from) {
+        title = from.title;
+    }
 
     Object.assign(toast.value, {
         from,

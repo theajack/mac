@@ -29,12 +29,13 @@ function initDevHelper (os: OS) {
             os.disk.clear();
             location.reload();
         },
-        toast (content = 'Some content') {
+        toast (content = 'Some content', duration = 3000) {
             toast({
                 from: this.getApps()[0],
                 title: 'New Message',
                 content,
-                buttonText: 'Reply'
+                buttonText: 'Reply',
+                duration
             });
         }
     };
