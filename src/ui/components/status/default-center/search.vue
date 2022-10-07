@@ -20,7 +20,7 @@ const onClick = () => {
   <div class="center-item">
     <img
       class="center-icon"
-      src="/mac/assets/center/search.png"
+      src="/assets/center/search.png"
       @click="onClick"
     >
     <div class="center-block">
