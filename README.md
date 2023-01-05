@@ -11,4 +11,6 @@ Based on macOS Monterey version 12.5.1
 
 At present many features are still under development, welcome interested developers to participate in the development
 
+<img src='https://shiyix.cn/macos.jpg' width='600px'/>
+
 <img src='https://shiyix.cn/design.png' width='600px'/>
