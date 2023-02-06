@@ -14,14 +14,14 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 dir: 'docs'
-            }
+            },
         },
-        outDir: 'docs'
+        outDir: 'docs',
     },
     resolve: {
         alias: {
             '@': '/src/',      // 格式一定要写对喽不然没有代码提示或者报错
             '@core': '/src/core/',
         }
-    }
+    },
 });

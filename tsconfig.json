@@ -29,7 +29,7 @@
         }
     },
     "include": [
-        "src/**/*",
+        "src/**/*", "src/babel.min.js",
     ],
     "exclude": [
         "./node_modules",

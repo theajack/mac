@@ -69,6 +69,7 @@ module.exports = {
         'vue/require-default-prop': 'off',
         '@typescript-eslint/no-empty-function': 1,
         'vue/max-attributes-per-line': 'off',
-        'vue/singleline-html-element-content-newline': 'off'
+        'vue/singleline-html-element-content-newline': 'off',
+        '@typescript-eslint/ban-ts-comment': 'off',
     }
 };

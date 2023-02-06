@@ -4,10 +4,9 @@
  * @Description: Coding something
  */
 
-import { Dir } from '../disk/files/dir';
+import { Dir, File } from 'webos-term';
 import { OS } from '../os/os';
 import { createApp, createDefaultApps, IAppConfig } from './app-config';
-import { File } from '../disk/files/file';
 import { IJson } from '../type';
 import { App } from './app';
 import { StringText } from '../string';
@@ -51,6 +50,10 @@ export class AppManager {
         await this.initAppConfig();
         await this.initApps();
         this.currentApp = this.installedApps.find(item => item.name === 'finder') as App;
+    }
+
+    refreshConfigFiles () {
+        this.appConfigFile.write({ content: createDefaultApps() });
     }
 
     private async initAppConfig () {

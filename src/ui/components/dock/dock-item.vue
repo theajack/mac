@@ -5,17 +5,13 @@
 -->
 <script setup lang="ts">
 import { App } from '@/core/apps/app';
-import { toast } from '../common/toast/toast';
 import PopBg from './pop-bg.vue';
 const props = defineProps<{
     app: App
 }>();
 
 const onClick = () => {
-    toast({
-        from: props.app,
-        content: 'In developing...'
-    });
+    props.app.onOpen();
 };
 
 </script>

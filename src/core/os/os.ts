@@ -6,7 +6,7 @@
 
 import { AppManager } from '../apps/app-manager';
 import { initAudioPlayer } from '../audio';
-import { Disk } from '../disk/disk';
+import { Disk } from 'webos-term';
 import './os.d';
 
 const OsName = Symbol('os');

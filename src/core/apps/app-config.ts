@@ -13,6 +13,7 @@ import { App } from './app';
 import { AppStore } from './default/app-store';
 import { Finder } from './default/finder';
 import { SystemPreferences } from './default/prefer';
+import { Terminal } from './default/terminal';
 import { Trash } from './default/trash';
 import { IAppStatus } from './type';
 
@@ -21,14 +22,18 @@ export enum AppNames {
     systemPreferences = 'system-preferences',
     trash = 'trash',
     appStore = 'app-store',
+    terminal = 'terminal',
 }
 
-export const DefaultAppNames = [
-    AppNames.appStore, AppNames.finder, AppNames.trash,
-    AppNames.systemPreferences
-] as const;
-
-export type TDefaultApps = (typeof DefaultAppNames)[number];
+export const DefaultApps: {
+    [key in AppNames]: typeof App
+} = {
+    [AppNames.finder]: Finder,
+    [AppNames.systemPreferences]: SystemPreferences,
+    [AppNames.trash]: Trash,
+    [AppNames.appStore]: AppStore,
+    [AppNames.terminal]: Terminal,
+};
 
 export function appNameToTitle (name: string): string {
     return charSplitToSpaceSplit(name, '-');
@@ -41,12 +46,6 @@ export interface IAppConfig {
     url?: string; // 从cdn加载的app
 }
 
-export const DefaultApps: IJson<typeof App> = {
-    [AppNames.finder]: Finder,
-    [AppNames.systemPreferences]: SystemPreferences,
-    [AppNames.trash]: Trash,
-    [AppNames.appStore]: AppStore,
-};
 
 export const InnerApps: IJson<typeof App> = {
 };
@@ -54,6 +53,7 @@ export const InnerApps: IJson<typeof App> = {
 export async function createApp (config: IAppConfig) {
 
     const name = config.name;
+    // @ts-ignore
     let AppClass = DefaultApps[name] || InnerApps[name];
     if (AppClass) {
         return new AppClass();
@@ -69,13 +69,14 @@ export async function createApp (config: IAppConfig) {
 }
 
 export function createDefaultApps ():
-    {[prop in TDefaultApps]: IAppConfig}
+    {[prop in AppNames]: IAppConfig}
 {
     return {
         [AppNames.finder]: { name: AppNames.finder, dockIndex: 1 },
         [AppNames.appStore]: { name: AppNames.appStore, dockIndex: 2 },
         [AppNames.systemPreferences]: { name: AppNames.systemPreferences, dockIndex: 3 },
         [AppNames.trash]: { name: AppNames.trash, dockIndex: 1000 },
+        [AppNames.terminal]: { name: AppNames.terminal, dockIndex: 4 },
     };
 }
 

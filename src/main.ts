@@ -22,8 +22,8 @@ function initDevHelper (os: OS) {
     (window as any).os = os;
     (window as any).dev = {
         ...Context,
-        clearAppConfig () {
-            os.disk.findFileByPath(`${StringText.appDir}/${StringText.appConfigFile}`)?.remove();
+        async clearAppConfig () {
+            (await os.disk.findFileByPath(`${StringText.appDir}/${StringText.appConfigFile}`))?.remove();
         },
         clear () {
             os.disk.clear();

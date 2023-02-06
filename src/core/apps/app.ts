@@ -3,6 +3,7 @@
  * @Date: 2022-09-05 19:46:58
  * @Description: Coding something
  */
+import { toast } from '@/ui/components/common/toast/toast';
 import { Event } from '@core/enum';
 import { AppEventModule, sendMessageToApp } from '@core/os/event-bus';
 import { Window } from '@core/os/window';
@@ -56,7 +57,10 @@ export class App implements IApp {
     }
 
     onOpen () {
-
+        toast({
+            from: this,
+            content: 'In developing...'
+        });
     }
 
     initStatusBar () {

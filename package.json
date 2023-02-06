@@ -10,14 +10,17 @@
   },
   "dependencies": {
     "tc-event": "^0.1.2",
-    "vue": "^3.2.16"
+    "vue": "^3.2.16",
+    "webos-term": "0.0.6"
   },
   "devDependencies": {
+    "@babel/standalone": "^7.20.15",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@vitejs/plugin-vue": "^1.9.3",
     "@vue/compiler-sfc": "^3.2.22",
     "@vue/eslint-config-typescript": "^9.1.0",
+    "babel-standalone": "^6.26.0",
     "eslint": "^8.2.0",
     "eslint-plugin-vue": "^8.0.3",
     "filer": "^1.4.1",
