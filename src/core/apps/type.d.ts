@@ -9,6 +9,7 @@ import { ISelectItem } from '../types/component';
 export interface IApp {
     name: string;
     status: IAppStatus;
+    isRunning: boolean;
 }
 
 export interface IAppStatusTitle {

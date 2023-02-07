@@ -8,6 +8,7 @@ import { AppManager } from '../apps/app-manager';
 import { initAudioPlayer } from '../audio';
 import { Disk } from 'webos-term';
 import './os.d';
+import event from 'tc-event';
 
 const OsName = Symbol('os');
 
@@ -23,6 +24,8 @@ export class OS {
         this.disk = new Disk();
         this.appManager = new AppManager(this);
         OS.instance = this;
+
+        event.emit('OS_INITED', this);
     }
 
     // 初始化系统

@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { IApp } from '../apps/type';
+import { App } from '../apps/app';
 
 export class WindowHeader {
     buttons: {
@@ -15,49 +15,63 @@ export class WindowHeader {
             disabled?: boolean;
         }
     };
-    parent: Window;
 
-    constructor ({
-        gap,
-        parent
-    }: {
-        gap: number;
-        parent: Window;
-    }) {
+    constructor () {
         this.buttons = {
             min: {},
             close: {},
             full: {},
-            gap,
+            gap: 10,
         };
-        this.parent = parent;
     }
 }
 
-export class Window {
-    header: WindowHeader;
+let idIndex = 0;
+
+export interface IWindowStatus {
+    id: number;
     zIndex: number;
     isOnTop: boolean;
     status: 'min' | 'full' | 'normal';
-    isFullscreen = false;
+    isFullscreen: boolean;
+    header: WindowHeader;
+}
 
-    parent: IApp;
+export function createWindowStatus (): IWindowStatus {
+    return {
+        isFullscreen: false,
+        id: idIndex ++,
+        zIndex: 0,
+        isOnTop: true,
+        status: 'normal',
+        header: new WindowHeader(),
+    };
+}
+
+
+export class Window {
+
+    status: IWindowStatus;
+
+    parent: App;
+
+    private _dom: HTMLElement;
 
     constructor ({
-        headerGap,
         parent,
     }: {
-        headerGap: number;
-        parent: IApp;
+        headerGap?: number;
+        parent: App;
     }) {
-        this.header = new WindowHeader({
-            gap: headerGap,
-            parent: this,
-        });
+        this.status = createWindowStatus();
         this.parent = parent;
     }
 
     close () {
+        this.parent.closeWindow(this);
+    }
+
+    removeUI () {
         console.log('close');
     }
 
@@ -69,5 +83,12 @@ export class Window {
         console.log('minimize');
     }
 
-
+    get dom () {
+        if (!this._dom) {
+            const dom = document.getElementById(`WINDOW_DOM_${this.status.id}`);
+            if (!dom) throw new Error('Connect find dom');
+            this._dom = dom;
+        }
+        return this._dom;
+    }
 }

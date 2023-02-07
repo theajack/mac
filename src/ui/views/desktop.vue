@@ -8,6 +8,7 @@ import StatusBar from '../components/status/status-bar.vue';
 import DockBar from '../components/dock/dock-bar.vue';
 import Toast from '../components/common/toast/toast.vue';
 import ContextMenu from '../components/common/context-menu/context-menu.vue';
+import AppManager from '../components/app-manager.vue';
 // import Select from '../components/common/select/index.vue';
 // import { Ref, ref } from 'vue';
 // import { ISelectItem } from '@/core/types/component';
@@ -43,6 +44,7 @@ defineProps({
     <DockBar />
     <Toast />
     <ContextMenu />
+    <AppManager />
   </div>
 </template>
 

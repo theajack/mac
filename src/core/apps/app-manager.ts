@@ -11,6 +11,8 @@ import { IJson } from '../type';
 import { App } from './app';
 import { StringText } from '../string';
 import { mainStatus } from '../status/main-status';
+import { IWindowStatus, Window } from '../os/window';
+import { reactive } from 'vue';
 
 export class AppManager {
     static DIR_NAME = StringText.appDir;
@@ -29,12 +31,14 @@ export class AppManager {
 
     mainStatus = mainStatus;
 
-    installedApps: App[];
-    runningApps: App[];
+    installedApps: App[] = [];
+    runningApps: App[] = [];
     dockApps: App[];
     currentApp: App;
 
     parent: OS;
+
+    windowStatus: IWindowStatus[] = reactive([]);
 
     constructor (os: OS) {
         this.parent = os;
@@ -92,5 +96,17 @@ export class AppManager {
             });
 
         this.appConfig.dockApps = this.dockApps.map(item => item.name);
+    }
+
+    removeWindowStatus (window: Window) {
+        this.windowStatus.splice(
+            this.windowStatus.indexOf(window.status),
+            1
+        );
+    }
+
+    enterApp (app: App) {
+        app.isRunning = true;
+        this.runningApps.push(app);
     }
 }

@@ -6,7 +6,8 @@
 import { App } from '../app';
 import { AppNames, createEmptyStatus } from '../app-config';
 import { IAppStatus } from '../type';
-import { Term } from 'webos-term';
+import { createTerm } from 'webos-term';
+import { nextTick } from 'vue';
 
 const status: IAppStatus = createEmptyStatus();
 
@@ -19,7 +20,9 @@ export class Terminal extends App {
         });
     }
 
-    onOpen () {
-        console.log(Term);
+    async onOpen () {
+        const window = this.openNewWindow();
+        await nextTick();
+        createTerm({ container: window.dom });
     }
 }
