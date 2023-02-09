@@ -6,6 +6,8 @@
     border-radius: 0;
 }
 
+.no-select {user-select: none;}
+
 .bg-blur{
     padding: 4px;
     position: relative;
@@ -51,11 +53,24 @@
 .cursor-default {cursor: default;}
 .no-select {user-select: none;}
 .mb-2 {margin-bottom: 2px;}
-
+.WEBOS_CONTAINER{
+    background-color: #1e1e1e;
+    padding: 10px!important;
+    height: 100%;
+    padding-top: 40px!important;
+}
 .WEBOS_CONTAINER * {
     font-family: Menlo, Monaco, "Courier New", monospace;
     font-size: 14px;
 }
 .term-histoy {
     line-height: 15px!important;
+}
+
+.window-edge {
+    position: absolute; 
+    opacity: 0;
+    width: 8px; 
+    height: 8px;
+    .no-select;
 }

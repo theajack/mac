@@ -5,22 +5,45 @@
 -->
 
 <script setup lang="ts">
-import { getDockApps } from '@/core/context';
+import { getDockApps, getTempDockApps, getTrash } from '@/core/context';
+import { WindowCapture } from '@/core/os/window';
+import { ref } from 'vue';
 import DockItem from './dock-item.vue';
+import DockCapture from './dock-capture.vue';
 
-const apps = getDockApps();
+const apps = ref(getDockApps());
+
+const tempApps = ref(getTempDockApps());
+
+const captures = ref(WindowCapture.List);
+
+const trash = getTrash();
 
 (window as any).apps = apps;
 
 </script>
 
 <template>
-  <div class="dock-bar">
+  <div class="dock-bar no-select">
     <DockItem
       v-for="item in apps"
       :key="item.name"
       :app="item"
     />
+    <span v-show="tempApps.length > 0" class="dock-split" />
+    <DockItem
+      v-for="item in tempApps"
+      :key="item.name"
+      :app="item"
+    />
+    <span class="dock-split" />
+    <DockCapture
+      v-for="item in captures"
+      :key="item.id"
+      :window="item.window"
+      :capture="item"
+    />
+    <DockItem :app="trash" />
   </div>
 </template>
 
@@ -39,5 +62,13 @@ const apps = getDockApps();
   border-radius: 14px;
   box-shadow: var(--box-shadow);
   z-index: 10;
+
+  .dock-split{
+    display: inline-block;
+    width: 1px;
+    height: 46px;
+    background-color: #eee8;
+    margin-right: 12px;
+  }
 }
 </style>

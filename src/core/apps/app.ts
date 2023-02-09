@@ -7,16 +7,18 @@ import { toast } from '@/ui/components/common/toast/toast';
 import { Event } from '@core/enum';
 import { AppEventModule, sendMessageToApp } from '@core/os/event-bus';
 import { Window } from '@core/os/window';
+import { nextTick } from 'vue';
 import { OS } from '../os/os';
 import { appNameToTitle } from './app-config';
 import { AppManager } from './app-manager';
 import { IAppStatus, IApp, IAppMessageBase, IAppMessage } from './type';
+
 export class App implements IApp {
     name: string;
     icon: string;
+    defCaptureSrc = '';
     title: string;
     status: IAppStatus;
-    isOpen = true;
     manager: AppManager;
     onMessage?: (data: IAppMessage) => void;
 
@@ -83,6 +85,15 @@ export class App implements IApp {
         const window = new Window({ parent: this });
         this.windows.push(window);
         this.manager.windowStatus.push(window.status);
+
+        if (!this.defCaptureSrc) {
+            setTimeout(() => { // 等待元素渲染好
+                window.capture().then(url => {
+                    this.defCaptureSrc = url;
+                });
+            }, 50);
+        }
+
         return window;
     }
 
@@ -99,10 +110,6 @@ export class App implements IApp {
     }
 
     quit () {
-        this.isRunning = false;
-        this.manager.runningApps.splice(
-            this.manager.runningApps.indexOf(this),
-            1,
-        );
+        this.manager.leaveApp(this);
     }
 }

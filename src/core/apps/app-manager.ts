@@ -13,6 +13,7 @@ import { StringText } from '../string';
 import { mainStatus } from '../status/main-status';
 import { IWindowStatus, Window } from '../os/window';
 import { reactive } from 'vue';
+import { Trash } from './default/trash';
 
 export class AppManager {
     static DIR_NAME = StringText.appDir;
@@ -33,12 +34,17 @@ export class AppManager {
 
     installedApps: App[] = [];
     runningApps: App[] = [];
+
+    tempDockApps: App[] = []; // temporary apps not always in dock
+
     dockApps: App[];
     currentApp: App;
 
     parent: OS;
 
     windowStatus: IWindowStatus[] = reactive([]);
+
+    trash: Trash;
 
     constructor (os: OS) {
         this.parent = os;
@@ -69,6 +75,12 @@ export class AppManager {
         }) as any as File;
     }
 
+    private initTrash () {
+        const index = this.installedApps.findIndex(app => app.name === 'trash');
+        this.trash = this.installedApps[index];
+        this.installedApps.splice(index, 1);
+    }
+
     private async initApps () {
         const config = this.appConfigFile.content as IJson<IAppConfig>;
 
@@ -82,6 +94,7 @@ export class AppManager {
         const installApps = await Promise.all(all);
 
         this.installedApps = installApps;
+        this.initTrash();
 
         this.appConfig.installedApps = installApps.map(item => item.name);
 
@@ -108,5 +121,16 @@ export class AppManager {
     enterApp (app: App) {
         app.isRunning = true;
         this.runningApps.push(app);
+
+        if (!this.dockApps.includes(app) && !this.tempDockApps.includes(app)) {
+            this.tempDockApps.push(app);
+        }
+    }
+    leaveApp (app: App) {
+        app.isRunning = false;
+        this.runningApps.splice(
+            this.runningApps.indexOf(app),
+            1,
+        );
     }
 }

@@ -9,6 +9,7 @@
     "release": "node helper/scripts/push-release.js"
   },
   "dependencies": {
+    "html2canvas": "^1.4.1",
     "tc-event": "^0.1.2",
     "vue": "^3.2.16",
     "webos-term": "0.0.7"
@@ -21,6 +22,7 @@
     "@vue/compiler-sfc": "^3.2.22",
     "@vue/eslint-config-typescript": "^9.1.0",
     "babel-standalone": "^6.26.0",
+    "easy-dom-util": "^0.0.29",
     "eslint": "^8.2.0",
     "eslint-plugin-vue": "^8.0.3",
     "filer": "^1.4.1",

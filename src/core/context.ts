@@ -34,6 +34,12 @@ export const getOS = createGetStoreFunc<OS>('os', getOSInstance);
 export function getDockApps () {
     return getOS().value.appManager.dockApps;
 }
+export function getTempDockApps () {
+    return getOS().value.appManager.tempDockApps;
+}
+export function getTrash () {
+    return getOS().value.appManager.trash;
+}
 
 export function getApps () {
     return getOS().value.appManager.installedApps;

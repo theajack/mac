@@ -35,6 +35,10 @@ function startToastTimer () {
     }, toast.value.duration);
 }
 
+export function toastText (content: string) {
+    toast({ content });
+}
+
 export async function toast ({
     from,
     title,

@@ -54,6 +54,7 @@ const {
     top: 46px;
     transform: translateX(110%);
     transition: transform .5s ease-out;
+    z-index: 10;
     &.visible{
       transform: translateX(0%);
     }

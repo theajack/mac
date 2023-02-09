@@ -71,5 +71,6 @@ module.exports = {
         'vue/max-attributes-per-line': 'off',
         'vue/singleline-html-element-content-newline': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',
+        'vue/no-setup-props-destructure': 'off',
     }
 };

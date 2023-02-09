@@ -7,10 +7,12 @@
 <script setup lang="ts">
 import Menu from './menu.vue';
 import Center from './center.vue';
+import { MenuHeightStr } from '@/ui/style/common';
+
 </script>
 
 <template>
-  <div class="status-bar bg-blur-nb">
+  <div class="status-bar no-select bg-blur-nb">
     <Menu />
     <Center />
   </div>
@@ -19,7 +21,7 @@ import Center from './center.vue';
 <style scoped lang="less">
   .status-bar{
     width: 100%;
-    height: 40px;
+    height: v-bind(MenuHeightStr);
     display: flex;
   }
   // background-color: #2224;

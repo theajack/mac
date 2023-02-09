@@ -22,7 +22,7 @@ const {
 </script>
 
 <template>
-  <div class="menu-bar">
+  <div class="menu-bar no-select">
     <div
       class="menu-bar-item"
       :class="{'active': -1 === activeIndex}"

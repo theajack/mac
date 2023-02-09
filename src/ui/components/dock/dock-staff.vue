@@ -5,30 +5,24 @@
 -->
 <script setup lang="ts">
 import { App } from '@/core/apps/app';
-import AppStaff from './dock-staff.vue';
+import PopBg from './pop-bg.vue';
 
-const props = defineProps<{
+defineProps<{
     app: App
 }>();
-
-const onClick = () => {
-    props.app.onOpen();
-};
 
 </script>
 
 <template>
-  <div class="dock-item">
-    <img :src="app.icon" @click="onClick">
-    <AppStaff :app="app" :icon="app.icon" @tap-app="onClick" />
-    <span
-      v-show="app.isRunning"
-      class="dock-dot"
-    />
+  <div class="dock-title">
+    <!-- 简单方案 会看到箭头后面有横线 但是兼容性比较好 -->
+    <!-- <div class="dock-title-bg-angle" /> -->
+    <PopBg />
+    <span>{{ app.title }}</span>
   </div>
 </template>
 
-<style lang="less">
+<style scoped lang="less">
 @import '@/ui/style/common.less';
 .dock-item {
     flex: 1;
