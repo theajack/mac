@@ -44,8 +44,8 @@ const onClick = () => {
   height: 45px;
 }
 .dock-capture-logo{
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   position: absolute;
   right: 0;
   bottom: 0;

@@ -7,10 +7,15 @@ export const MenuHeight = 40;
 
 export const MenuHeightStr = `${MenuHeight}px`;
 
-export const WindowHeight = window.innerHeight;
+export let WindowHeight = window.innerHeight;
 
 // export const WindowHeightStr = `${WindowHeight}px`;
 
-export const WindowWidth = window.innerWidth;
+export let WindowWidth = window.innerWidth;
 
 // export const WindowWidthStr = `${WindowWidth}px`;
+
+window.addEventListener('resize', () => {
+    WindowHeight = window.innerHeight;
+    WindowWidth = window.innerWidth;
+});
