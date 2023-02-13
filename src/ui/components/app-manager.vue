@@ -20,9 +20,7 @@ event.regist('OS_INITED', (os: OS) => {
 </script>
 
 <template>
-  <div class="os-windows-container">
-    <Window v-for="status in windowStatus" :key="status.id" :status="status" />
-  </div>
+  <Window v-for="status in windowStatus" :key="status.id" :status="status" />
 </template>
 
 <style scoped lang="less">

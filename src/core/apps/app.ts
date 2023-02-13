@@ -86,13 +86,13 @@ export class App implements IApp {
         this.windows.push(window);
         this.manager.windowStatus.push(window.status);
 
-        if (!this.defCaptureSrc) {
-            setTimeout(() => { // 等待元素渲染好
-                window.capture().then(url => {
-                    this.defCaptureSrc = url;
-                });
-            }, 50);
-        }
+        // if (!this.defCaptureSrc) {
+        //     setTimeout(() => { // 等待元素渲染好
+        //         window.capture().then(url => {
+        //             this.defCaptureSrc = url;
+        //         });
+        //     }, 50);
+        // }
 
         return window;
     }

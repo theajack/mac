@@ -17,7 +17,10 @@ const width = `${WindowWidth * 0.8}px`;
 </script>
 
 <template>
-  <div v-show="status.visible" class="os-window">
+  <div
+    v-show="status.visible" class="os-window"
+    :style="{'z-index': status.zIndex}"
+  >
     <WindowHeader :header="status.header" />
     <div :id="'WINDOW_DOM_'+status.id" />
   </div>
@@ -30,6 +33,8 @@ const width = `${WindowWidth * 0.8}px`;
     height: v-bind(height);
     min-width: 500px;
     min-height: 300px;
+    max-width: 1000px;
+    max-height: 600px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);

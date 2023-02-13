@@ -3,3 +3,4 @@ docs
 public
 index.html
 *.min.js
+tween.js

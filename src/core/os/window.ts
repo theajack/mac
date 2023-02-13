@@ -9,6 +9,7 @@ import { reactive } from 'vue';
 import { IJson } from 'webos-term';
 import { App } from '../apps/app';
 import html2canvas from 'html2canvas';
+import { WindowCapture } from './window-capture';
 
 export class WindowHeader {
     buttons: {
@@ -62,55 +63,16 @@ export function createWindowStatus (events: IJson<()=>void>): IWindowStatus {
     };
 }
 
-let captureIndex = 0;
-
-export class WindowCapture {
-    static List: WindowCapture[] = reactive([]);
-    id: number;
-    icon: string;
-    title: string;
-    appIcon: string;
-    window: Window;
-    inited = false;
-    constructor (window: Window) {
-        this.id = captureIndex++;
-        this.window = window;
-        const parent = window.parent;
-        this.icon = parent.defCaptureSrc || parent.icon;
-        this.title = parent.name;
-        this.appIcon = parent.icon;
-        WindowCapture.List.push(this);
-        this.init(window);
-    }
-
-    async init (window: Window) {
-        // this.icon = canvas.toDataURL();
-        const _thisProxy = WindowCapture.List.find(item => item.id === this.id);
-        if (_thisProxy) {
-            const url = await window.capture();
-            _thisProxy.icon = url;
-            // 修改默认快照
-            window.parent.defCaptureSrc = url;
-            _thisProxy.inited = true;
-        }
-    }
-
-    remove () {
-        WindowCapture.List.splice(
-            WindowCapture.List.indexOf(this),
-            1
-        );
-    }
-}
-
-window.WindowCapture = WindowCapture;
-
 export class Window {
     id: number;
 
     status: IWindowStatus;
 
     parent: App;
+
+    capture: WindowCapture;
+
+    captureDom: HTMLElement;
 
     private _dom: HTMLElement;
 
@@ -129,10 +91,10 @@ export class Window {
         this.parent = parent;
     }
 
-    async capture () {
-        const canvas = await html2canvas(this.dom);
-        return canvas.toDataURL();
-    }
+    // async capture () {
+    //     const canvas = await html2canvas(this.dom);
+    //     return canvas.toDataURL();
+    // }
 
     close () {
         this.parent.closeWindow(this);
@@ -149,12 +111,11 @@ export class Window {
 
     minimize () {
         console.log('minimize');
-        this.status.visible = false;
-        new WindowCapture(this);
+        this.capture = new WindowCapture(this);
     }
 
     resume () {
-        this.status.visible = true;
+        this.capture.resumeWindow();
     }
 
     get dom () {

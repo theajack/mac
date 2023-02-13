@@ -20,7 +20,6 @@ export function initWindow (
         initEvents(target, parent);
 
         initWindowResize(parent);
-
     });
 
     onUnmounted(() => {
@@ -35,18 +34,21 @@ function initDrag () {
 
     let parent: HTMLElement;
     let target: HTMLElement;
-    let isFirst = true;
 
     let isMouseDown = false;
 
     let offsetX = 0;
     let offsetY = 0;
 
+    const setTransform = (left: number, top: number) => {
+        parent.style.transform = `translate(${left}px, ${top}px)`;
+    };
+
     const modifyPos = (e: MouseEvent) => {
         left = e.clientX - offsetX;
         top = e.clientY - offsetY;
         if (top < MenuHeight) top = MenuHeight;
-        parent.style.transform = `translate(${left}px, ${top}px)`;
+        setTransform(left, top);
     };
 
     const clearMouseDown = () => {
@@ -60,17 +62,18 @@ function initDrag () {
 
     function onMouseDown (e: MouseEvent) {
         isMouseDown = true;
-
         const { left, top } = target.getBoundingClientRect();
         offsetX = e.clientX - left;
         offsetY = e.clientY - top;
+    }
 
-        if (isFirst) {
-            modifyPos(e);
-            isFirst = false;
-            parent.style.left = '0';
-            parent.style.top = '0';
-        }
+    function initPosition () {
+        const { x, y } = parent.getBoundingClientRect();
+        parent.style.left = '0';
+        parent.style.top = '0';
+
+        setTransform(x, y);
+
     }
 
     return {
@@ -83,6 +86,8 @@ function initDrag () {
             window.addEventListener('mousemove', onMouseMove, false);
             target.addEventListener('mouseup', clearMouseDown, false);
             window.addEventListener('mouseup', clearMouseDown, false);
+
+            initPosition();
         },
         clearEvents () {
             target.removeEventListener('mousedown', onMouseDown, false);

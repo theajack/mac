@@ -7,3 +7,8 @@
 export interface IJson<T = any> {
     [prop: string]: T
 }
+
+export interface ISize {
+    width: number;
+    height: number;
+}
