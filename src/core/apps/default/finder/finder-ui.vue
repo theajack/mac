@@ -9,8 +9,9 @@
 
 <template>
   <div>
-    test
-    <iframe style="width: 400px; height: 300px;" src="https://shiyix.cn/iproxy/vscode" />
+    <!-- <iframe style="width: 400px; height: 300px;" src="https://github1s.com/" />
+    <iframe style="width: 400px; height: 300px;" src="https://bilibili.com/" />
+    <iframe style="width: 400px; height: 300px;" src="https://bing.com/" /> -->
   </div>
 </template>
 

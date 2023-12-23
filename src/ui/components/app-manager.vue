@@ -5,15 +5,15 @@
 -->
 
 <script setup lang="ts">
-import { OS } from '@/core/os/os';
-import { IWindowStatus } from '@/core/os/window';
+import type { OS } from '@/core/os/os';
+import type { IWindowStatus } from '@/core/os/window';
 import { ref } from 'vue';
-import event from 'tc-event';
 import Window from './common/window/window.vue';
+import { MacEvent } from '@/core/os/event-bus';
 
 const windowStatus = ref<IWindowStatus[]>([]);
 
-event.regist('OS_INITED', (os: OS) => {
+MacEvent.on('os-inited', (os: OS) => {
     // console.log(os.appManager.windowStatus);
     windowStatus.value = os.appManager.windowStatus;
 });

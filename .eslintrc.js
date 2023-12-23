@@ -25,6 +25,7 @@ module.exports = {
             'error',
             'interface'
         ],
+        '@typescript-eslint/consistent-type-imports': 1,
         '@typescript-eslint/no-unused-vars': 'error', // 使用 ts 未使用变量的规则 比如枚举类型在es中会报错
         'no-extend-native': 0,
         'no-new': 0,

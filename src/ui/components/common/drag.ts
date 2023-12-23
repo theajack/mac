@@ -1,7 +1,9 @@
 import { MenuHeight } from '@/ui/style/common';
-import { onMounted, Ref, onUnmounted } from 'vue';
-import $, { Ele } from 'easy-dom-util';
-import { IJson } from '@/types';
+import type { Ref } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
+import type { Ele } from 'easy-dom-util';
+import $ from 'easy-dom-util';
+import type { IJson } from '@/types';
 
 export function initWindow (
     domRef: Ref<HTMLElement>,
@@ -71,6 +73,7 @@ function initDrag () {
         const { x, y } = parent.getBoundingClientRect();
         parent.style.left = '0';
         parent.style.top = '0';
+        console.log(parent.offsetHeight);
 
         setTransform(x, y);
 
@@ -87,7 +90,10 @@ function initDrag () {
             target.addEventListener('mouseup', clearMouseDown, false);
             window.addEventListener('mouseup', clearMouseDown, false);
 
-            initPosition();
+            setTimeout(() => {
+                // ! 等待dom高度有值，否在在auto时会导致位置不对
+                initPosition();
+            }, 50);
         },
         clearEvents () {
             target.removeEventListener('mousedown', onMouseDown, false);

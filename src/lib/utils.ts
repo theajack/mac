@@ -3,7 +3,23 @@
  * @Date: 2022-09-11 07:58:38
  * @Description: Coding something
  */
-import { TWriteType } from '@/core/disk/saver/reader';
+
+export function cache (
+    // @ts-ignore
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor
+) {
+    const { get } = descriptor; // 获取原来方法
+    descriptor.get = function () {
+        const target = this as any;
+        let v = target[`__${propertyKey}`];
+        if (!v) {
+            v = target[`__${propertyKey}`] = get?.call(target);
+        }
+        return v;
+    };
+}
 
 export function countStringBytes (str: string): number {
     let totalLength = 0;
@@ -70,7 +86,7 @@ export function basePromiseify<T = any> (
 }
 
 export function readFile (file:File, mimetype = 'text/plain') {
-    return new Promise<TWriteType>((resolve) => {
+    return new Promise<any>((resolve) => {
         const reader = new FileReader();
         reader.onload = function (e) {
             resolve(e.target?.result || null);
@@ -140,4 +156,11 @@ export function buildDate () {
 
 export function fixNumber (number: number) {
     return number < 10 ? `0${number}` : number;
+}
+
+export function transformSize (base: number, value?: number|'auto', defRate = 0.8) {
+    if (typeof value === 'string') return value;
+    if (!value) return base * defRate;
+    if (value < 1) return base * value;
+    return value;
 }

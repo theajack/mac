@@ -4,18 +4,21 @@
  * @Description: Coding something
  */
 import { toast } from '@/ui/components/common/toast/toast';
-import { Event } from '@core/enum';
-import { AppEventModule, sendMessageToApp } from '@core/os/event-bus';
+import { MacEvent, sendMessageToApp } from '@core/os/event-bus';
+import type { IWindowOptions } from '@core/os/window';
 import { Window } from '@core/os/window';
 import { OS } from '../os/os';
 import { appNameToTitle } from './app-config';
-import { AppManager } from './app-manager';
-import { IAppStatus, IApp, IAppMessageBase, IAppMessage } from './type';
-import { nextTick } from 'vue';
+import type { AppManager } from './app-manager';
+import type { IAppStatus, IApp, IAppMessageBase, IAppMessage } from './type';
+import type { App as VueApp } from 'vue';
+import { nextTick, createApp } from 'vue';
+import { cache } from '@/lib/utils';
 
 export class App implements IApp {
     name: string;
     icon: string;
+    component?: VueApp;
     defCaptureSrc = '';
     title: string;
     status: IAppStatus;
@@ -48,12 +51,20 @@ export class App implements IApp {
         this.status = status;
         this.onMessage = onMessage;
 
-        AppEventModule.regist(Event.AppMessage, (data) => {
+        MacEvent.on('app-message', (data) => {
             if (this.onMessage && data.to === this.name) {
                 this.onMessage(data);
             }
         });
     }
+
+    @cache get on () {
+        return MacEvent.on.bind(MacEvent) as typeof MacEvent.on;
+    }
+    @cache get emit () {
+        return MacEvent.emit.bind(MacEvent) as typeof MacEvent.emit;
+    }
+
 
     sendMessageToApp ({
         to,
@@ -78,23 +89,25 @@ export class App implements IApp {
 
     }
 
-    async openNewWindow () {
+    async openNewWindow (options: {
+        component?: any,
+    } & Partial<IWindowOptions> = {}) {
         if (!this.isRunning) {
             this.manager.enterApp(this);
         }
-        const window = new Window({ parent: this });
+        if (typeof options.title !== 'string') {
+            options.title = this.name;
+        }
+        const window = new Window({ parent: this, ...options });
         this.windows.push(window);
         this.manager.windowStatus.push(window.status);
 
-        // if (!this.defCaptureSrc) {
-        //     setTimeout(() => { // 等待元素渲染好
-        //         window.capture().then(url => {
-        //             this.defCaptureSrc = url;
-        //         });
-        //     }, 50);
-        // }
-
         await nextTick();
+
+        if (options.component) {
+            this.component = createApp(options.component);
+            this.component.mount(window.dom);
+        }
 
         return window;
     }
@@ -103,7 +116,7 @@ export class App implements IApp {
         this.windows.splice(this.windows.indexOf(window), 1);
 
         this.manager.removeWindowStatus(window);
-
+        this.component?.unmount();
         window.removeUI();
 
         if (this.windows.length === 0 && !this.canBackground) {

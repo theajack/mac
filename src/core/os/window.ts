@@ -6,33 +6,60 @@
 
 import { toastText } from '@/ui/components/common/toast/toast';
 import { reactive } from 'vue';
-import { IJson } from 'webos-term';
-import { App } from '../apps/app';
+import type { IJson } from 'webos-term';
+import type { App } from '../apps/app';
 // import html2canvas from 'html2canvas';
 import { WindowCapture } from './window-capture';
+import { WindowHeight, WindowWidth } from '@/ui/style/common';
+import { transformSize } from '@/lib/utils';
+
+export interface IHeaderBtnStatus {
+    active?: boolean;
+    disabled?: boolean;
+}
+
+export type IHeaderBtns = {
+    gap: number;
+} & {
+    [key in 'close' | 'min' | 'full']: IHeaderBtnStatus;
+};
+
+export interface IWindowOptions {
+    title?: string,
+    events: IJson<()=>void>,
+    buttons?: Partial<IHeaderBtns>;
+    width?: number|'auto',
+    height?: number|'auto',
+    headerBgColor?: string,
+}
 
 export class WindowHeader {
-    buttons: {
-        gap: number;
-    } & {
-        [key in 'close' | 'min' | 'full']: {
-            active?: boolean;
-            disabled?: boolean;
-        }
-    };
-    title = 'Title';
+    buttons: IHeaderBtns;
+    title = 'Window';
     id = 0;
     events: IJson<()=>void>;
+    background = '';
 
-    constructor (id: number, events: IJson<()=>void>) {
+    constructor ({
+        id,
+        events,
+        buttons = {},
+        title = 'Window',
+        headerBgColor = '#38343c',
+    }: {
+        id: number,
+    } & IWindowOptions) {
+        this.title = title,
         this.id = id;
-        this.events = events;
-        this.buttons = {
+        this.events = events || {};
+        this.background = headerBgColor;
+
+        this.buttons = Object.assign({
             min: {},
             close: {},
             full: {},
             gap: 10,
-        };
+        }, buttons);
     }
 }
 
@@ -46,10 +73,12 @@ export interface IWindowStatus {
     isFullscreen: boolean;
     header: WindowHeader;
     visible: boolean;
-    events: IJson<()=>void>
+    events: IJson<()=>void>;
+    width: number,
+    height: number,
 }
 
-export function createWindowStatus (events: IJson<()=>void>): IWindowStatus {
+export function createWindowStatus (header: IWindowOptions): IWindowStatus {
     const id = idIndex ++;
     return {
         isFullscreen: false,
@@ -58,8 +87,10 @@ export function createWindowStatus (events: IJson<()=>void>): IWindowStatus {
         isOnTop: true,
         status: 'normal',
         visible: true,
-        events,
-        header: new WindowHeader(id, events),
+        width: transformSize(WindowWidth, header.width),
+        height: transformSize(WindowHeight, header.height),
+        events: header.events,
+        header: new WindowHeader(Object.assign(header, { id })),
     };
 }
 
@@ -76,19 +107,18 @@ export class Window {
 
     private _dom: HTMLElement;
 
-    constructor ({
-        parent,
-    }: {
-        headerGap?: number;
+    constructor (options: {
         parent: App;
-    }) {
-        this.status = reactive(createWindowStatus({
-            closeWindow: () => this.close(),
-            minimize: () => this.minimize(),
-            maximize: () => this.maximize()
-        }));
+    } & Partial<IWindowOptions>) {
+        this.status = reactive(createWindowStatus(Object.assign({
+            events: {
+                closeWindow: () => this.close(),
+                minimize: () => this.minimize(),
+                maximize: () => this.maximize()
+            },
+        }, options)));
         this.id = this.status.id;
-        this.parent = parent;
+        this.parent = options.parent;
     }
 
     // async capture () {

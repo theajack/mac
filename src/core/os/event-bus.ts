@@ -3,22 +3,28 @@
  * @Date: 2022-09-21 21:09:10
  * @Description: Coding something
  */
-import event from 'tc-event';
-import { IAppMessage } from '../apps/type';
-import { Event } from '../enum';
+import Eveit from 'eveit';
+import type { IAppMessage } from '../apps/type';
+import type { OS } from './os';
+
 
 export const ApiSymbol = Symbol('api');
+// todo 当有新事件加入时 请在下面加入声明
+// @ts-ignore
+export const MacEvent = new Eveit<{ // EEvent
+    'app-message': [IAppMessage];
 
-export const AppEventModule = event.createModule('app');
+    'os-inited': [OS]
+}>();
 
-export const OSEventModule = event.createModule('os');
+MacEvent.usePrevEmit = true;
 
 export function sendMessageToApp ({
     from = ApiSymbol,
     to,
     data
 }: IAppMessage) {
-    AppEventModule.emit(Event.AppMessage, {
+    MacEvent.emit('app-message', {
         from,
         to,
         data,

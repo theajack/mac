@@ -5,7 +5,7 @@
 -->
 <script setup lang="ts">
 import { ref } from 'vue';
-import { WindowHeader } from '@/core/os/window';
+import type { WindowHeader } from '@/core/os/window';
 import { initWindow } from '../drag';
 const props = defineProps<{
   header: WindowHeader
@@ -18,7 +18,13 @@ initWindow(headerDom);
 
 </script>
 <template>
-  <div ref="headerDom" class="os-window-header">
+  <div
+    ref="headerDom"
+    class="os-window-header"
+    :style="{
+      'background-color': header.background
+    }"
+  >
     <div class="os-win-h-btn no-select" @mousedown.stop>
       <div class="os-win-hb hb-close" @click="closeWindow">
         <span class="hb-inner">×</span>
@@ -36,7 +42,6 @@ initWindow(headerDom);
 
 <style scoped lang="less">
   .os-window-header {
-    background-color: #38343c;
     position: absolute;
     min-height: 28px;
     width: 100%;
