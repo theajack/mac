@@ -7,16 +7,17 @@ import { createApp } from 'vue';
 import Entry from './entry.vue';
 import { initFullscreen } from './lib/fullscreen';
 import router from './router';
-import store from './store';
+import { createPinia } from 'pinia';
 import './style/common.less';
+import './style/tailwind-output.css';
 
 export function initUI () {
 
     initFullscreen();
 
-    createApp(Entry)
-        .use(store)
-        .use(router)
+    const app = createApp(Entry);
+    app.use(router)
+        .use(createPinia())
         .mount('#app');
 }
 

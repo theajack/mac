@@ -8,7 +8,7 @@ import { toastText } from '@/ui/components/common/toast/toast';
 import { reactive } from 'vue';
 import { IJson } from 'webos-term';
 import { App } from '../apps/app';
-import html2canvas from 'html2canvas';
+// import html2canvas from 'html2canvas';
 import { WindowCapture } from './window-capture';
 
 export class WindowHeader {

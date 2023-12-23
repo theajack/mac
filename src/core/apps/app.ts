@@ -7,11 +7,11 @@ import { toast } from '@/ui/components/common/toast/toast';
 import { Event } from '@core/enum';
 import { AppEventModule, sendMessageToApp } from '@core/os/event-bus';
 import { Window } from '@core/os/window';
-import { nextTick } from 'vue';
 import { OS } from '../os/os';
 import { appNameToTitle } from './app-config';
 import { AppManager } from './app-manager';
 import { IAppStatus, IApp, IAppMessageBase, IAppMessage } from './type';
+import { nextTick } from 'vue';
 
 export class App implements IApp {
     name: string;
@@ -78,7 +78,7 @@ export class App implements IApp {
 
     }
 
-    openNewWindow () {
+    async openNewWindow () {
         if (!this.isRunning) {
             this.manager.enterApp(this);
         }
@@ -93,6 +93,8 @@ export class App implements IApp {
         //         });
         //     }, 50);
         // }
+
+        await nextTick();
 
         return window;
     }

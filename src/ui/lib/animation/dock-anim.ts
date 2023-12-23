@@ -140,6 +140,8 @@ export function createDockAnimation (
     if (!target.rangRight) target.rangRight = 0;
     if (!target.range) target.range = 0;
 
+    const clearPath = () => {dom.style.clipPath = 'none';};
+
     const middlePoint = buildMiddlePoint(source, target, size);
 
     const originSource = Object.assign({}, source);
@@ -154,6 +156,7 @@ export function createDockAnimation (
         list: [ source, middlePoint, target ],
         onUpdate,
         onComplete () {
+            clearPath();
             onComplete();
         },
         time: 500,
@@ -169,6 +172,7 @@ export function createDockAnimation (
             list: [ target, middlePoint, originSource ],
             onUpdate,
             onComplete () {
+                clearPath();
                 onComplete?.();
             },
             time: 500,

@@ -24,7 +24,6 @@ export class OS {
         this.disk = new Disk();
         this.appManager = new AppManager(this);
         OS.instance = this;
-
         event.emit('OS_INITED', this);
     }
 

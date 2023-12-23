@@ -5,6 +5,17 @@
 -->
 #  Build Amazing macOS in your browser
 
+<p align="left">
+    <a href="https://www.github.com/theajack/mac/stargazers" target="_black">
+        <img src="https://img.shields.io/github/stars/theajack/mac?logo=github" alt="stars" />
+    </a>
+    <a href="https://www.github.com/theajack/mac/network/members" target="_black">
+        <img src="https://img.shields.io/github/forks/theajack/mac?logo=github" alt="forks" />
+    </a>
+    <a href="https://github.com/theajack/mac/issues"><img src="https://img.shields.io/github/issues-closed/theajack/mac.svg" alt="issue"></a>
+    <img src="https://shiyix.cn/api2/util/badge/stat?c=Visitors-Mac" alt="visitors">
+</p>
+
 [Live Demo](https://theajack.github.io/mac)
 
 Terminal App is Based on [WebOS](https://github.com/theajack/webos)

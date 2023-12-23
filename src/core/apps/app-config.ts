@@ -16,6 +16,11 @@ import { SystemPreferences } from './default/prefer';
 import { Terminal } from './default/terminal';
 import { Trash } from './default/trash';
 import { IAppStatus } from './type';
+import { Calculator } from './default/calculator';
+import { Launcher } from './default/launcher';
+import { Safari } from './default/safari';
+import { Notes } from './default/notes';
+import { Siri } from './default/siri';
 
 export enum AppNames {
     finder = 'finder',
@@ -23,6 +28,11 @@ export enum AppNames {
     trash = 'trash',
     appStore = 'app-store',
     terminal = 'terminal',
+    calculator = 'calculator',
+    launcher = 'launcher',
+    notes = 'notes',
+    safari = 'safari',
+    siri = 'siri',
 }
 
 export const DefaultApps: {
@@ -33,7 +43,30 @@ export const DefaultApps: {
     [AppNames.trash]: Trash,
     [AppNames.appStore]: AppStore,
     [AppNames.terminal]: Terminal,
+    [AppNames.calculator]: Calculator,
+    [AppNames.launcher]: Launcher,
+    [AppNames.safari]: Safari,
+    [AppNames.notes]: Notes,
+    [AppNames.siri]: Siri,
 };
+
+export function createDefaultApps ():
+    {[prop in AppNames]: IAppConfig}
+{
+    let dockIndex = 1;
+    return {
+        [AppNames.finder]: { name: AppNames.finder, dockIndex: dockIndex++ },
+        [AppNames.launcher]: { name: AppNames.launcher, dockIndex: dockIndex++ },
+        [AppNames.appStore]: { name: AppNames.appStore, dockIndex: dockIndex++ },
+        [AppNames.notes]: { name: AppNames.notes, dockIndex: dockIndex++ },
+        [AppNames.safari]: { name: AppNames.safari, dockIndex: dockIndex++ },
+        [AppNames.siri]: { name: AppNames.siri, dockIndex: dockIndex++ },
+        [AppNames.systemPreferences]: { name: AppNames.systemPreferences, dockIndex: dockIndex++ },
+        [AppNames.terminal]: { name: AppNames.terminal, dockIndex: dockIndex++ },
+        [AppNames.calculator]: { name: AppNames.calculator, dockIndex: dockIndex++ },
+        [AppNames.trash]: { name: AppNames.trash, dockIndex: 1000 },
+    };
+}
 
 export function appNameToTitle (name: string): string {
     return charSplitToSpaceSplit(name, '-');
@@ -68,17 +101,6 @@ export async function createApp (config: IAppConfig) {
     return new AppClass();
 }
 
-export function createDefaultApps ():
-    {[prop in AppNames]: IAppConfig}
-{
-    return {
-        [AppNames.finder]: { name: AppNames.finder, dockIndex: 1 },
-        [AppNames.appStore]: { name: AppNames.appStore, dockIndex: 2 },
-        [AppNames.systemPreferences]: { name: AppNames.systemPreferences, dockIndex: 3 },
-        [AppNames.trash]: { name: AppNames.trash, dockIndex: 1000 },
-        [AppNames.terminal]: { name: AppNames.terminal, dockIndex: 4 },
-    };
-}
 
 function onClick (this: ISelectItem) {
     toast({

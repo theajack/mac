@@ -37,6 +37,9 @@ function initDevHelper (os: OS) {
                 buttonText: 'Button',
                 duration
             });
+        },
+        refreshApps () {
+            os.appManager.refreshConfigFiles();
         }
     };
 }

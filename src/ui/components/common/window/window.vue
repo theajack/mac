@@ -22,7 +22,7 @@ const width = `${WindowWidth * 0.8}px`;
     :style="{'z-index': status.zIndex}"
   >
     <WindowHeader :header="status.header" />
-    <div :id="'WINDOW_DOM_'+status.id" />
+    <div :id="'WINDOW_DOM_'+status.id" class="window-body" />
   </div>
 </template>
 
@@ -41,6 +41,9 @@ const width = `${WindowWidth * 0.8}px`;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: var(--box-shadow);
+  }
+  .window-body{
+    padding-top: 28px;
   }
 </style>
 

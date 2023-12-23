@@ -5,7 +5,7 @@
  */
 import { buildTransform, createDockAnimation } from '@/ui/lib/animation/dock-anim';
 import { reactive } from 'vue';
-import { IJson, ISize } from '../type';
+import { ISize } from '../type';
 import { Window } from './window';
 
 let captureIndex = 0;
