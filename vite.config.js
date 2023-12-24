@@ -11,6 +11,7 @@ import legacy from '@vitejs/plugin-legacy';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
+    const isDev = mode === 'development';
     return {
         // base: isDev ? '/' : '/',
         plugins: [
@@ -25,7 +26,7 @@ export default defineConfig(({ mode }) => {
         define: {
             __DEV__: mode === 'development',
         },
-        base: '/mac',
+        base: isDev ? '/mac' : 'https://cdn.jsdelivr.net/gh/theajack/mac@gh-pages/',
         build: {
             rollupOptions: {
                 output: {

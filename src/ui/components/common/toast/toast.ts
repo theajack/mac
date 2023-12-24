@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { App } from '@/core/apps/app';
+import type { App } from '@/core/apps/app';
 import { AudioPlayer } from '@/core/audio';
 import { getToast } from '@/core/context';
 import { delay } from '@/lib/utils';

@@ -4,6 +4,8 @@
  * @Description: Coding something
  */
 
+import { isDev } from '@/core/context';
+
 export function cache (
     // @ts-ignore
     target: any,
@@ -183,4 +185,9 @@ export function createDoubleClick (gap = 400) {
             }
         }
     };
+}
+
+export function resource (name: string) {
+    const base = isDev ? '/mac/' : 'https://cdn.jsdelivr.net/gh/theajack/mac@gh-pages/';
+    return `${base}assets/${name}`;
 }

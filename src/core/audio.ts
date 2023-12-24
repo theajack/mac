@@ -4,6 +4,8 @@
  * @Description: Coding something
  */
 
+import { resource } from '@/lib/utils';
+
 const AudioKeys = [ 'toast' ] as const;
 
 type TAudioKey = (typeof AudioKeys)[number]
@@ -22,7 +24,7 @@ function play (name: TAudioKey) {
 }
 
 function buildSrc (name: string) {
-    return `/mac/assets/audio/${name}.mp3`;
+    return resource(`audio/${name}.mp3`);
 }
 
 export function initAudioPlayer () {

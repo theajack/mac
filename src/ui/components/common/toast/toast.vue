@@ -37,7 +37,7 @@ const {
       </div>
     </div>
     <i class="ei-angle-right ot-arrow" />
-    <span class="ot-close bg-blur cursor-default" @click.stop="clearToast">
+    <span class="ot-close bg-blur cursor-default flex-center" @click.stop="clearToast">
       <span>×</span>
     </span>
   </div>
@@ -109,6 +109,9 @@ const {
       align-items: center;
       &:before{
         border-radius: 50%;
+      }
+      span{
+        top: -1px;
       }
     }
     &:hover{

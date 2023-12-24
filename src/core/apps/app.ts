@@ -14,7 +14,7 @@ import type { AppManager } from './app-manager';
 import type { IAppStatus, IApp, IAppMessageBase, IAppMessage } from './type';
 import type { App as VueApp } from 'vue';
 import { nextTick, createApp } from 'vue';
-import { cache } from '@/lib/utils';
+import { cache, resource } from '@/lib/utils';
 
 export class App implements IApp {
     name: string;
@@ -47,7 +47,7 @@ export class App implements IApp {
     }) {
         this.name = name;
         this.manager = OS.instance.appManager;
-        this.icon = icon || `/mac/assets/icons/${name}.png`;
+        this.icon = icon || resource(`icons/${name}.png`);
         this.title = title || appNameToTitle(name);
         this.status = status;
         this.onMessage = onMessage;
