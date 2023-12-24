@@ -5,7 +5,7 @@
  */
 
 import { toastText } from '@/ui/components/common/toast/toast';
-import { reactive } from 'vue';
+import { nextTick, reactive } from 'vue';
 import type { App } from '../../apps/app';
 // import html2canvas from 'html2canvas';
 import { WindowCapture } from './window-capture';
@@ -19,7 +19,7 @@ let idIndex = 0;
 
 export interface IWindowOptions {
     enableResize?: boolean;
-    paddingTop?: number;
+    marginTop?: number;
 }
 
 export function createWindowStatus (
@@ -28,6 +28,7 @@ export function createWindowStatus (
     const id = idIndex ++;
     return {
         isFullscreen: false,
+        isMax: false,
         id: id,
         zIndex: 0,
         isOnTop: true,
@@ -38,7 +39,27 @@ export function createWindowStatus (
         events: options.events,
         header: new WindowHeader(Object.assign(options, { id })),
         enableResize: options.enableResize ?? true,
-        paddingTop: options.paddingTop ?? 28,
+        marginTop: options.marginTop ?? 28,
+        x: 0,
+        y: 0,
+        inited: false,
+        transform () {
+            return this.inited ?
+                `translate(${this.x}px, ${this.y}px)` :
+                `translate(-50%, -50%)`;
+        },
+        clearList: [] as (()=>void)[],
+        animation: false,
+        _timer: null as any,
+        async $animate (fn: ()=>void) {
+            clearTimeout(this._timer);
+            this.animation = true;
+            await nextTick();
+            fn();
+            this._timer = setTimeout(() => {
+                this.animation = false;
+            }, 310);
+        }
     };
 }
 export type IWindowStatus = ReturnType<typeof createWindowStatus>;

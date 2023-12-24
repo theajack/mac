@@ -19,7 +19,9 @@ export class Finder extends App {
     }
     async onOpen () {
         await this.openNewWindow({
-            component: FinderUI
+            component: FinderUI,
+            width: 0.6,
+            height: 0.6
         });
     }
 

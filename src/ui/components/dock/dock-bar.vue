@@ -65,6 +65,7 @@ const trash = getTrash();
   border-radius: 14px;
   box-shadow: var(--box-shadow);
   z-index: 10;
+  width: max-content;
 
   .dock-split{
     display: inline-block;

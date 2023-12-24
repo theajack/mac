@@ -34,6 +34,7 @@ const onClick = () => {
     flex: 1;
     margin-right: 12px;
     position: relative;
+    flex-shrink: 0;
     &:last-child{
       margin-right: 0;
     }

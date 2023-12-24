@@ -8,7 +8,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia';
 
 export const useStore = defineStore('store', {
     state: () => ({
-        showAuthBool: false,
+        windowMaxZIndex: 0,
     }),
 
     actions: {
@@ -17,6 +17,8 @@ export const useStore = defineStore('store', {
     }
 });
 
+// @ts-ignore
 if (import.meta.hot) {
+    // @ts-ignore
     import.meta.hot.accept(acceptHMRUpdate(useStore, import.meta.hot));
 }

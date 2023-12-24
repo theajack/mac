@@ -20,7 +20,9 @@ MacEvent.on('os-inited', (os: OS) => {
 </script>
 
 <template>
-  <Window v-for="status in windowStatus" :key="status.id" :status="status" />
+  <div>
+    <Window v-for="status in windowStatus" :key="status.id" :status="status" />
+  </div>
 </template>
 
 <style scoped lang="less">

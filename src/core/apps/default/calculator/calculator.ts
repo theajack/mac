@@ -23,7 +23,7 @@ export class Calculator extends App {
             height: 'auto',
             headerBgColor: 'transparent',
             enableResize: false,
-            paddingTop: 0,
+            marginTop: 0,
         });
     }
 }

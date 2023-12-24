@@ -19,3 +19,6 @@ window.addEventListener('resize', () => {
     WindowHeight = window.innerHeight;
     WindowWidth = window.innerWidth;
 });
+
+// 扩展坞的上边搞
+export const DockTop = 72 + 5;

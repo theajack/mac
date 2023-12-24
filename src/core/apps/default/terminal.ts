@@ -23,7 +23,6 @@ export class Terminal extends App {
         const window = await this.openNewWindow({
             width: 700,
             height: 500,
-            headerBgColor: '#38343c33'
         });
         createTerm({ container: window.dom });
     }

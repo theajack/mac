@@ -164,3 +164,23 @@ export function transformSize (base: number, value?: number|string, defRate = 0.
     if (value < 1) return base * value;
     return value;
 }
+
+export function createDoubleClick (gap = 400) {
+    let start = -1;
+
+    return () => {
+        const now = Date.now();
+        if (start < 0) {
+            start = now;
+            return false;
+        } else {
+            if (now - start < gap) {
+                start = -1;
+                return true;
+            } else {
+                start = now;
+                return false;
+            }
+        }
+    };
+}

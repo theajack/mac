@@ -15,14 +15,14 @@ export function initWindow (
     let parent: HTMLElement;
     let target: HTMLElement;
 
-    const { initEvents, clearEvents } = initDrag();
+    const { initEvents, clearEvents } = initDrag(status);
 
     onMounted(() => {
         target = domRef.value;
         parent = handleParent(target);
         initEvents(target, parent);
         if (status.enableResize) {
-            initWindowResize(parent);
+            initWindowResize(parent, status);
         }
     });
 
@@ -31,7 +31,7 @@ export function initWindow (
     });
 }
 
-function initDrag () {
+function initDrag (status: IWindowStatus) {
 
     let left = 0;
     let top = 0;
@@ -45,7 +45,9 @@ function initDrag () {
     let offsetY = 0;
 
     const setTransform = (left: number, top: number) => {
-        parent.style.transform = `translate(${left}px, ${top}px)`;
+        status.x = left;
+        status.y = top;
+        status.isMax = false;
     };
 
     const modifyPos = (e: MouseEvent) => {
@@ -73,12 +75,8 @@ function initDrag () {
 
     function initPosition () {
         const { x, y } = parent.getBoundingClientRect();
-        parent.style.left = '0';
-        parent.style.top = '0';
-        console.log(parent.offsetHeight);
-
         setTransform(x, y);
-
+        status.inited = true;
     }
 
     return {
@@ -106,65 +104,146 @@ function initDrag () {
     };
 }
 
-function createEdge (style: IJson): Ele {
-    return ($.create('div')
+function createEdge (
+    status: IWindowStatus,
+    style: IJson,
+    onresize: (x: number, y: number)=>void
+): Ele {
+    const el = ($.create('div')
         .cls('window-edge') as Ele)
         .style(style) as Ele;
+    let isMouseDown = false;
+    el.on({
+        mousedown: () => {
+            isMouseDown = true;
+            document.body.style.cursor = style.cursor;
+        },
+        mouseup: () => {
+            isMouseDown = false;
+            document.body.style.cursor = 'auto';
+        },
+    });
+
+    const moveHandler = (e: MouseEvent) => {
+        if (!isMouseDown) return;
+        status.isMax = false; // ! 清空isMax状态
+        onresize(e.clientX, e.clientY);
+    };
+    const upHandler = () => {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+        document.body.style.cursor = 'auto';
+    };
+
+    window.addEventListener('mousemove', moveHandler);
+    window.addEventListener('mouseup', upHandler);
+    status.clearList.push(() => {
+        window.removeEventListener('mousemove', moveHandler);
+        window.removeEventListener('mouseup', upHandler);
+    });
+
+    return el;
 }
 
 
-function initWindowResize (parent: HTMLElement) {
+function initWindowResize (parent: HTMLElement, status: IWindowStatus) {
 
-    const top = createEdge({
-        width: '100%',
-        cursor: 'ns-resize',
-        left: 0,
-        top: 0,
-    });
-    const right = createEdge({
-        height: '100%',
-        cursor: 'ew-resize',
-        top: 0,
-        right: 0,
-    });
-    const bottom = createEdge({
-        width: '100%',
-        cursor: 'ns-resize',
-        left: 0,
-        bottom: 0,
-    });
-    const left = createEdge({
-        height: '100%',
-        cursor: 'ew-resize',
-        top: 0,
-        left: 0,
-    });
+    const MIN_SIZE = 200;
 
-    const l_t = createEdge({
-        cursor: 'nwse-resize',
-        top: 0,
-        left: 0,
-    });
-    const r_t = createEdge({
-        cursor: 'nesw-resize',
-        top: 0,
-        right: 0,
-    });
-    const r_b = createEdge({
-        cursor: 'nwse-resize',
-        bottom: 0,
-        right: 0,
-    });
-    const l_b = createEdge({
-        cursor: 'nesw-resize',
-        bottom: 0,
-        right: 0,
+    const formatHeight = () => {if (typeof status.height === 'string') { status.height = parent.offsetHeight;}};
+
+    const formatWidth = () => {if (typeof status.width === 'string') { status.width = parent.offsetWidth;}};
+
+
+    const topResize = (x: number, y: number) => {
+        const prevY = status.y;
+        formatHeight();
+        // @ts-ignore
+        const newValue = status.height + (prevY - y);
+        if (newValue < MIN_SIZE) return;
+        status.height = newValue;
+        status.y = y;
+    };
+
+    const rightResize = (x: number) => {
+        formatWidth();
+        const newValue = (x - status.x);
+        if (newValue < MIN_SIZE) return;
+        status.width = newValue;
+    };
+
+    const bottomResize = (x: number, y: number) => {
+        formatHeight();
+        const newValue = (y - status.y);
+        if (newValue < MIN_SIZE) return;
+        status.height = newValue;
+    };
+
+    const leftResize = (x: number) => {
+        const prevX = status.x;
+        formatWidth();
+        // @ts-ignore
+        const newValue = status.width + (prevX - x);
+        if (newValue < MIN_SIZE) return;
+        status.width = newValue;
+        status.x = x;
+    };
+
+    const edgeConfig: IJson<{
+        style: IJson,
+        onresize(x: number, y: number): void;
+    }> = {
+        'top': {
+            style: { width: '100%', cursor: 'ns-resize', left: 0, top: 0, },
+            onresize: topResize
+        },
+        'right': {
+            style: { height: '100%', cursor: 'ew-resize', right: 0, top: 0 },
+            onresize: rightResize
+        },
+        'bottom': {
+            style: { width: '100%', cursor: 'ns-resize', left: 0, bottom: 0 },
+            onresize: bottomResize
+        },
+        'left': {
+            style: { height: '100%', cursor: 'ew-resize', left: 0, top: 0 },
+            onresize: leftResize
+        },
+        'l_t': {
+            style: { cursor: 'nwse-resize', left: 0, top: 0 },
+            onresize: (x, y) => {
+                leftResize(x);
+                topResize(x, y);
+            } },
+        'r_t': {
+            style: { cursor: 'nesw-resize', right: 0, top: 0 },
+            onresize: (x, y) => {
+                rightResize(x);
+                topResize(x, y);
+            } },
+        'r_b': {
+            style: { cursor: 'nwse-resize', right: 0, bottom: 0 },
+            onresize: (x, y) => {
+                rightResize(x);
+                bottomResize(x, y);
+            } },
+        'l_b': {
+            style: { cursor: 'nesw-resize', left: 0, bottom: 0 },
+            onresize: (x, y) => {
+                leftResize(x);
+                bottomResize(x, y);
+            }
+        },
+    };
+
+    // @ts-ignore
+    const children = Object.keys(edgeConfig).map(key => {
+        const { style, onresize } = edgeConfig[key];
+        return createEdge(status, style, onresize);
     });
 
     // @ts-ignore
-    $.query(parent).append(
-        top, right, bottom, left, l_t, r_t, r_b, l_b
-    );
+    $.query(parent).append(children);
 
 
     // 左右缩放 ew-resize

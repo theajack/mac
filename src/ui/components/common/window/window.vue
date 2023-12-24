@@ -6,27 +6,41 @@
 <script setup lang="ts">
 import type { IWindowStatus } from '@/core/os/window/window';
 import WindowHeader from './window-header.vue';
-defineProps<{
+import { useStore } from '@/ui/store';
+const props = defineProps<{
   status: IWindowStatus,
 }>();
 
+const store = useStore();
+
+function clickWindow () {
+    // eslint-disable-next-line vue/no-mutating-props
+    props.status.zIndex = ++store.windowMaxZIndex;
+}
 </script>
 
 <template>
   <div
-    v-show="status.visible" class="os-window window-blur"
+    v-show="status.visible"
+    class="os-window window-blur"
     :style="{
       'z-index': status.zIndex,
       width: status.width + 'px',
-      height: status.height + 'px'
+      height: status.height + 'px',
+      transform: status.transform(),
+      left: status.inited ? 0: '50%',
+      top: status.inited ? 0: '50%',
+      transition: status.animation ? 'all .3s ease': 'none',
     }"
+    @click="clickWindow"
   >
     <WindowHeader :status="status" />
     <div
       :id="'WINDOW_DOM_'+status.id"
       class="window-body"
       :style="{
-        'padding-top': status.paddingTop + 'px'
+        'margin-top': status.marginTop + 'px',
+        'height': `calc(100% - ${status.marginTop}px)`
       }"
     />
   </div>
@@ -48,7 +62,7 @@ defineProps<{
     border: 1px solid #5b5b5b
   }
   .window-body{
+    height: 100%;
+    overflow: auto;
   }
 </style>
-
-@/core/os/window/window

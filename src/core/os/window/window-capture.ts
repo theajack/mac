@@ -41,7 +41,6 @@ export class WindowCapture {
         WindowCapture.List.push(this);
         this.init(window);
 
-
         this.startCaptureAnimation();
     }
 
@@ -147,11 +146,11 @@ export class WindowCapture {
 
         if (!holder) throw new Error('CapturePlaceHolder not exist');
 
-        const targetLen = WindowCapture.LEN;
+        const targetLen = WindowCapture.LEN; // 缩略图边长
 
-        const scale = targetLen / Math.max(height, width);
+        const scale = targetLen / Math.max(height, width); // 缩放比例
 
-        const { x, y } = holder.getBoundingClientRect();
+        const { x, y } = holder.getBoundingClientRect(); // 缩略图参考点的坐标
 
         const targetHeight = height * scale;
         const targetWidth = width * scale;
@@ -165,9 +164,10 @@ export class WindowCapture {
 
         const targetX = x + offsetX - (targetLen + 12) / 2;
 
+
         const targetY = y + offsetY;
 
-        console.log(offsetX, offsetY);
+        console.log(targetX, offsetX, offsetY);
 
         return {
             offsetX,

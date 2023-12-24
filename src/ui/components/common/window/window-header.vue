@@ -7,6 +7,8 @@
 import { ref } from 'vue';
 import type { IWindowStatus } from '@/core/os/window/window';
 import { initWindow } from '../drag';
+import { createDoubleClick } from '@/lib/utils';
+import { MenuHeight, WindowWidth, WindowHeight, DockTop } from '@/ui/style/common';
 const props = defineProps<{
   status: IWindowStatus
 }>();
@@ -16,6 +18,41 @@ const { closeWindow, minimize, maximize } = props.status.header.events;
 const headerDom = ref();
 initWindow(headerDom, props.status);
 
+const isDoubleClick = createDoubleClick();
+
+let prevSize: any = null;
+
+async function onClick () {
+    const status = props.status;
+    if (!isDoubleClick() || !status.enableResize) return;
+
+
+    if (status.isMax) {
+        const [ x, y, width, height ] = prevSize;
+        status.$animate(() => {
+            status.isMax = false;
+            status.x = x;
+            status.y = y;
+            status.width = width;
+            status.height = height;
+        });
+        prevSize = null;
+    } else {
+        if (typeof status.height === 'string') { status.height = headerDom.value.parentElement.offsetHeight;}
+        if (typeof status.width === 'string') { status.width = headerDom.value.parentElement.offsetWidth;}
+        prevSize = [ status.x, status.y, status.width, status.height ];
+        status.$animate(() => {
+            status.isMax = true;
+            status.x = 0;
+            status.y = MenuHeight;
+            status.width = WindowWidth;
+            status.height = WindowHeight - MenuHeight - DockTop;
+        });
+    }
+
+}
+
+
 </script>
 <template>
   <div
@@ -24,6 +61,7 @@ initWindow(headerDom, props.status);
     :style="{
       'background-color': status.header.headerBgColor
     }"
+    @click="onClick"
   >
     <div class="os-win-h-btn no-select" @mousedown.stop>
       <div class="os-win-hb hb-close" @click="closeWindow">
