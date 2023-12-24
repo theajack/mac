@@ -32,7 +32,7 @@ function clickWindow () {
       top: status.inited ? 0: '50%',
       transition: status.animation ? 'all .3s ease': 'none',
     }"
-    @click="clickWindow"
+    @mousedown="clickWindow"
   >
     <WindowHeader :status="status" />
     <div
