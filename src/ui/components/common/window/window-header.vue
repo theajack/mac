@@ -5,16 +5,16 @@
 -->
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { WindowHeader } from '@/core/os/window';
+import type { IWindowStatus } from '@/core/os/window/window';
 import { initWindow } from '../drag';
 const props = defineProps<{
-  header: WindowHeader
+  status: IWindowStatus
 }>();
 
-const { closeWindow, minimize, maximize } = props.header.events;
+const { closeWindow, minimize, maximize } = props.status.header.events;
 
 const headerDom = ref();
-initWindow(headerDom);
+initWindow(headerDom, props.status);
 
 </script>
 <template>
@@ -22,7 +22,7 @@ initWindow(headerDom);
     ref="headerDom"
     class="os-window-header"
     :style="{
-      'background-color': header.background
+      'background-color': status.header.headerBgColor
     }"
   >
     <div class="os-win-h-btn no-select" @mousedown.stop>
@@ -36,7 +36,7 @@ initWindow(headerDom);
         <span class="hb-inner">+</span>
       </div>
     </div>
-    <div class="os-win-h-title no-select">{{ header.title }}</div>
+    <div class="os-win-h-title no-select">{{ status.header.title }}</div>
   </div>
 </template>
 
@@ -45,6 +45,7 @@ initWindow(headerDom);
     position: absolute;
     min-height: 28px;
     width: 100%;
+    z-index: 10;
     .os-win-h-btn{
         position: fixed;
         top: 4px;
@@ -97,4 +98,3 @@ initWindow(headerDom);
     }
   }
 </style>
-

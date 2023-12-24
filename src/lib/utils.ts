@@ -158,7 +158,7 @@ export function fixNumber (number: number) {
     return number < 10 ? `0${number}` : number;
 }
 
-export function transformSize (base: number, value?: number|'auto', defRate = 0.8) {
+export function transformSize (base: number, value?: number|string, defRate = 0.8) {
     if (typeof value === 'string') return value;
     if (!value) return base * defRate;
     if (value < 1) return base * value;

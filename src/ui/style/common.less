@@ -54,7 +54,7 @@
 .no-select {user-select: none;}
 .mb-2 {margin-bottom: 2px;}
 .WEBOS_CONTAINER{
-    background-color: #1e1e1e;
+    background-color: #1e1e1edd!important;
     padding: 10px!important;
     height: 100%;
     padding-top: 40px!important;
@@ -70,7 +70,10 @@
 .window-edge {
     position: absolute; 
     opacity: 0;
-    width: 8px; 
-    height: 8px;
+    width: 5px; 
+    height: 5px;
     .no-select;
+}
+.window-blur {
+    backdrop-filter: blur(30px);
 }

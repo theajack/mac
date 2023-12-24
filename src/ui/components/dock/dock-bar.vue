@@ -6,10 +6,11 @@
 
 <script setup lang="ts">
 import { getDockApps, getTempDockApps, getTrash } from '@/core/context';
-import { WindowCapture } from '@/core/os/window-capture';
+import { WindowCapture } from '@/core/os/window/window-capture';
 import { ref } from 'vue';
 import DockItem from './dock-item.vue';
 import DockCapture from './dock-capture.vue';
+import { App } from '@/core/apps/app';
 
 const apps = ref(getDockApps());
 
@@ -28,13 +29,13 @@ const trash = getTrash();
     <DockItem
       v-for="item in apps"
       :key="item.name"
-      :app="item"
+      :app="(item as App)"
     />
     <span v-show="tempApps.length > 0" class="dock-split" />
     <DockItem
       v-for="item in tempApps"
       :key="item.name"
-      :app="item"
+      :app="(item as App)"
     />
     <span class="dock-split" />
     <div id="windowCaptureContainer">
@@ -82,3 +83,4 @@ const trash = getTrash();
   // background-color: #000;
 }
 </style>
+@/core/os/window/window-capture

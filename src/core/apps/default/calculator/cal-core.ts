@@ -97,8 +97,8 @@ export function createCalculator () {
             case 'C': {
                 if (latest() !== E) {
                     modValue(() => E);
-                    setText('0');
                 }
+                setText('0');
                 setAC(true);
             } break;
             case 'AC': {

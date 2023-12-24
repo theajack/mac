@@ -4,7 +4,7 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { Window } from '@/core/os/window';
+import type { Window } from '@/core/os/window';
 import AppStaff from './dock-staff.vue';
 
 const props = defineProps<{
@@ -81,3 +81,4 @@ const onClick = () => {
   }
 }
 </style>
+@/core/os/window/window

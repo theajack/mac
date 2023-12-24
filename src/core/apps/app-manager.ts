@@ -4,16 +4,17 @@
  * @Description: Coding something
  */
 
-import { Dir, File } from 'webos-term';
-import { OS } from '../os/os';
-import { createApp, createDefaultApps, IAppConfig } from './app-config';
-import { IJson } from '../type';
-import { App } from './app';
+import type { Dir, File } from 'webos-term';
+import type { OS } from '../os/os';
+import type { IAppConfig } from './app-config';
+import { createApp, createDefaultApps } from './app-config';
+import type { IJson } from '../type';
+import type { App } from './app';
 import { StringText } from '../string';
 import { mainStatus } from '../status/main-status';
-import { IWindowStatus, Window } from '../os/window';
+import type { IWindowStatus, Window } from '../os/window/window';
 import { reactive } from 'vue';
-import { Trash } from './default/trash';
+import type { Trash } from './default/trash';
 
 export class AppManager {
     static DIR_NAME = StringText.appDir;

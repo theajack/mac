@@ -5,8 +5,9 @@
  */
 import { toast } from '@/ui/components/common/toast/toast';
 import { MacEvent, sendMessageToApp } from '@core/os/event-bus';
-import type { IWindowOptions } from '@core/os/window';
-import { Window } from '@core/os/window';
+import type { IWindowHeaderOptions } from '@/core/os/window/window-header';
+import type { IWindowOptions } from '@/core/os/window/window';
+import { Window } from '@/core/os/window/window';
 import { OS } from '../os/os';
 import { appNameToTitle } from './app-config';
 import type { AppManager } from './app-manager';
@@ -91,7 +92,7 @@ export class App implements IApp {
 
     async openNewWindow (options: {
         component?: any,
-    } & Partial<IWindowOptions> = {}) {
+    } & Partial<IWindowHeaderOptions> & IWindowOptions = {}) {
         if (!this.isRunning) {
             this.manager.enterApp(this);
         }

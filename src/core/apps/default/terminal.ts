@@ -5,7 +5,7 @@
  */
 import { App } from '../app';
 import { AppNames, createEmptyStatus } from '../app-config';
-import { IAppStatus } from '../type';
+import type { IAppStatus } from '../type';
 import { createTerm } from 'webos-term';
 
 const status: IAppStatus = createEmptyStatus();
@@ -20,7 +20,11 @@ export class Terminal extends App {
     }
 
     async onOpen () {
-        const window = await this.openNewWindow();
+        const window = await this.openNewWindow({
+            width: 700,
+            height: 500,
+            headerBgColor: '#38343c33'
+        });
         createTerm({ container: window.dom });
     }
 }

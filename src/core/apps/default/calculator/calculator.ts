@@ -21,7 +21,9 @@ export class Calculator extends App {
             title: '',
             width: 250,
             height: 'auto',
-            headerBgColor: '#372956',
+            headerBgColor: 'transparent',
+            enableResize: false,
+            paddingTop: 0,
         });
     }
 }

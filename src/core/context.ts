@@ -4,10 +4,13 @@
  * @Description: Coding something
  */
 
-import { IToastData } from '@/ui/components/common/toast/toast';
-import { Ref, ref } from 'vue';
-import { getOSInstance, OS } from './os/os';
-import { IJson } from './type';
+import type { IToastData } from '@/ui/components/common/toast/toast';
+import type { Ref } from 'vue';
+import { ref } from 'vue';
+import type { OS } from './os/os';
+import { getOSInstance } from './os/os';
+import type { IJson } from './type';
+import type { App } from './apps/app';
 
 const StoreMap: IJson<Ref<any>> = {};
 
@@ -31,7 +34,7 @@ export const getToast = createGetStoreFunc<IToastData>('toast', () => ({
 
 export const getOS = createGetStoreFunc<OS>('os', getOSInstance);
 
-export function getDockApps () {
+export function getDockApps (): App[] {
     return getOS().value.appManager.dockApps;
 }
 export function getTempDockApps () {

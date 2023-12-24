@@ -4,9 +4,11 @@ import { onMounted, onUnmounted } from 'vue';
 import type { Ele } from 'easy-dom-util';
 import $ from 'easy-dom-util';
 import type { IJson } from '@/types';
+import type { IWindowStatus } from '@/core/os/window/window';
 
 export function initWindow (
     domRef: Ref<HTMLElement>,
+    status: IWindowStatus,
     handleParent: (el: HTMLElement) => HTMLElement = e => e.parentElement || e
 ) {
 
@@ -18,10 +20,10 @@ export function initWindow (
     onMounted(() => {
         target = domRef.value;
         parent = handleParent(target);
-
         initEvents(target, parent);
-
-        initWindowResize(parent);
+        if (status.enableResize) {
+            initWindowResize(parent);
+        }
     });
 
     onUnmounted(() => {

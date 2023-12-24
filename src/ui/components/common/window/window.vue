@@ -4,7 +4,7 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import type { IWindowStatus } from '@/core/os/window';
+import type { IWindowStatus } from '@/core/os/window/window';
 import WindowHeader from './window-header.vue';
 defineProps<{
   status: IWindowStatus,
@@ -14,15 +14,21 @@ defineProps<{
 
 <template>
   <div
-    v-show="status.visible" class="os-window"
+    v-show="status.visible" class="os-window window-blur"
     :style="{
       'z-index': status.zIndex,
       width: status.width + 'px',
       height: status.height + 'px'
     }"
   >
-    <WindowHeader :header="status.header" />
-    <div :id="'WINDOW_DOM_'+status.id" class="window-body" />
+    <WindowHeader :status="status" />
+    <div
+      :id="'WINDOW_DOM_'+status.id"
+      class="window-body"
+      :style="{
+        'padding-top': status.paddingTop + 'px'
+      }"
+    />
   </div>
 </template>
 
@@ -42,7 +48,7 @@ defineProps<{
     border: 1px solid #5b5b5b
   }
   .window-body{
-    padding-top: 28px;
   }
 </style>
 
+@/core/os/window/window

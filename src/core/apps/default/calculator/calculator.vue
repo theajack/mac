@@ -7,7 +7,6 @@
 import { ref } from 'vue';
 import { createCalculator } from './cal-core';
 
-
 const {
     text,
     onChange,
@@ -38,7 +37,7 @@ const clickCal = (e: MouseEvent) => {
 </script>
 
 <template>
-  <div class="bg-top cal-w select-none" @click="clickCal">
+  <div class="cal-w select-none" @click="clickCal">
     <div class="result bg-top text-right" :class="{mini: showText.length >= 10}">{{ showText }}</div>
     <div class="flex bg-center line-top">
       <div class="flex-1 _click">{{ isAllClear?'AC':'C' }}</div>
@@ -102,9 +101,10 @@ const clickCal = (e: MouseEvent) => {
 
   &.result{
     height: auto;
+    padding-top: 28px;
     padding-right: 10px;
     font-size: 40px;
-    height: 60px;
+    height: 88px;
     display: flex;
     align-items: center;
     justify-content: end;
@@ -114,32 +114,37 @@ const clickCal = (e: MouseEvent) => {
   }
 }
 .bg-top {
-  background-color: #372956;
+  background-color: #37295688;
+
 }
 .bg-center {
-  background-color: #4b3e67;
+  background-color: #4b3e67dd;
+
   div{
     &:active {
-      background-color: #655a77;
+      background-color: #655a77dd;
+
     }
   }
 }
 .bg-bottom {
-  background-color: #655a77;
+  background-color: #655a77dd;
+
   div{
     &:active {
-      background-color: #a29cae;
+      background-color: #a29caedd;
+
     }
   }
 }
 .bg-right {
-  background-color: #ff9f0a;
+  background-color: #ff9f0add;
   &:active {
-    background-color: #cb7d06;
+    background-color: #cb7d06dd;
   }
 }
 .line-color {
-  border-color: #382956;
+  border-color: #38295677;
 }
 .line-top {
   border-top: 1px solid white;

@@ -4,7 +4,7 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { App } from '@/core/apps/app';
+import type { App } from '@/core/apps/app';
 import AppStaff from './dock-staff.vue';
 
 const props = defineProps<{

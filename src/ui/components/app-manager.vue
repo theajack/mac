@@ -30,4 +30,4 @@ MacEvent.on('os-inited', (os: OS) => {
     height: 0;
     top: 0;
   }
-</style>
+</style>@/core/os/window/window
