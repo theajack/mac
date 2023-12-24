@@ -39,7 +39,7 @@ export class WindowCapture {
         this.title = parent.name;
         this.appIcon = parent.icon;
         WindowCapture.List.push(this);
-        this.init(window);
+        this.init();
 
         this.startCaptureAnimation();
     }
@@ -180,7 +180,7 @@ export class WindowCapture {
         };
     }
 
-    async init (window: Window) {
+    async init () {
         // this.icon = canvas.toDataURL();
         const _thisProxy = WindowCapture.List.find(item => item.id === this.id);
         if (_thisProxy) {

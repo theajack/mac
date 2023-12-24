@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import type { OS } from '@/core/os/os';
-import type { IWindowStatus } from '@/core/os/window';
+import type { IWindowStatus } from '@/core/os/window/window';
 import { ref } from 'vue';
 import Window from './common/window/window.vue';
 import { MacEvent } from '@/core/os/event-bus';

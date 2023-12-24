@@ -4,7 +4,7 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import type { Window } from '@/core/os/window';
+import type { Window } from '@/core/os/window/window';
 import AppStaff from './dock-staff.vue';
 
 const props = defineProps<{

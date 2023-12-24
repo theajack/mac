@@ -11,6 +11,7 @@ import { ref } from 'vue';
 import DockItem from './dock-item.vue';
 import DockCapture from './dock-capture.vue';
 import { App } from '@/core/apps/app';
+import { Window } from '@/core/os/window/window';
 
 const apps = ref(getDockApps());
 
@@ -42,7 +43,7 @@ const trash = getTrash();
       <DockCapture
         v-for="item in captures"
         :key="item.id"
-        :window="item.window"
+        :window="(item.window as Window)"
       />
       <div id="CapturePlaceHolder" class="dock-item" />
     </div>
