@@ -39,10 +39,12 @@ function clickWindow () {
       :id="'WINDOW_DOM_'+status.id"
       class="window-body"
       :style="{
-        'margin-top': status.marginTop + 'px',
-        'height': `calc(100% - ${status.marginTop}px)`
+        'margin-top': status.header.height + 'px',
+        'height': `calc(100% - ${status.header.height}px)`
       }"
-    />
+    >
+      <component :is="status.component" />
+    </div>
   </div>
 </template>
 
@@ -62,7 +64,7 @@ function clickWindow () {
     border: 1px solid #5b5b5b
   }
   .window-body{
-    height: 100%;
     overflow: auto;
+    position: relative;
   }
 </style>

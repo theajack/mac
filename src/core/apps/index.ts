@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { Finder } from './default/finder';
+import { Finder } from './default/finder/finder';
 // import { SystemPreferences } from './default/prefer';
 // import { Trash } from './default/trash';
 

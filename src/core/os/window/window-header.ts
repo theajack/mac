@@ -1,10 +1,9 @@
 /*
+import component from '../../../shims.d';
  * @Author: chenzhongsheng
  * @Date: 2023-12-24 09:18:55
  * @Description: Coding something
  */
-
-import type { IJson } from '@/core/type';
 
 export interface IHeaderBtnStatus {
     active?: boolean;
@@ -19,40 +18,31 @@ export type IHeaderBtns = {
 
 export interface IWindowHeaderOptions {
     title?: string,
-    events: IJson<()=>void>, // header 按钮的事件
+    component?: any,
     buttons?: Partial<IHeaderBtns>;
-    width?: number|'auto',
-    height?: number|'auto',
-    headerBgColor?: string,
+    height?: number,
+    bgColor?: string,
+    enable?: boolean,
 }
 
 export class WindowHeader {
     id = 0;
     title = 'Window';
-    events: IJson<()=>void>;
-    buttons: IHeaderBtns;
-    headerBgColor = '';
-    canResize: boolean;
+    buttons: IHeaderBtns = {} as any;
+    bgColor = '#38343c88';
+    height = 28;
+    enable = true;
+    component = undefined as any;
 
-    constructor ({
-        id,
-        events,
-        buttons = {},
-        title = 'Window',
-        headerBgColor = '#38343c88',
-    }: {
+    constructor (options: {
         id: number,
     } & IWindowHeaderOptions) {
-        this.title = title,
-        this.id = id;
-        this.events = events || {};
-        this.headerBgColor = headerBgColor;
-
-        this.buttons = Object.assign({
+        options.buttons = Object.assign({
             min: {},
             close: {},
             full: {},
             gap: 10,
-        }, buttons);
+        }, options.buttons);
+        Object.assign(this, options);
     }
 }

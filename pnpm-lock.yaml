@@ -6,7 +6,7 @@ settings:
 
 dependencies:
   easy-dom-util:
-    specifier: ^0.0.29
+    specifier: 0.0.29
     version: 0.0.29
   eveit:
     specifier: ^0.0.1

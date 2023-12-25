@@ -4,7 +4,7 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { App } from '@/core/apps/app';
+import type { App } from '@/core/apps/app';
 import PopBg from './pop-bg.vue';
 
 defineProps<{

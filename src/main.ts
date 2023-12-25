@@ -3,7 +3,8 @@
  * @Date: 2022-09-10 22:08:00
  * @Description: Coding something
  */
-import { createOS, OS } from './core/os/os';
+import type { OS } from './core/os/os';
+import { createOS } from './core/os/os';
 import { StringText } from './core/string';
 import { log } from './lib/utils';
 import { initUI } from './ui';
@@ -23,6 +24,7 @@ function initDevHelper (os: OS) {
     (window as any).dev = {
         ...Context,
         async clearAppConfig () {
+            // todo 自动刷新或者每次重新取值
             (await os.disk.findFileByPath(`${StringText.appDir}/${StringText.appConfigFile}`))?.remove();
         },
         clear () {

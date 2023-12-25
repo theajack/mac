@@ -5,6 +5,7 @@
  */
 
 import { isDev } from '@/core/context';
+import { markRaw } from 'vue';
 
 export function cache (
     // @ts-ignore
@@ -190,4 +191,14 @@ export function createDoubleClick (gap = 400) {
 export function resource (name: string) {
     const base = isDev ? '/mac/' : 'https://cdn.jsdelivr.net/gh/theajack/mac@gh-pages/';
     return `${base}assets/${name}`;
+}
+
+export function handleComponent (data: any) {
+    if (data?.component) {
+        data.component = markRaw(data.component);
+    }
+}
+
+export function isUrl (value: string) {
+    return /^(((ht|f)tps?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/.test(value);
 }

@@ -14,35 +14,43 @@ import { transformSize } from '@/lib/utils';
 import type { IWindowHeaderOptions } from './window-header';
 import { WindowHeader } from './window-header';
 import type { WindowSizeStatus } from '@/core/enum';
+import { useStore } from '@/ui/store';
+import type { IJson } from '@/core/type';
 
 let idIndex = 0;
 
 export interface IWindowOptions {
+    events?: IJson<()=>void>, // header 按钮的事件
     enableResize?: boolean;
-    marginTop?: number;
+    width?: number|'auto',
+    height?: number|'auto',
+    header?: IWindowHeaderOptions,
+    component?: any,
+    singleMode?: boolean,
 }
 
 export function createWindowStatus (
-    options: IWindowHeaderOptions & IWindowOptions,
+    options: IWindowOptions,
 ) {
     const id = idIndex ++;
     return {
         isFullscreen: false,
         isMax: false,
         id: id,
-        zIndex: 0,
+        zIndex: useStore().windowMaxZIndex,
         isOnTop: true,
         status: 'normal' as WindowSizeStatus,
         visible: true,
         width: transformSize(WindowWidth, options.width),
         height: transformSize(WindowHeight, options.height),
         events: options.events,
-        header: new WindowHeader(Object.assign(options, { id })),
+        header: new WindowHeader(Object.assign(options.header || {}, { id })),
         enableResize: options.enableResize ?? true,
-        marginTop: options.marginTop ?? 28,
         x: 0,
         y: 0,
         inited: false,
+        component: options.component,
+        singleMode: options.singleMode ?? false,
         transform () {
             return this.inited ?
                 `translate(${this.x}px, ${this.y}px)` :
@@ -79,7 +87,7 @@ export class Window {
 
     constructor (options: {
         parent: App;
-    } & Partial<IWindowHeaderOptions> & IWindowOptions) {
+    } & IWindowOptions) {
         this.status = reactive(createWindowStatus(Object.assign({
             events: {
                 closeWindow: () => this.close(),

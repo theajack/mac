@@ -18,10 +18,12 @@ export class Calculator extends App {
     onOpen (): void {
         this.openNewWindow({
             component: CalculatorUI,
-            title: '',
             width: 250,
             height: 'auto',
-            headerBgColor: 'transparent',
+            header: {
+                title: '',
+                bgColor: 'transparent',
+            },
             enableResize: false,
             marginTop: 0,
         });

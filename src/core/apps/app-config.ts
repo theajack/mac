@@ -11,14 +11,14 @@ import type { IJson } from '../type';
 import type { ISelectItem } from '../types/component';
 import type { App } from './app';
 import { AppStore } from './default/app-store';
-import { Finder } from './default/finder';
+import { Finder } from './default/finder/finder';
 import { SystemPreferences } from './default/prefer';
 import { Terminal } from './default/terminal';
 import { Trash } from './default/trash';
 import type { IAppStatus } from './type';
 import { Calculator } from './default/calculator/calculator';
 import { Launcher } from './default/launcher';
-import { Safari } from './default/safari';
+import { Safari } from './default/safari/safari';
 import { Notes } from './default/notes';
 import { Siri } from './default/siri';
 

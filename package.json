@@ -10,7 +10,7 @@
     "twd": "tailwindcss -i ./src/ui/style/tailwind-input.css -o ./src/ui/style/tailwind-output.css --watch"
   },
   "dependencies": {
-    "easy-dom-util": "^0.0.29",
+    "easy-dom-util": "0.0.29",
     "eveit": "^0.0.1",
     "html2canvas": "^1.4.1",
     "pinia": "^2.0.33",

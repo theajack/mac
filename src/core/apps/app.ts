@@ -5,16 +5,14 @@
  */
 import { toast } from '@/ui/components/common/toast/toast';
 import { MacEvent, sendMessageToApp } from '@core/os/event-bus';
-import type { IWindowHeaderOptions } from '@/core/os/window/window-header';
 import type { IWindowOptions } from '@/core/os/window/window';
 import { Window } from '@/core/os/window/window';
 import { OS } from '../os/os';
 import { appNameToTitle } from './app-config';
 import type { AppManager } from './app-manager';
 import type { IAppStatus, IApp, IAppMessageBase, IAppMessage } from './type';
-import type { App as VueApp } from 'vue';
-import { nextTick, createApp } from 'vue';
-import { cache, resource } from '@/lib/utils';
+import { markRaw, type App as VueApp } from 'vue';
+import { cache, handleComponent, resource } from '@/lib/utils';
 
 export class App implements IApp {
     name: string;
@@ -90,25 +88,31 @@ export class App implements IApp {
 
     }
 
-    async openNewWindow (options: {
-        component?: any,
-    } & Partial<IWindowHeaderOptions> & IWindowOptions = {}) {
+    async openNewWindow (options: IWindowOptions = {
+        header: {},
+        events: {}
+    }) {
+        if (!options.header) options.header = {};
+        handleComponent(options);
+        if (options.component) {
+            options.component = markRaw(options.component);
+        }
         if (!this.isRunning) {
             this.manager.enterApp(this);
         }
-        if (typeof options.title !== 'string') {
-            options.title = this.name;
+        handleComponent(options.header);
+        if (typeof options.header.title !== 'string') {
+            // @ts-ignore
+            options.header.title = this.name;
         }
         const window = new Window({ parent: this, ...options });
         this.windows.push(window);
         this.manager.windowStatus.push(window.status);
 
-        await nextTick();
-
-        if (options.component) {
-            this.component = createApp(options.component);
-            this.component.mount(window.dom);
-        }
+        // if (options.component) {
+        //     this.component = createApp(options.component);
+        //     this.component.mount(window.dom);
+        // }
 
         return window;
     }

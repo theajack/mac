@@ -13,7 +13,7 @@ const props = defineProps<{
   status: IWindowStatus
 }>();
 
-const { closeWindow, minimize, maximize } = props.status.header.events;
+const { closeWindow, minimize, maximize } = props.status.events || {};
 
 const headerDom = ref();
 initWindow(headerDom, props.status);
@@ -56,10 +56,12 @@ async function onClick () {
 </script>
 <template>
   <div
+    v-if="status.header"
     ref="headerDom"
     class="os-window-header"
     :style="{
-      'background-color': status.header.headerBgColor
+      'background-color': status.header.bgColor,
+      'height': status.header.height + 'px',
     }"
     @click="onClick"
   >
@@ -74,65 +76,71 @@ async function onClick () {
         <span class="hb-inner">+</span>
       </div>
     </div>
-    <div class="os-win-h-title no-select">{{ status.header.title }}</div>
+    <div v-if="status.header.component" class="w-full h-full">
+      <component :is="status.header.component" />
+    </div>
+    <div v-else class="os-win-h-tittle no-select">{{ status.header.title }}</div>
   </div>
 </template>
 
 <style scoped lang="less">
   .os-window-header {
     position: absolute;
-    min-height: 28px;
     width: 100%;
     z-index: 10;
-    .os-win-h-btn{
-        position: fixed;
-        top: 4px;
-        left: 13px;
-        .os-win-hb{
-            height: 12px;
-            width: 12px;
-            display: inline-block;
-            border-radius: 50%;
-            color: #434343;
-            margin-right: 7px;
-            text-align: center;
-            line-height: 9px;
-            &.hb-close{
-                background-color: #ec6a5d;
-            }
-            &.hb-min{
-                background-color: #f5bd4f
-            }
-            &.hb-full{
-                background-color: #62c454;
-            }
-            .hb-inner{
-                font-size: 12px;
-                font-weight: bold;
-                visibility: hidden;
-                cursor: default;
-            }
-            &.disabled {
-                background-color: #4e4e4e;
-                .hb-inner{
-                    display: none;
-                }
-            }
-            &.hidden {
-                display: none;
-            }
-        }
-        &:hover{
-            .os-win-hb .hb-inner{
-                visibility: visible;
-            }
-        }
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .os-win-h-title{
-        line-height: 28px;
         text-align: center;
         font-weight: bold;
         color: #ccc;
+    }
+  }
+
+  .os-win-h-btn{
+    position: fixed;
+    left: 13px;
+    z-index: 10000;
+    display: flex;
+    gap: 7px;
+    .os-win-hb{
+        height: 12px;
+        width: 12px;
+        display: inline-block;
+        border-radius: 50%;
+        color: #434343;
+        text-align: center;
+        line-height: 9px;
+        &.hb-close{
+            background-color: #ec6a5d;
+        }
+        &.hb-min{
+            background-color: #f5bd4f
+        }
+        &.hb-full{
+            background-color: #62c454;
+        }
+        .hb-inner{
+            font-size: 12px;
+            font-weight: bold;
+            visibility: hidden;
+            cursor: default;
+        }
+        &.disabled {
+            background-color: #4e4e4e;
+            .hb-inner{
+                display: none;
+            }
+        }
+        &.hidden {
+            display: none;
+        }
+    }
+    &:hover{
+        .os-win-hb .hb-inner{
+            visibility: visible;
+        }
     }
   }
 </style>

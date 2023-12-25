@@ -26,7 +26,6 @@
   .common-bg{
       backdrop-filter: blur(40px);
       border: 1px solid var(--color-white-200);
-      border-radius: 5px;
       box-shadow: var(--box-shadow-border);
       background-color: #2229;
       padding: 4px;
@@ -54,6 +53,7 @@
       padding: 1px;
       div{
         .common-bg;
+        border-radius: 5px 0 0 5px;
         position: relative;
         height: 100%;
         width: 120%;
@@ -84,6 +84,7 @@
       transform: rotate(180deg);
       div{
         .common-bg;
+        border-radius: 5px 0 0 5px;
         height: 100%;
         width: 120%;
         right: 1px;
