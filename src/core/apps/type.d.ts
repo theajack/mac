@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { ISelectItem } from '../types/component';
+import type { ISelectItem } from '../types/component';
 
 export interface IApp {
     name: string;
@@ -18,6 +18,7 @@ export interface IAppStatusTitle {
 }
 
 export interface IAppStatus {
+    firstWindowOpen?: boolean; // 用于显示docker动画
     dock: IAppStatusTitle;
     center?: IAppStatusTitle;
     list: IAppStatusTitle[];

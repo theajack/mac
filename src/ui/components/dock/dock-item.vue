@@ -19,7 +19,7 @@ const onClick = () => {
 
 <template>
   <div class="dock-item">
-    <img :src="app.icon" @click="onClick">
+    <img :src="app.icon" :class="{first: app.status.firstWindowOpen}" @click="onClick">
     <AppStaff :app="app" :icon="app.icon" @tap-app="onClick" />
     <span
       v-show="app.isRunning"
@@ -30,6 +30,11 @@ const onClick = () => {
 
 <style lang="less">
 @import '@/ui/style/common.less';
+@keyframes dock-jump {
+  0% { transform: translateY(0);}
+  50% { transform: translateY(-15px);}
+  100% { transform: translateY(0px);}
+}
 .dock-item {
     flex: 1;
     margin-right: 12px;
@@ -39,8 +44,10 @@ const onClick = () => {
       margin-right: 0;
     }
     img {
-        // width: 45px;
-        height: 45px;
+      height: 45px;
+      &.first{
+        animation: dock-jump .8s ease-in-out;
+      }
     }
     .dock-title{
       padding: 5px 13px;

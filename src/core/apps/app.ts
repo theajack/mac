@@ -92,6 +92,7 @@ export class App implements IApp {
         header: {},
         events: {}
     }) {
+        this.status.firstWindowOpen = this.windows.length === 0;
         if (!options.header) options.header = {};
         handleComponent(options);
         if (options.component) {
@@ -118,6 +119,7 @@ export class App implements IApp {
     }
 
     closeWindow (window: Window) {
+        this.status.firstWindowOpen = false;
         this.windows.splice(this.windows.indexOf(window), 1);
 
         this.manager.removeWindowStatus(window);
