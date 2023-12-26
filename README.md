@@ -16,7 +16,7 @@
     <img src="https://shiyix.cn/api2/util/badge/stat?c=Visitors-Mac" alt="visitors">
 </p>
 
-[Live Demo](https://theajack.github.io/mac)
+[Live Demo](https://theajack.github.io/mac) | [国内高速版](https://theajack.gitee.io/mac)
 
 Terminal App is Based on [WebOS](https://github.com/theajack/webos)
 
