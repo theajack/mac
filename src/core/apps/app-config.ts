@@ -21,6 +21,7 @@ import { Launcher } from './default/launcher';
 import { Safari } from './default/safari/safari';
 import { Notes } from './default/notes';
 import { Siri } from './default/siri';
+import { Github } from './default/github';
 
 export enum AppNames {
     finder = 'finder',
@@ -33,6 +34,7 @@ export enum AppNames {
     notes = 'notes',
     safari = 'safari',
     siri = 'siri',
+    github = 'github',
 }
 
 export const DefaultApps: {
@@ -48,6 +50,7 @@ export const DefaultApps: {
     [AppNames.safari]: Safari,
     [AppNames.notes]: Notes,
     [AppNames.siri]: Siri,
+    [AppNames.github]: Github,
 };
 
 export function createDefaultApps ():
@@ -55,15 +58,16 @@ export function createDefaultApps ():
 {
     let dockIndex = 1;
     return {
+        [AppNames.github]: { name: AppNames.github, dockIndex: dockIndex++ },
+        [AppNames.safari]: { name: AppNames.safari, dockIndex: dockIndex++ },
+        [AppNames.terminal]: { name: AppNames.terminal, dockIndex: dockIndex++ },
+        [AppNames.calculator]: { name: AppNames.calculator, dockIndex: dockIndex++ },
         [AppNames.finder]: { name: AppNames.finder, dockIndex: dockIndex++ },
         [AppNames.launcher]: { name: AppNames.launcher, dockIndex: dockIndex++ },
         [AppNames.appStore]: { name: AppNames.appStore, dockIndex: dockIndex++ },
         [AppNames.notes]: { name: AppNames.notes, dockIndex: dockIndex++ },
-        [AppNames.safari]: { name: AppNames.safari, dockIndex: dockIndex++ },
         [AppNames.siri]: { name: AppNames.siri, dockIndex: dockIndex++ },
         [AppNames.systemPreferences]: { name: AppNames.systemPreferences, dockIndex: dockIndex++ },
-        [AppNames.terminal]: { name: AppNames.terminal, dockIndex: dockIndex++ },
-        [AppNames.calculator]: { name: AppNames.calculator, dockIndex: dockIndex++ },
         [AppNames.trash]: { name: AppNames.trash, dockIndex: 1000 },
     };
 }

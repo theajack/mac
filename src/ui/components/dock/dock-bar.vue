@@ -85,4 +85,3 @@ const trash = getTrash();
   // background-color: #000;
 }
 </style>
-@/core/os/window/window-capture

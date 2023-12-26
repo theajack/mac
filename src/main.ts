@@ -18,6 +18,7 @@ async function main () {
 }
 
 function initDevHelper (os: OS) {
+    os.appManager.refreshConfigFiles();
     if (!Context.isDev) return;
     log(os);
     (window as any).os = os;

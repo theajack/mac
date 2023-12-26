@@ -20,7 +20,7 @@
 
 Terminal App is Based on [WebOS](https://github.com/theajack/webos)
 
-Based on macOS Monterey version 12.5.1
+Based on macOS Monterey version 14.0
 
 At present many features are still under development, welcome interested developers to participate in the development
 
