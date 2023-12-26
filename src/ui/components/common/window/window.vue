@@ -24,6 +24,7 @@ function clickWindow () {
     v-show="status.visible"
     class="os-window window-blur"
     :style="{
+      'visibility': status.inited ? 'visible': 'hidden',
       'z-index': status.zIndex,
       width: status.width + 'px',
       height: status.height + 'px',
@@ -43,7 +44,7 @@ function clickWindow () {
         'height': `calc(100% - ${status.header.height}px)`
       }"
     >
-      <component :is="status.component" />
+      <component :is="status.component" :status="status" />
     </div>
   </div>
 </template>

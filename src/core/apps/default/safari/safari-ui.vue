@@ -4,15 +4,36 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { useSafariStore, type ITabItem } from './safari-store';
+import { createSafariStore, type ITabItem } from './safari-store';
 import SafariStart from './safari-start.vue';
-const store = useSafariStore();
+import { createDragScope } from '@/ui/lib/drag-scope';
+import type { IWindowStatus } from '@/core/os/window/window';
+const props = defineProps<{
+    status: IWindowStatus
+}>();
+const store = createSafariStore(props.status.id);
 
 const TabHeight = 28;
+
+const {
+    dragActiveId,
+    dragstart,
+    dragend,
+    dragenter,
+    drop
+} = createDragScope({
+    dragClass: 'tab-item',
+    ondragfinish (src, target) {
+        // console.warn('ondragfinish', src, target);
+        store.dragTabIndex(src, target);
+    }
+});
+
 
 function clickTab (item: ITabItem) {
     store.setActiveId(item.id);
 }
+
 </script>
 
 <template>
@@ -21,11 +42,21 @@ function clickTab (item: ITabItem) {
       <div
         v-for="(item) in store.tabs"
         :key="item.id"
-        class="tab-item"
-        :class="{active: store.activeId === item.id}"
+        :data-id="item.id"
+        draggable="true"
+        class="tab-item text-ell"
+        :class="{
+          active: store.activeId === item.id,
+          'drag-active': dragActiveId === item.id,
+        }"
         @click="clickTab(item)"
+        @dragenter.prevent="dragenter"
+        @dragstart="dragstart"
+        @dragend="dragend"
+        @drop="drop"
+        @dragover.prevent
       >
-        <i class="el-close" @click.stop="store.close" />
+        <i class="el-close" @click.stop="store.close(item.id)" />
         <i :class="item.icon" />
         <span>{{ item.title }}</span>
       </div>
@@ -36,7 +67,7 @@ function clickTab (item: ITabItem) {
       }"
     >
       <div v-for="(item) in store.tabs" v-show="store.activeId === item.id" :key="item.id" class="h-full">
-        <SafariStart v-if="item.isStart" />
+        <SafariStart v-if="item.isStart" :id="status.id" />
         <iframe
           v-else
           :id="`SAFARI_IFRAME_${item.id}`"
@@ -54,6 +85,7 @@ function clickTab (item: ITabItem) {
   display: flex;
   .tab-item{
     cursor: default;
+    user-select: none;
     flex: 1;
     height: 100%;
     font-size: 11px;
@@ -71,6 +103,9 @@ function clickTab (item: ITabItem) {
     }
     &.active{
       background-color: rgb(53,53,53);
+    }
+    &.drag-active{
+      background-color: #666;
     }
 
     .el-close{

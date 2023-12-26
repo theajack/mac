@@ -7,6 +7,8 @@ import { App } from '../../app';
 import { AppNames } from '../../app-config';
 import SafariUI from './safari-ui.vue';
 import SafariHeader from './safari-header.vue';
+import { MacEvent } from '@/core/os/event-bus';
+import { createSafariStore } from './safari-store';
 
 export class Safari extends App {
 
@@ -14,10 +16,19 @@ export class Safari extends App {
         super({
             name: AppNames.safari
         });
+
+        MacEvent.on('new-window', async ({ name, data }) => {
+            console.log(name, data);
+            if (name === this.name) {
+                const window = await this.onOpen();
+                const store = createSafariStore(window.id);
+                store.initNewWindow(data);
+            }
+        });
     }
 
     async onOpen () {
-        await this.openNewWindow({
+        return await this.openNewWindow({
             component: SafariUI,
             header: {
                 component: SafariHeader,

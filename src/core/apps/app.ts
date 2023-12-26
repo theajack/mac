@@ -79,7 +79,7 @@ export class App implements IApp {
     onOpen () {
         toast({
             from: this,
-            content: 'In developing...'
+            content: 'under development...'
         });
 
     }
@@ -105,7 +105,7 @@ export class App implements IApp {
             // @ts-ignore
             options.header.title = this.name;
         }
-        const window = new Window({ parent: this, ...options });
+        const window = new Window({ parent: this, appName: this.name, ...options });
         this.windows.push(window);
         this.manager.windowStatus.push(window.status);
 

@@ -6,6 +6,7 @@
 import Eveit from 'eveit';
 import type { IAppMessage } from '../apps/type';
 import type { OS } from './os';
+import type { AppNames } from '../apps/app-config';
 
 
 export const ApiSymbol = Symbol('api');
@@ -13,8 +14,8 @@ export const ApiSymbol = Symbol('api');
 // @ts-ignore
 export const MacEvent = new Eveit<{ // EEvent
     'app-message': [IAppMessage];
-
-    'os-inited': [OS]
+    'os-inited': [OS];
+    'new-window': [{name: AppNames, data: any}],
 }>();
 
 MacEvent.usePrevEmit = true;

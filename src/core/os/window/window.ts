@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { toastText } from '@/ui/components/common/toast/toast';
+import { toastText, underDevelopment } from '@/ui/components/common/toast/toast';
 import { nextTick, reactive } from 'vue';
 import type { App } from '../../apps/app';
 // import html2canvas from 'html2canvas';
@@ -17,8 +17,6 @@ import type { WindowSizeStatus } from '@/core/enum';
 import { useStore } from '@/ui/store';
 import type { IJson } from '@/core/type';
 
-let idIndex = 0;
-
 export interface IWindowOptions {
     events?: IJson<()=>void>, // header 按钮的事件
     enableResize?: boolean;
@@ -27,16 +25,35 @@ export interface IWindowOptions {
     header?: IWindowHeaderOptions,
     component?: any,
     singleMode?: boolean,
+    appName?: string,
 }
+
+const createWinIds = (() => {
+
+    let idIndex = 0;
+    const map: Record<string, number> = {} as any;
+
+    return (name = '$default') => {
+        if (typeof map[name] === 'number') {
+            map[name] ++;
+        } else {
+            map[name] = 0;
+        }
+        return [ idIndex++, map[name] ];
+    };
+})();
+
 
 export function createWindowStatus (
     options: IWindowOptions,
 ) {
-    const id = idIndex ++;
+    const [ id, appWinId ] = createWinIds(options.appName);
     return {
         isFullscreen: false,
         isMax: false,
-        id: id,
+        id,
+        appWinId, // 当前app内的id
+        appName: options.appName,
         zIndex: useStore().windowMaxZIndex,
         isOnTop: true,
         status: 'normal' as WindowSizeStatus,
@@ -114,7 +131,7 @@ export class Window {
 
     maximize () {
         console.log('maximize');
-        toastText('in developing');
+        underDevelopment();
     }
 
     minimize () {

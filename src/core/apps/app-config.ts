@@ -120,7 +120,7 @@ function createEmptyStatusItem (title = '') {
         }, {
             isSplit: true,
         }, {
-            name: 'Still in developing',
+            name: 'Still under development',
             onClick,
         } ]
     };

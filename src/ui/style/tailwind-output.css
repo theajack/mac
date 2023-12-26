@@ -614,6 +614,10 @@ video {
           user-select: none;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
 .items-center {
   align-items: center;
 }
@@ -632,6 +636,10 @@ video {
 
 .gap-2 {
   gap: 0.5rem;
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
 }
 
 .border {

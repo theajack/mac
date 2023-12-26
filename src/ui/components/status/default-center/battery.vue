@@ -10,7 +10,7 @@ import { toast } from '../../common/toast/toast';
 const onClick = () => {
     toast({
         title: 'Battery',
-        content: 'In developing'
+        content: 'under development'
     });
 };
 </script>

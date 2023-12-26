@@ -5,12 +5,18 @@
 -->
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { useSafariStore, DefaultPH } from './safari-store';
-const store = useSafariStore();
+import { createSafariStore } from './safari-store';
+import type { IWindowStatus } from '@/core/os/window/window';
+import { underDevelopment } from '@/ui/components/common/toast/toast';
+
+const props = defineProps<{
+    status: IWindowStatus
+}>();
+const store = createSafariStore(props.status.id);
 const queryInput = ref();
 const widthEle = ref();
 function queryKeyDown (e: KeyboardEvent) {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && e.keyCode === 13) {
         store.startQuery();
         queryInput.value.blur();
     }
@@ -41,11 +47,11 @@ store.newTab();
   <div class="flex items-center justify-between w-full h-full" style="background-color: rgb(56,56,56);">
     <!-- 为了使input居中 -->
     <span class="flex gap-2 text-lg relative" style="left: 76px;margin-right: 32px;">
-      <i class="el-arrow-left safari-icon" @click="store.forward" />
-      <i class="el-arrow-right safari-icon" @click="store.back" />
+      <i class="el-arrow-left safari-icon" @click.stop="store.forward" />
+      <i class="el-arrow-right safari-icon" @click.stop="store.back" />
     </span>
     <div
-      class="search-input-w" :class="{focus: store.isFocus}"
+      class="search-input-w text-ell" :class="{focus: store.isFocus}"
     >
       <div>
         <i :class="(store.isStartPage || store.isFocus || store.query) ? 'el-search': 'ei-lock'" />
@@ -68,9 +74,9 @@ store.newTab();
       </div>
     </div>
     <span class="flex gap-2 text-lg relative" style="right: 15px">
-      <i class="el-upload2 safari-icon" />
-      <i class="el-plus safari-icon" @click="store.newTab" />
-      <i class="el-copy-document safari-icon" />
+      <i class="el-upload2 safari-icon" @click.stop="underDevelopment" />
+      <i class="el-plus safari-icon" @click.stop="store.newTab" />
+      <i class="el-copy-document safari-icon" @click.stop="underDevelopment" />
     </span>
   </div>
 </template>
@@ -104,7 +110,9 @@ store.newTab();
             opacity: 0;
         }
     }
+    user-select: none;
     &.focus{
+        user-select: auto;
         border-color: rgb(52,113,156);
     }
 }

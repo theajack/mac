@@ -77,7 +77,7 @@ async function onClick () {
       </div>
     </div>
     <div v-if="status.header.component" class="w-full h-full">
-      <component :is="status.header.component" />
+      <component :is="status.header.component" :status="status" />
     </div>
     <div v-else class="os-win-h-tittle no-select">{{ status.header.title }}</div>
   </div>

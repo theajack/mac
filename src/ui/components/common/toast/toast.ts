@@ -39,6 +39,10 @@ export function toastText (content: string) {
     toast({ content });
 }
 
+export function underDevelopment () {
+    toastText('Under development.');
+}
+
 export async function toast ({
     from,
     title,

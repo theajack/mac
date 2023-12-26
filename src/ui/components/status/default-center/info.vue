@@ -11,7 +11,7 @@ import { toast } from '../../common/toast/toast';
 const onClick = () => {
     toast({
         title: 'Info',
-        content: 'In developing'
+        content: 'under development'
     });
 };
 </script>

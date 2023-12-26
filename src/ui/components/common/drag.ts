@@ -31,7 +31,13 @@ export function initWindow (
     });
 }
 
+function createOffset (id: number) {
+    const size = id % 10;
+    return 12 * size;
+}
+
 function initDrag (status: IWindowStatus) {
+    console.log('initDrag', status.id);
 
     let left = 0;
     let top = 0;
@@ -75,7 +81,8 @@ function initDrag (status: IWindowStatus) {
 
     function initPosition () {
         const { x, y } = parent.getBoundingClientRect();
-        setTransform(x, y);
+        const offset = createOffset(status.appWinId);
+        setTransform(x + offset, y + offset);
         status.inited = true;
     }
 
