@@ -8,7 +8,7 @@ import { createSafariStore, type ITabItem } from './safari-store';
 import SafariStart from './safari-start.vue';
 import { createDragScope } from '@/ui/lib/drag-scope';
 import type { IWindowStatus } from '@/core/os/window/window';
-import { ref } from 'vue';
+import IFrame from '@/ui/components/common/iframe.vue';
 const props = defineProps<{
     status: IWindowStatus
 }>();
@@ -30,12 +30,9 @@ const {
     }
 });
 
-const loaded = ref(false);
-
 function clickTab (item: ITabItem) {
     store.setActiveId(item.id);
 }
-
 </script>
 
 <template>
@@ -76,14 +73,7 @@ function clickTab (item: ITabItem) {
         class="h-full"
       >
         <SafariStart v-if="item.isStart" :id="status.id" />
-        <div v-else class="w-full h-full flex-center">
-          <i v-show="!loaded" class="absolute-center text-2xl mr-2 ei-spinner-snake ei-spin" />
-          <iframe
-            class="w-full h-full"
-            :src="item.url"
-            frameborder="0" @loadeddata="loaded = true"
-          />
-        </div>
+        <IFrame v-else :url="item.url" />
       </div>
     </div>
   </div>

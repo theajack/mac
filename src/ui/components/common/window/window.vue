@@ -6,12 +6,12 @@
 <script setup lang="ts">
 import type { IWindowStatus } from '@/core/os/window/window';
 import WindowHeader from './window-header.vue';
-import { useStore } from '@/ui/store';
+import { useGlobalStore } from '@/ui/store';
 const props = defineProps<{
   status: IWindowStatus,
 }>();
 
-const store = useStore();
+const store = useGlobalStore();
 
 function clickWindow () {
     // eslint-disable-next-line vue/no-mutating-props

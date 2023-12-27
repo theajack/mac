@@ -14,7 +14,7 @@ import { transformSize } from '@/lib/utils';
 import type { IWindowHeaderOptions } from './window-header';
 import { WindowHeader } from './window-header';
 import type { WindowSizeStatus } from '@/core/enum';
-import { useStore } from '@/ui/store';
+import { useGlobalStore } from '@/ui/store';
 import type { IJson } from '@/core/type';
 
 export interface IWindowOptions {
@@ -82,7 +82,7 @@ export function createWindowStatus (
         id,
         appWinId, // 当前app内的id
         appName: options.appName,
-        zIndex: useStore().windowMaxZIndex,
+        zIndex: useGlobalStore().windowMaxZIndex,
         isOnTop: true,
         status: 'normal' as WindowSizeStatus,
         visible: true,

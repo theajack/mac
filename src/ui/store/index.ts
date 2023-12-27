@@ -6,12 +6,16 @@
 import { defineStore, acceptHMRUpdate } from 'pinia';
 // import { ref } from 'vue';
 
-export const useStore = defineStore('store', {
+export const useGlobalStore = defineStore('store', {
     state: () => ({
         windowMaxZIndex: 0,
+        inDragging: false,
     }),
 
     actions: {
+        drag (bool = true) {
+            this.inDragging = bool;
+        }
     },
     getters: {
     }
@@ -20,5 +24,5 @@ export const useStore = defineStore('store', {
 // @ts-ignore
 if (import.meta.hot) {
     // @ts-ignore
-    import.meta.hot.accept(acceptHMRUpdate(useStore, import.meta.hot));
+    import.meta.hot.accept(acceptHMRUpdate(useGlobalStore, import.meta.hot));
 }

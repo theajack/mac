@@ -5,6 +5,7 @@ import type { Ele } from 'easy-dom-util';
 import $ from 'easy-dom-util';
 import type { IJson } from '@/types';
 import type { IWindowStatus } from '@/core/os/window/window';
+import { useGlobalStore } from '@/ui/store';
 
 export function initWindow (
     domRef: Ref<HTMLElement>,
@@ -38,6 +39,7 @@ function createOffset (id: number) {
 
 function initDrag (status: IWindowStatus) {
     console.log('initDrag', status.id);
+    const store = useGlobalStore();
 
     let left = 0;
     let top = 0;
@@ -64,6 +66,8 @@ function initDrag (status: IWindowStatus) {
     };
 
     const clearMouseDown = () => {
+        if (!isMouseDown) return;
+        store.drag(false);
         isMouseDown = false;
     };
 
@@ -73,6 +77,7 @@ function initDrag (status: IWindowStatus) {
     }
 
     function onMouseDown (e: MouseEvent) {
+        store.drag();
         isMouseDown = true;
         const { left, top } = target.getBoundingClientRect();
         offsetX = e.clientX - left;
@@ -116,6 +121,7 @@ function createEdge (
     style: IJson,
     onresize: (x: number, y: number)=>void
 ): Ele {
+    const store = useGlobalStore();
     const el = ($.create('div')
         .cls('window-edge') as Ele)
         .style(style) as Ele;
@@ -123,6 +129,7 @@ function createEdge (
     el.on({
         mousedown: () => {
             isMouseDown = true;
+            store.drag();
             document.body.style.cursor = style.cursor;
         },
         mouseup: () => {
@@ -139,6 +146,7 @@ function createEdge (
     const upHandler = () => {
         if (!isMouseDown) return;
         isMouseDown = false;
+        store.drag(false);
         document.body.style.cursor = 'auto';
     };
 
