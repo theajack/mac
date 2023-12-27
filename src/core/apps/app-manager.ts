@@ -14,7 +14,7 @@ import { StringText } from '../string';
 import { mainStatus } from '../status/main-status';
 import type { IWindowStatus, Window } from '../os/window/window';
 import { reactive } from 'vue';
-import type { Trash } from './default/trash';
+import type { Trash } from './built-in/trash';
 
 export class AppManager {
     static DIR_NAME = StringText.appDir;
@@ -84,12 +84,16 @@ export class AppManager {
 
     private async initApps () {
         const config = this.appConfigFile.content as IJson<IAppConfig>;
-
+        // todo 改名字的话需要这里delete config.key 调试一下
+        // debugger
         const all: Promise<App>[] = [];
 
         for (const key in config) {
             const value = config[key];
-            all.push(createApp(value));
+            const app = createApp(value);
+            if (app) {
+                all.push(app);
+            }
         }
 
         const installApps = await Promise.all(all);

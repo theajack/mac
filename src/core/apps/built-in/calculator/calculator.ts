@@ -21,11 +21,9 @@ export class Calculator extends App {
             width: 250,
             height: 'auto',
             header: {
-                title: '',
-                bgColor: 'transparent',
+                enable: false,
             },
             enableResize: false,
-            marginTop: 0,
         });
     }
 }

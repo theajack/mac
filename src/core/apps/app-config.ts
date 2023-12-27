@@ -10,18 +10,24 @@ import { getApps } from '../context';
 import type { IJson } from '../type';
 import type { ISelectItem } from '../types/component';
 import type { App } from './app';
-import { AppStore } from './default/app-store';
-import { Finder } from './default/finder/finder';
-import { SystemPreferences } from './default/prefer';
-import { Terminal } from './default/terminal';
-import { Trash } from './default/trash';
+import { AppStore } from './built-in/app-store';
+import { Finder } from './built-in/finder/finder';
+import { SystemPreferences } from './built-in/prefer';
+import { Terminal } from './built-in/terminal';
+import { Trash } from './built-in/trash';
 import type { IAppStatus } from './type';
-import { Calculator } from './default/calculator/calculator';
-import { Launcher } from './default/launcher';
-import { Safari } from './default/safari/safari';
-import { Notes } from './default/notes';
-import { Siri } from './default/siri';
-import { Github } from './default/github';
+import { Calculator } from './built-in/calculator/calculator';
+import { Launcher } from './built-in/launcher';
+import { Safari } from './built-in/safari/safari';
+import { Notes } from './built-in/notes';
+import { Siri } from './built-in/siri';
+import { Github } from './built-in/github';
+import { Vscode } from './third/vscode';
+import { Bilibili } from './third/bilibili';
+import { Meitu } from './third/meitu';
+import { WeChat } from './third/wechat';
+import { KWai } from './third/kwai';
+import { QQMusic } from './third/qqmusic';
 
 export enum AppNames {
     finder = 'finder',
@@ -34,7 +40,15 @@ export enum AppNames {
     notes = 'notes',
     safari = 'safari',
     siri = 'siri',
+
+    // 三方App
     github = 'github',
+    vscode = 'vscode',
+    bilibili = 'bilibili',
+    meitu = 'meitu',
+    wechat = 'wechat',
+    kwai = 'kwai',
+    qqmusic = 'qqmusic',
 }
 
 export const DefaultApps: {
@@ -50,7 +64,14 @@ export const DefaultApps: {
     [AppNames.safari]: Safari,
     [AppNames.notes]: Notes,
     [AppNames.siri]: Siri,
+    // 三方App
     [AppNames.github]: Github,
+    [AppNames.bilibili]: Bilibili,
+    [AppNames.meitu]: Meitu,
+    [AppNames.vscode]: Vscode,
+    [AppNames.wechat]: WeChat,
+    [AppNames.qqmusic]: QQMusic,
+    [AppNames.kwai]: KWai,
 };
 
 export function createDefaultApps ():
@@ -60,6 +81,12 @@ export function createDefaultApps ():
     return {
         [AppNames.github]: { name: AppNames.github, dockIndex: dockIndex++ },
         [AppNames.safari]: { name: AppNames.safari, dockIndex: dockIndex++ },
+        [AppNames.wechat]: { name: AppNames.wechat, dockIndex: dockIndex++ },
+        [AppNames.vscode]: { name: AppNames.vscode, dockIndex: dockIndex++ },
+        [AppNames.meitu]: { name: AppNames.meitu, dockIndex: dockIndex++ },
+        [AppNames.bilibili]: { name: AppNames.bilibili, dockIndex: dockIndex++ },
+        [AppNames.qqmusic]: { name: AppNames.qqmusic, dockIndex: dockIndex++ },
+        [AppNames.kwai]: { name: AppNames.kwai, dockIndex: dockIndex++ },
         [AppNames.terminal]: { name: AppNames.terminal, dockIndex: dockIndex++ },
         [AppNames.calculator]: { name: AppNames.calculator, dockIndex: dockIndex++ },
         [AppNames.finder]: { name: AppNames.finder, dockIndex: dockIndex++ },
@@ -96,7 +123,7 @@ export async function createApp (config: IAppConfig) {
         return new AppClass();
     }
 
-    if (!config.url) throw new Error();
+    if (!config.url) return null;
 
     await importScript(config.url);
 

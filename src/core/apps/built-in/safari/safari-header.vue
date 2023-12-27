@@ -52,6 +52,7 @@ store.newTab();
     </span>
     <div
       class="search-input-w text-ell" :class="{focus: store.isFocus}"
+      @click="queryInput.focus()"
     >
       <div>
         <i :class="(store.isStartPage || store.isFocus || store.query) ? 'el-search': 'ei-lock'" />
@@ -87,6 +88,7 @@ store.newTab();
     .common-icon;
 }
 .search-input-w{
+    cursor: text;
     background-color: rgb(42,42,42);
     width: 400px;
     height: 28px;

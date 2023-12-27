@@ -19,7 +19,12 @@ const onClick = () => {
 
 <template>
   <div class="dock-item">
-    <img :src="app.icon" :class="{first: app.status.firstWindowOpen}" @click="onClick">
+    <img
+      :src="app.icon"
+      :style="{'border-radius': app.iconRadius, scale: app.iconScale}"
+      :class="{first: app.status.firstWindowOpen}"
+      @click="onClick"
+    >
     <AppStaff :app="app" :icon="app.icon" @tap-app="onClick" />
     <span
       v-show="app.isRunning"

@@ -7,6 +7,7 @@ import Eveit from 'eveit';
 import type { IAppMessage } from '../apps/type';
 import type { OS } from './os';
 import type { AppNames } from '../apps/app-config';
+import type { ITabItem } from '../apps/built-in/safari/safari-store';
 
 
 export const ApiSymbol = Symbol('api');
@@ -15,7 +16,8 @@ export const ApiSymbol = Symbol('api');
 export const MacEvent = new Eveit<{ // EEvent
     'app-message': [IAppMessage];
     'os-inited': [OS];
-    'new-window': [{name: AppNames, data: any}],
+    'new-window': [{name: AppNames, data: ITabItem}],
+    // 'new-window': [{name: AppNames, data: ITabItem, iframe: HTMLIFrameElement}],
 }>();
 
 MacEvent.usePrevEmit = true;

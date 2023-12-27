@@ -14,14 +14,27 @@ import type { IAppStatus, IApp, IAppMessageBase, IAppMessage } from './type';
 import { markRaw, type App as VueApp } from 'vue';
 import { cache, handleComponent, resource } from '@/lib/utils';
 
+export interface IAppOptions {
+    name?: string;
+    icon?: string;
+    iconRadius?: number;
+    iconScale?: number|boolean;
+    title?: string;
+    status?: IAppStatus;
+    jumpUrl?: string;
+    onMessage?: (data: IAppMessage) => void;
+}
 export class App implements IApp {
     name: string;
     icon: string;
+    iconRadius: string;
     component?: VueApp;
     defCaptureSrc = '';
     title: string;
     status: IAppStatus;
     manager: AppManager;
+    jumpUrl: string;
+    iconScale: number;
     onMessage?: (data: IAppMessage) => void;
 
     windows: Window[] = [];
@@ -33,21 +46,21 @@ export class App implements IApp {
     constructor ({
         name = '',
         icon = '',
+        iconRadius = 0.25,
+        iconScale = 1,
         title = '',
         status = {} as any,
         onMessage,
-    }: {
-        name?: string;
-        icon?: string;
-        title?: string;
-        status?: IAppStatus;
-        onMessage?: (data: IAppMessage) => void;
-    }) {
+        jumpUrl = '',
+    }: IAppOptions) {
+        this.jumpUrl = jumpUrl;
         this.name = name;
         this.manager = OS.instance.appManager;
         this.icon = icon || resource(`icons/${name}.png`);
+        this.iconRadius = iconRadius < 1 ? `${iconRadius * 100}%` : `${iconRadius}px`;
         this.title = title || appNameToTitle(name);
         this.status = status;
+        this.iconScale = typeof iconScale === 'number' ? iconScale : (iconScale ? 1.22 : 1);
         this.onMessage = onMessage;
 
         MacEvent.on('app-message', (data) => {
@@ -77,11 +90,15 @@ export class App implements IApp {
     }
 
     onOpen () {
-        toast({
-            from: this,
-            content: 'under development...'
-        });
-
+        if (this.jumpUrl) {
+            window.open(this.jumpUrl);
+        } else {
+            // todo
+            toast({
+                from: this,
+                content: 'under development...'
+            });
+        }
     }
 
     initStatusBar () {

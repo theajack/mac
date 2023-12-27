@@ -40,8 +40,8 @@ function clickWindow () {
       :id="'WINDOW_DOM_'+status.id"
       class="window-body"
       :style="{
-        'margin-top': status.header.height + 'px',
-        'height': `calc(100% - ${status.header.height}px)`
+        'margin-top': status.header.enable ? status.header.height + 'px': '0',
+        'height': status.header.enable ? `calc(100% - ${status.header.height}px)`: '100%',
       }"
     >
       <component :is="status.component" :status="status" />

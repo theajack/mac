@@ -15,12 +15,13 @@ export interface ITabItem {
     icon: string,
     id: number,
     isStart?: boolean,
+    // fromPrev?: boolean, // 是否是从别的窗口过来的
 }
 
 export const DefaultPH = '搜索或输入网站名称';
 
 function createSingleStore (id: number) {
-    let pageId = 0;
+    let pageId = 1;
     return defineStore(`safari-store-${id}`, {
         state: () => ({
             query: '',
@@ -131,8 +132,11 @@ function createSingleStore (id: number) {
                 if (target === -1) {
                     // 新窗口
                     const item = this._findItem(src);
+                    // const iframe: any = document.getElementById(`SAFARI_ITEM_${id}_${item.id}`)?.children[0];
+                    // item.fromPrev = true;
                     this.close(item.id);
                     MacEvent.emit('new-window', { name: AppNames.safari, data: item });
+                    // MacEvent.emit('new-window', { name: AppNames.safari, data: item, iframe: 1 });
                     return;
                 }
                 const targetIndex = this._findItemIndex(target);
@@ -143,6 +147,7 @@ function createSingleStore (id: number) {
                 return this.tabs.splice(this._findItemIndex(id), 1);
             },
             initNewWindow (data: ITabItem) {
+                data.id = 0; // ! 新窗口id从0开始
                 this.tabs = [ data ];
                 this.setActiveId(data.id);
             }

@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { toastText, underDevelopment } from '@/ui/components/common/toast/toast';
+// import { underDevelopment } from '@/ui/components/common/toast/toast';
 import { nextTick, reactive } from 'vue';
 import type { App } from '../../apps/app';
 // import html2canvas from 'html2canvas';
@@ -26,6 +26,7 @@ export interface IWindowOptions {
     component?: any,
     singleMode?: boolean,
     appName?: string,
+    url?: string,
 }
 
 const createWinIds = (() => {
@@ -43,11 +44,38 @@ const createWinIds = (() => {
     };
 })();
 
+function countSize (width?: number|string, height?: number|string) {
+    const defRate = 0.8;
+
+    const relHeight = transformSize(WindowHeight, height, defRate);
+
+    let refHeight = 0;
+
+    if (typeof relHeight === 'string') {
+        if (relHeight.includes('px')) {
+            refHeight = parseInt(relHeight.replace('px', ''));
+        } else if (relHeight.includes('%')) {
+            refHeight = (parseFloat(relHeight.replace('%', '')) / 100) * WindowHeight;
+        } else {
+            refHeight = WindowHeight * defRate;
+        }
+    } else {
+        refHeight = relHeight;
+    }
+    const relWidth = typeof width !== 'undefined' ?
+        transformSize(WindowWidth, width, defRate) :
+        transformSize(refHeight, width, 1920 / 1080);
+    return [ relWidth, relHeight ];
+}
+
 
 export function createWindowStatus (
     options: IWindowOptions,
 ) {
     const [ id, appWinId ] = createWinIds(options.appName);
+
+    const [ width, height ] = countSize(options.width, options.height);
+
     return {
         isFullscreen: false,
         isMax: false,
@@ -58,8 +86,8 @@ export function createWindowStatus (
         isOnTop: true,
         status: 'normal' as WindowSizeStatus,
         visible: true,
-        width: transformSize(WindowWidth, options.width),
-        height: transformSize(WindowHeight, options.height),
+        width,
+        height,
         events: options.events,
         header: new WindowHeader(Object.assign(options.header || {}, { id })),
         enableResize: options.enableResize ?? true,
@@ -68,6 +96,7 @@ export function createWindowStatus (
         inited: false,
         component: options.component,
         singleMode: options.singleMode ?? false,
+        url: options.url,
         transform () {
             return this.inited ?
                 `translate(${this.x}px, ${this.y}px)` :
@@ -84,7 +113,7 @@ export function createWindowStatus (
             this._timer = setTimeout(() => {
                 this.animation = false;
             }, 310);
-        }
+        },
     };
 }
 export type IWindowStatus = ReturnType<typeof createWindowStatus>;
@@ -131,8 +160,13 @@ export class Window {
 
     maximize () {
         console.log('maximize');
-        underDevelopment();
+        // underDevelopment();
+        // 先使用fullwindow代替
+
     }
+
+    private prevSize: any = null;
+
 
     minimize () {
         console.log('minimize');

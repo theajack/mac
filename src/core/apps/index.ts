@@ -4,9 +4,9 @@
  * @Description: Coding something
  */
 
-import { Finder } from './default/finder/finder';
-// import { SystemPreferences } from './default/prefer';
-// import { Trash } from './default/trash';
+import { Finder } from './built-in/finder/finder';
+// import { SystemPreferences } from './built-in/prefer';
+// import { Trash } from './built-in/trash';
 
 export const DefaultApps = [ {
     Finder,

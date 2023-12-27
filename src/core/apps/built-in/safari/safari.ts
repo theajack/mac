@@ -9,6 +9,7 @@ import SafariUI from './safari-ui.vue';
 import SafariHeader from './safari-header.vue';
 import { MacEvent } from '@/core/os/event-bus';
 import { createSafariStore } from './safari-store';
+// import { nextTick } from 'vue';
 
 export class Safari extends App {
 
@@ -23,6 +24,8 @@ export class Safari extends App {
                 const window = await this.onOpen();
                 const store = createSafariStore(window.id);
                 store.initNewWindow(data);
+                // await nextTick();
+                // document.getElementById(`SAFARI_ITEM_${window.id}_${data.id}`)?.appendChild(iframe);
             }
         });
     }
@@ -34,8 +37,6 @@ export class Safari extends App {
                 component: SafariHeader,
                 height: 45,
             },
-            width: 0.6,
-            height: 0.8
         });
     }
 }

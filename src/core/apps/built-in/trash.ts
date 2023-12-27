@@ -9,6 +9,7 @@ import { AppNames } from '../app-config';
 export class Trash extends App {
     constructor () {
         super({
+            iconRadius: 0,
             name: AppNames.trash
         });
     }

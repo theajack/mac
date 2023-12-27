@@ -12,7 +12,7 @@ import { MenuHeight, WindowWidth, WindowHeight, DockTop } from '@/ui/style/commo
 const props = defineProps<{
   status: IWindowStatus
 }>();
-
+// @ts-ignore
 const { closeWindow, minimize, maximize } = props.status.events || {};
 
 const headerDom = ref();
@@ -22,12 +22,12 @@ const isDoubleClick = createDoubleClick();
 
 let prevSize: any = null;
 
-async function onClick () {
+// 充满出状态栏和docker的部分
+function toggleFullWindow () {
     const status = props.status;
-    if (!isDoubleClick() || !status.enableResize) return;
-
-
+    if (!status.enableResize) return;
     if (status.isMax) {
+
         const [ x, y, width, height ] = prevSize;
         status.$animate(() => {
             status.isMax = false;
@@ -49,7 +49,11 @@ async function onClick () {
             status.height = WindowHeight - MenuHeight - DockTop;
         });
     }
+}
 
+async function onClick () {
+    if (!isDoubleClick()) return;
+    toggleFullWindow();
 }
 
 
@@ -60,7 +64,7 @@ async function onClick () {
     ref="headerDom"
     class="os-window-header"
     :style="{
-      'background-color': status.header.bgColor,
+      'background-color': status.header.enable ? status.header.bgColor: 'transparent',
       'height': status.header.height + 'px',
     }"
     @click="onClick"
@@ -72,14 +76,18 @@ async function onClick () {
       <div class="os-win-hb hb-min" @click="minimize">
         <span class="hb-inner">-</span>
       </div>
-      <div class="os-win-hb hb-full" @click="maximize">
-        <span class="hb-inner">+</span>
+      <!-- todo 暂时先用 toggleFullWindow 代替-->
+      <!-- <div class="os-win-hb hb-full" @click="maximize"> -->
+      <div class="os-win-hb hb-full" @click="toggleFullWindow">
+        <span v-show="status.enableResize" class="hb-inner">+</span>
       </div>
     </div>
-    <div v-if="status.header.component" class="w-full h-full">
-      <component :is="status.header.component" :status="status" />
+    <div v-show="status.header.enable" class="w-full h-full">
+      <div v-if="status.header.component" class="w-full h-full">
+        <component :is="status.header.component" :status="status" />
+      </div>
+      <div v-else class="os-win-h-tittle no-select flex-center h-full">{{ status.header.title }}</div>
     </div>
-    <div v-else class="os-win-h-tittle no-select">{{ status.header.title }}</div>
   </div>
 </template>
 

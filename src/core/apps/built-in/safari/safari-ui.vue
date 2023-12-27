@@ -66,11 +66,16 @@ function clickTab (item: ITabItem) {
         height: store.showTab ? `calc(100% - ${TabHeight}px)`: '100%'
       }"
     >
-      <div v-for="(item) in store.tabs" v-show="store.activeId === item.id" :key="item.id" class="h-full">
+      <div
+        v-for="(item) in store.tabs"
+        v-show="store.activeId === item.id"
+        :id="`SAFARI_ITEM_${status.id}_${item.id}`"
+        :key="item.id"
+        class="h-full"
+      >
         <SafariStart v-if="item.isStart" :id="status.id" />
         <iframe
-          v-else
-          :id="`SAFARI_IFRAME_${item.id}`"
+          v-else-if="!item.fromPrev"
           class="w-full h-full"
           :src="item.url" frameborder="0"
         />

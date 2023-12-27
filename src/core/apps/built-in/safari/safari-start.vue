@@ -4,11 +4,11 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { createSafariStore } from './safari-store';
-const props = defineProps<{
-    id: number
-}>();
-const store = createSafariStore(props.id);
+// import { createSafariStore } from './safari-store';
+// const props = defineProps<{
+//     id: number
+// }>();
+// const store = createSafariStore(props.id);
 </script>
 
 <template>

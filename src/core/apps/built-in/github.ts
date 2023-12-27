@@ -10,10 +10,8 @@ export class Github extends App {
 
     constructor () {
         super({
-            name: AppNames.github
+            name: AppNames.github,
+            jumpUrl: 'https://github.com/theajack/mac',
         });
-    }
-    onOpen (): void {
-        window.open('https://github.com/theajack/mac');
     }
 }

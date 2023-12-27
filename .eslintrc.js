@@ -73,5 +73,8 @@ module.exports = {
         'vue/singleline-html-element-content-newline': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',
         'vue/no-setup-props-destructure': 'off',
+        '@typescript-eslint/no-this-alias': 0,
+        'no-unused-vars': 'warn',
+        '@typescript-eslint/no-unused-vars': 'warn',
     }
 };
