@@ -16,6 +16,7 @@ export class Terminal extends App {
         super({
             name: AppNames.terminal,
             status,
+            msgCount: 1,
         });
     }
 
@@ -25,5 +26,6 @@ export class Terminal extends App {
             height: 500,
         });
         createTerm({ container: window.dom });
+        this.msgCount = 0;
     }
 }

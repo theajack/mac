@@ -193,6 +193,10 @@ export function resource (name: string) {
     return `${base}assets/${name}`;
 }
 
+export function appIcon (name: string) {
+    return resource(`icons/${name}.png`);
+}
+
 export function handleComponent (data: any) {
     if (data?.component) {
         data.component = markRaw(data.component);

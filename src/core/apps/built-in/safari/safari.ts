@@ -15,7 +15,8 @@ export class Safari extends App {
 
     constructor () {
         super({
-            name: AppNames.safari
+            name: AppNames.safari,
+            msgCount: 1,
         });
 
         MacEvent.on('new-window', async ({ name, data }) => {
@@ -31,6 +32,7 @@ export class Safari extends App {
     }
 
     async onOpen () {
+        this.msgCount = 0;
         return await this.openNewWindow({
             component: SafariUI,
             header: {

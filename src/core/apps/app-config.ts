@@ -80,15 +80,15 @@ export function createDefaultApps ():
     let dockIndex = 1;
     return {
         [AppNames.github]: { name: AppNames.github, dockIndex: dockIndex++ },
+        [AppNames.terminal]: { name: AppNames.terminal, dockIndex: dockIndex++ },
         [AppNames.safari]: { name: AppNames.safari, dockIndex: dockIndex++ },
+        [AppNames.calculator]: { name: AppNames.calculator, dockIndex: dockIndex++ },
         [AppNames.wechat]: { name: AppNames.wechat, dockIndex: dockIndex++ },
         [AppNames.vscode]: { name: AppNames.vscode, dockIndex: dockIndex++ },
         [AppNames.meitu]: { name: AppNames.meitu, dockIndex: dockIndex++ },
         [AppNames.bilibili]: { name: AppNames.bilibili, dockIndex: dockIndex++ },
         [AppNames.qqmusic]: { name: AppNames.qqmusic, dockIndex: dockIndex++ },
         [AppNames.kwai]: { name: AppNames.kwai, dockIndex: dockIndex++ },
-        [AppNames.terminal]: { name: AppNames.terminal, dockIndex: dockIndex++ },
-        [AppNames.calculator]: { name: AppNames.calculator, dockIndex: dockIndex++ },
         [AppNames.finder]: { name: AppNames.finder, dockIndex: dockIndex++ },
         [AppNames.launcher]: { name: AppNames.launcher, dockIndex: dockIndex++ },
         [AppNames.appStore]: { name: AppNames.appStore, dockIndex: dockIndex++ },

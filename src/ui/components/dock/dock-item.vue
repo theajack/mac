@@ -6,6 +6,7 @@
 <script setup lang="ts">
 import type { App } from '@/core/apps/app';
 import AppStaff from './dock-staff.vue';
+import AppBlock from '../../components/app-block.vue';
 
 const props = defineProps<{
     app: App
@@ -18,14 +19,14 @@ const onClick = () => {
 </script>
 
 <template>
-  <div class="dock-item">
-    <img
-      :src="app.icon"
-      :style="{'border-radius': app.iconRadius, scale: app.iconScale}"
-      :class="{first: app.status.firstWindowOpen}"
-      @click="onClick"
-    >
-    <AppStaff :app="app" :icon="app.icon" @tap-app="onClick" />
+  <div
+    class="dock-item"
+    :class="{first: app.status.firstWindowOpen}"
+  >
+    <div class="dock-icon">
+      <AppBlock :app="app" :height="48" @click="onClick" />
+      <AppStaff :app="app" :icon="app.icon" @tap-app="onClick" />
+    </div>
     <span
       v-show="app.isRunning"
       class="dock-dot"
@@ -48,9 +49,11 @@ const onClick = () => {
     &:last-child{
       margin-right: 0;
     }
-    img {
-      height: 45px;
-      &.first{
+    .dock-icon{
+      transform: translateY(0);
+    }
+    &.first{
+      .dock-icon {
         animation: dock-jump .8s ease-in-out;
       }
     }

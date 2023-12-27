@@ -11,7 +11,7 @@ export class Github extends App {
     constructor () {
         super({
             name: AppNames.github,
-            jumpUrl: 'https://github.com/theajack/mac',
+            link: 'https://github.com/theajack/mac',
         });
     }
 }

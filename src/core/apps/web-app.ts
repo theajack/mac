@@ -5,7 +5,7 @@
  */
 import type { IWindowOptions } from '../os/window/window';
 import type { IAppOptions } from './app';
-import { App } from './app';
+import { App, AppType } from './app';
 import WebWindow from '@/ui/components/common/window/web-window-body.vue';
 
 export class WebApp extends App {
@@ -13,7 +13,7 @@ export class WebApp extends App {
     constructor (options: IAppOptions & {
         url: string,
     }) {
-        super(options);
+        super(Object.assign(options, { appType: AppType.Web }));
         this.url = options.url;
     }
     onOpen (): void {

@@ -63,11 +63,11 @@ export function createCalculator () {
     let text = '0';
     const changeList: ((v: string)=>void)[] = [];
 
-    const setText = (v: string|number) => {
+    const setText = (v: string|number, fromAc = false) => {
         if (typeof v === 'number') v = v.toString();
         text = v;
         changeList.forEach(f => {f(text);});
-        setAC(false);
+        if (!fromAc) setAC(false);
         return v;
     };
 
@@ -102,7 +102,7 @@ export function createCalculator () {
                 setAC(true);
             } break;
             case 'AC': {
-                setText('0');
+                setText('0', true);
                 queue = [ E ];
                 setCurSign('');
             } break;

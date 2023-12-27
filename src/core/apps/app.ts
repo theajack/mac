@@ -12,7 +12,13 @@ import { appNameToTitle } from './app-config';
 import type { AppManager } from './app-manager';
 import type { IAppStatus, IApp, IAppMessageBase, IAppMessage } from './type';
 import { markRaw, type App as VueApp } from 'vue';
-import { cache, handleComponent, resource } from '@/lib/utils';
+import { cache, handleComponent, appIcon } from '@/lib/utils';
+
+export enum AppType {
+    Normal,
+    Web,
+    Link,
+}
 
 export interface IAppOptions {
     name?: string;
@@ -21,8 +27,10 @@ export interface IAppOptions {
     iconScale?: number|boolean;
     title?: string;
     status?: IAppStatus;
-    jumpUrl?: string;
+    link?: string;
+    msgCount?: number;
     onMessage?: (data: IAppMessage) => void;
+    appType?: AppType;
 }
 export class App implements IApp {
     name: string;
@@ -33,8 +41,9 @@ export class App implements IApp {
     title: string;
     status: IAppStatus;
     manager: AppManager;
-    jumpUrl: string;
+    link: string;
     iconScale: number;
+    msgCount: number; // 小红点数量
     onMessage?: (data: IAppMessage) => void;
 
     windows: Window[] = [];
@@ -42,6 +51,7 @@ export class App implements IApp {
     isRunning = false;
 
     canBackground = false;
+    appType: AppType;
 
     constructor ({
         name = '',
@@ -51,15 +61,21 @@ export class App implements IApp {
         title = '',
         status = {} as any,
         onMessage,
-        jumpUrl = '',
+        link = '',
+        msgCount = 0,
+        appType = AppType.Normal,
     }: IAppOptions) {
-        this.jumpUrl = jumpUrl;
+        this.link = link;
+        if (link) appType = AppType.Link;
         this.name = name;
+        this.status = status;
+        this.msgCount = msgCount;
+        this.appType = appType;
+
         this.manager = OS.instance.appManager;
-        this.icon = icon || resource(`icons/${name}.png`);
+        this.icon = icon || appIcon(name);
         this.iconRadius = iconRadius < 1 ? `${iconRadius * 100}%` : `${iconRadius}px`;
         this.title = title || appNameToTitle(name);
-        this.status = status;
         this.iconScale = typeof iconScale === 'number' ? iconScale : (iconScale ? 1.22 : 1);
         this.onMessage = onMessage;
 
@@ -90,8 +106,8 @@ export class App implements IApp {
     }
 
     onOpen () {
-        if (this.jumpUrl) {
-            window.open(this.jumpUrl);
+        if (this.link) {
+            window.open(this.link);
         } else {
             // todo
             toast({

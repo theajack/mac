@@ -11,11 +11,13 @@ export class Calculator extends App {
 
     constructor () {
         super({
-            name: AppNames.calculator
+            name: AppNames.calculator,
+            msgCount: 1,
         });
     }
 
     onOpen (): void {
+        this.msgCount = 0;
         this.openNewWindow({
             component: CalculatorUI,
             width: 250,

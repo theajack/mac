@@ -10,7 +10,12 @@ export class SystemPreferences extends App {
 
     constructor () {
         super({
-            name: AppNames.systemPreferences
+            name: AppNames.systemPreferences,
+            msgCount: 3,
         });
+    }
+    onOpen (): void {
+        super.onOpen();
+        this.msgCount = 0;
     }
 }
