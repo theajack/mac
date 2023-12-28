@@ -82,7 +82,7 @@ export function createWindowStatus (
         id,
         appWinId, // 当前app内的id
         appName: options.appName,
-        zIndex: useGlobalStore().windowMaxZIndex,
+        zIndex: ++useGlobalStore().windowMaxZIndex,
         isOnTop: true,
         status: 'normal' as WindowSizeStatus,
         visible: true,

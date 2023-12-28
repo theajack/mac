@@ -20,7 +20,7 @@ MacEvent.on('os-inited', (os: OS) => {
 </script>
 
 <template>
-  <div>
+  <div class="os-windows-container">
     <Window v-for="status in windowStatus" :key="status.id" :status="status" />
   </div>
 </template>
@@ -31,5 +31,6 @@ MacEvent.on('os-inited', (os: OS) => {
     width: 0;
     height: 0;
     top: 0;
+    z-index: 0;
   }
 </style>@/core/os/window/window

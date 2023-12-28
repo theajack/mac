@@ -8,7 +8,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia';
 
 export const useGlobalStore = defineStore('store', {
     state: () => ({
-        windowMaxZIndex: 0,
+        windowMaxZIndex: -1,
         inDragging: false,
     }),
 

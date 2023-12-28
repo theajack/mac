@@ -14,8 +14,10 @@ const props = defineProps<{
 const store = useGlobalStore();
 
 function clickWindow () {
-    // eslint-disable-next-line vue/no-mutating-props
-    props.status.zIndex = ++store.windowMaxZIndex;
+    if (props.status.zIndex !== store.windowMaxZIndex) {
+        // eslint-disable-next-line vue/no-mutating-props
+        props.status.zIndex = ++store.windowMaxZIndex;
+    }
 }
 </script>
 

@@ -171,6 +171,7 @@ function initWindowResize (parent: HTMLElement, status: IWindowStatus) {
 
 
     const topResize = (x: number, y: number) => {
+        if (y < MenuHeight) y = MenuHeight;
         const prevY = status.y;
         formatHeight();
         // @ts-ignore
