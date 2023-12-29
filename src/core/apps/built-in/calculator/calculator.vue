@@ -118,29 +118,29 @@ const clickCal = (e: MouseEvent) => {
 
 }
 .bg-center {
-  background-color: #4b3e67dd;
+  background-color: #4b3e67cc;
 
   div{
     &:active {
-      background-color: #655a77dd;
+      background-color: #655a77cc;
 
     }
   }
 }
 .bg-bottom {
-  background-color: #655a77dd;
+  background-color: #655a77cc;
 
   div{
     &:active {
-      background-color: #a29caedd;
+      background-color: #a29caecc;
 
     }
   }
 }
 .bg-right {
-  background-color: #ff9f0add;
+  background-color: #ff9f0acc;
   &:active {
-    background-color: #cb7d06dd;
+    background-color: #cb7d06cc;
   }
 }
 .line-color {

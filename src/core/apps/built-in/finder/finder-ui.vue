@@ -8,16 +8,14 @@
 </script>
 
 <template>
-  <div class="bg-gray h-full">
-    <div class="flex-center text-white h-full">
-      In Development.
-      <!-- <iframe style="width: 400px; height: 300px;" src="https://github1s.com/" />
+  <div class="flex-center text-white h-full">
+    In Development.
+    <!-- <iframe style="width: 400px; height: 300px;" src="https://github1s.com/" />
       <iframe style="width: 400px; height: 300px;" src="https://bilibili.com/" />
       <iframe style="width: 400px; height: 300px;" src="https://bing.com/" /> -->
-    </div>
-    <div class="flex-center text-white h-full">
-      Test ScrollBar.
-    </div>
+  </div>
+  <div class="flex-center text-white h-full">
+    Test ScrollBar.
   </div>
 </template>
 

@@ -37,6 +37,7 @@ defineProps<{
     }
     .dock-title{
       padding: 5px 13px;
+      text-align: center;
       left: 50%;
       transform: translateX(-50%);
       position: absolute;
@@ -44,37 +45,6 @@ defineProps<{
       top: -55px;
       display: none;
     }
-    // .dock-title{
-    //   .common-bg;
-    //   padding: 5px 13px;
-    //   left: 50%;
-    //   transform: translateX(-50%);
-    //   position: absolute;
-    //   white-space: nowrap;
-    //   top: -60px;
-    //   display: none;
-    //   .dock-title-bg-angle{
-    //     display: inline-block;
-    //     position: absolute;
-    //     left: 50%;
-    //     bottom: -9px;
-    //     width: 20px;
-    //     height: 9px;
-    //     transform: translateX(-50%);
-    //     overflow: hidden;
-    //     &:after {
-    //       content: " ";
-    //       .common-bg;
-    //       content: " ";
-    //       transform: rotate(45deg) translateX(-50%);
-    //       border-radius: 2px;
-    //       display: inline-block;
-    //       position: absolute;
-    //       top: -1px;
-    //       left: 43%;
-    //     }
-    //   }
-    // }
 
     &:hover .dock-title{
       display: block;

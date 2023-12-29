@@ -15,7 +15,7 @@ const loaded = ref(false);
 </script>
 
 <template>
-  <div class="w-full h-full flex-center bg-gray" :class="{dragging: useGlobalStore().inDragging}">
+  <div class="w-full h-full flex-center" :class="{dragging: useGlobalStore().inDragging}">
     <i v-show="!loaded" class="absolute-center text-2xl mr-2 ei-spinner-snake ei-spin" />
     <iframe
       class="w-full h-full relative"

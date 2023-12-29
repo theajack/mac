@@ -26,7 +26,7 @@ const trash = getTrash();
 </script>
 
 <template>
-  <div class="dock-bar no-select">
+  <div class="dock-bar no-select bg-blur">
     <DockItem
       v-for="item in apps"
       :key="item.name"
@@ -61,12 +61,14 @@ const trash = getTrash();
   display: flex;
   align-items: center;
   padding: 10px 10px 12px 10px;
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--color-white-200);
-  border-radius: 14px;
-  box-shadow: var(--box-shadow);
+
   z-index: 10;
   width: max-content;
+
+  &::before{
+    box-shadow: var(--box-shadow);
+    border-radius: 15px;
+  }
 
   .dock-split{
     display: inline-block;

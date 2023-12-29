@@ -9,10 +9,12 @@ import DockBar from '../components/dock/dock-bar.vue';
 import Toast from '../components/common/toast/toast.vue';
 import ContextMenu from '../components/common/context-menu/context-menu.vue';
 import AppManager from '../components/app-manager.vue';
+import Loading from './loading.vue';
 </script>
 
 <template>
   <div class="desktop-container">
+    <Loading />
     <StatusBar />
     <DockBar />
     <Toast />

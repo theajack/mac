@@ -44,6 +44,7 @@ function clickWindow () {
       :style="{
         'margin-top': status.header.enable ? status.header.height + 'px': '0',
         'height': status.header.enable ? `calc(100% - ${status.header.height}px)`: '100%',
+        backgroundColor: status.background ? status.background: 'var(--bg-gray)',
       }"
     >
       <component :is="status.component" :status="status" />

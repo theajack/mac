@@ -206,3 +206,37 @@ export function handleComponent (data: any) {
 export function isUrl (value: string) {
     return /^(((ht|f)tps?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/.test(value);
 }
+
+export function degToArc (deg: number) {
+    return deg * Math.PI / 180;
+}
+
+export function fetchProcess (url: string, onprogress: (progress: number)=>void) {
+    fetch(url)
+        .then((response: any) => {
+            const totalSize = response.headers.get('Content-Length');
+            const reader = response.body.getReader();
+            let receivedSize = 0;
+
+            function read () {
+                reader.read().then(({ done, value }: {done: boolean, value: any}) => {
+                    if (done) {
+                    // 图片加载完成
+                        return;
+                    }
+                    receivedSize += value.length;
+                    const progress = (receivedSize / totalSize) * 100;
+                    // 更新进度条
+                    onprogress(progress);
+                    // 继续读取下一部分数据
+                    read();
+                });
+            }
+
+            // 开始读取数据
+            read();
+
+            // 将加载的图片显示在页面上
+            return null;
+        });
+}

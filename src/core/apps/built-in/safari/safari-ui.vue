@@ -36,7 +36,7 @@ function clickTab (item: ITabItem) {
 </script>
 
 <template>
-  <div class="h-full bg-gray">
+  <div class="h-full">
     <div v-show="store.showTab" class="tab-w" :style="`height: ${TabHeight}px`">
       <div
         v-for="(item) in store.tabs"

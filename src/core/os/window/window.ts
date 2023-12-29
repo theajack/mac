@@ -27,6 +27,7 @@ export interface IWindowOptions {
     singleMode?: boolean,
     appName?: string,
     url?: string,
+    background?: string,
 }
 
 const createWinIds = (() => {
@@ -104,6 +105,7 @@ export function createWindowStatus (
         },
         clearList: [] as (()=>void)[],
         animation: false,
+        background: options.background,
         _timer: null as any,
         async $animate (fn: ()=>void) {
             clearTimeout(this._timer);

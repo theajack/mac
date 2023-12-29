@@ -26,6 +26,7 @@ export class Calculator extends App {
                 enable: false,
             },
             enableResize: false,
+            background: 'var(--bg-gray-light)'
         });
     }
 }
