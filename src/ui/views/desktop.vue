@@ -10,6 +10,16 @@ import Toast from '../components/common/toast/toast.vue';
 import ContextMenu from '../components/common/context-menu/context-menu.vue';
 import AppManager from '../components/app-manager.vue';
 import Loading from './loading.vue';
+import { useGlobalStore } from '@/ui/store';
+
+const store = useGlobalStore();
+
+// const {
+//     position,
+//     visible,
+//     contextmenu
+// } = createContextMenuRef();
+
 </script>
 
 <template>
@@ -18,7 +28,9 @@ import Loading from './loading.vue';
     <StatusBar />
     <DockBar />
     <Toast />
-    <ContextMenu />
+    <ContextMenu
+      :list="store.deskTopMenuList"
+    />
     <AppManager />
   </div>
 </template>

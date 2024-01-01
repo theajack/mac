@@ -6,19 +6,9 @@
 <script setup lang="ts">
 import type { IWindowStatus } from '@/core/os/window/window';
 import WindowHeader from './window-header.vue';
-import { useGlobalStore } from '@/ui/store';
-const props = defineProps<{
+defineProps<{
   status: IWindowStatus,
 }>();
-
-const store = useGlobalStore();
-
-function clickWindow () {
-    if (props.status.zIndex !== store.windowMaxZIndex) {
-        // eslint-disable-next-line vue/no-mutating-props
-        props.status.zIndex = ++store.windowMaxZIndex;
-    }
-}
 </script>
 
 <template>
@@ -35,7 +25,7 @@ function clickWindow () {
       top: status.inited ? 0: '50%',
       transition: status.animation ? 'all .3s ease': 'none',
     }"
-    @mousedown="clickWindow"
+    @mousedown="status.$bringToTop"
   >
     <WindowHeader :status="status" />
     <div

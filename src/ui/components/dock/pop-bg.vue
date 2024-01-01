@@ -6,9 +6,13 @@
 <script setup lang="ts">
 import { degToArc } from '@/lib/utils';
 const props = withDefaults(defineProps<{
-    angleWidth?: number
+    angleWidth?: number,
+    backgroundColor?: string,
+    left?: string,
 }>(), {
-    angleWidth: 20
+    angleWidth: 20,
+    backgroundColor: '#2229',
+    left: '50%',
 });
 
 const width = `${props.angleWidth / 2}px`;
@@ -29,16 +33,14 @@ const bwidth = `${props.angleWidth * Math.cos(degToArc(45))}px`;
 
   // todo 此部分为实现毛玻璃带尖角的气泡 有待优化
   .common-bg{
-      // content: ' ';
       backdrop-filter: blur(40px);
       border: 1px solid var(--color-white-200);
       box-shadow: var(--box-shadow-border);
-      background-color: #2229;
+      background-color: v-bind(backgroundColor);
   }
   .pop-w::before{
       content: ' ';
       backdrop-filter: blur(40px);
-      background-color: #2229;
   }
   .pop-w{
     position: absolute;
@@ -47,6 +49,7 @@ const bwidth = `${props.angleWidth * Math.cos(degToArc(45))}px`;
     width: 100%;
     height: 100%;
     --width: v-bind(width);
+    --left: v-bind(left);
     --bwidth: v-bind(bwidth);
     .pop-border{
       .common-bg;
@@ -56,28 +59,28 @@ const bwidth = `${props.angleWidth * Math.cos(degToArc(45))}px`;
       height: 100%;
       left: 0;
       top:0;
-      border-radius: 3px;
+      border-radius: 6px;
       clip-path: polygon(
         -10px -10px,
         calc(100% + 10px) -10px,
         calc(100% + 10px) calc(100% + 10px),
 
-        calc(50% + var(--width)) calc(100% + 10px),
-        calc(50% + var(--width)) calc(100% - 1px),
-        calc(50% - var(--width)) calc(100% - 1px),
-        calc(50% - var(--width)) calc(100% + 10px),
+        calc(var(--left) + var(--width)) calc(100% + 10px),
+        calc(var(--left) + var(--width)) calc(100% - 1px),
+        calc(var(--left) - var(--width)) calc(100% - 1px),
+        calc(var(--left) - var(--width)) calc(100% + 10px),
 
         -10px calc(100% + 10px)
       );
     }
     .pop-angle{
       .common-bg;
-      background-color: #2229;
+      background-color: v-bind(backgroundColor);
       width: var(--bwidth);
       height: var(--bwidth);
       position: absolute;
-      left: 50%;
-      bottom: 0.1px;
+      left: var(--left);
+      bottom: 0.5px;
       transform-origin: center center;
       // transform: rotate(45deg) translate(-50%, -100%);
       transform: translate(-50%, v-bind(oy)) rotate(45deg);

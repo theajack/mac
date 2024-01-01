@@ -24,7 +24,8 @@ defineProps<{
       :style="{
         'border-radius': app.iconRadius,
         scale: app.iconScale,
-        height: height+'px'
+        height: height+'px',
+        margin: '0 auto',
       }"
       @click="$emit('click')"
     >

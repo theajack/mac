@@ -3,7 +3,8 @@
  * @Date: 2022-09-04 08:16:09
  * @Description: Coding something
  */
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '../views/home.vue';
 import Desktop from '../views/desktop.vue';
 

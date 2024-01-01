@@ -5,18 +5,34 @@
 -->
 <script setup lang="ts">
 // import { ref } from 'vue';
-import { ISelectItem } from '@/core/types/component';
+import type { ISelectItem } from '@/core/types/component';
 import Item from './item.vue';
-defineProps<{
-    list: ISelectItem[]
-}>();
+withDefaults(defineProps<{
+    list: ISelectItem[],
+    background?: boolean,
+    isChild?: boolean,
+    isOverScreen?: boolean,
+}>(), {
+    background: true,
+    isChild: false,
+    isOverScreen: false,
+});
+
+
 </script>
 
 <template>
-  <div class="os-select-list bg-blur">
+  <div
+    class="os-select-list"
+    :class="{
+      'bg-blur': background,
+      'overscreen': isOverScreen
+    }"
+  >
     <Item
       v-for="item in list"
       :key="item.name"
+      :parent-over-screen="isOverScreen"
       :item="item"
       class="os-select-item"
     />
@@ -25,9 +41,19 @@ defineProps<{
 
 <style lang="less">
   .os-select-list {
+    position: relative;
     user-select: none;
     color: #fff;
     min-width: 100px;
     display: inline-block;
+    padding: 5px;
+    .os-select-item {
+      position: relative;
+    }
+    &.overscreen{
+      left: 0!important;
+      right: auto!important;;
+      transform: translateX(-100%)!important;
+    }
   }
 </style>

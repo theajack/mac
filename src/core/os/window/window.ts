@@ -5,7 +5,7 @@
  */
 
 // import { underDevelopment } from '@/ui/components/common/toast/toast';
-import { nextTick, reactive } from 'vue';
+import { markRaw, nextTick, reactive } from 'vue';
 import type { App } from '../../apps/app';
 // import html2canvas from 'html2canvas';
 import { WindowCapture } from './window-capture';
@@ -28,6 +28,7 @@ export interface IWindowOptions {
     appName?: string,
     url?: string,
     background?: string,
+    $getTotalCount: ()=>number,
 }
 
 const createWinIds = (() => {
@@ -63,9 +64,12 @@ function countSize (width?: number|string, height?: number|string) {
     } else {
         refHeight = relHeight;
     }
-    const relWidth = typeof width !== 'undefined' ?
+    let relWidth = typeof width !== 'undefined' ?
         transformSize(WindowWidth, width, defRate) :
         transformSize(refHeight, width, 1920 / 1080);
+    if (typeof relWidth === 'number' && relWidth > WindowWidth) {
+        relWidth = WindowWidth;
+    }
     return [ relWidth, relHeight ];
 }
 
@@ -95,7 +99,7 @@ export function createWindowStatus (
         x: 0,
         y: 0,
         inited: false,
-        component: options.component,
+        component: options.component ? markRaw(options.component) : options.component,
         singleMode: options.singleMode ?? false,
         url: options.url,
         transform () {
@@ -116,6 +120,13 @@ export function createWindowStatus (
                 this.animation = false;
             }, 310);
         },
+        $bringToTop () {
+            const store = useGlobalStore();
+            if (this.zIndex !== store.windowMaxZIndex) {
+                this.zIndex = ++store.windowMaxZIndex;
+            }
+        },
+        $getTotalCount: options.$getTotalCount,
     };
 }
 export type IWindowStatus = ReturnType<typeof createWindowStatus>;
@@ -142,7 +153,10 @@ export class Window {
                 minimize: () => this.minimize(),
                 maximize: () => this.maximize()
             },
-        }, options)));
+            $getTotalCount: () => {
+                return this.parent.windows.length;
+            }
+        } as IWindowOptions, options)));
         this.id = this.status.id;
         this.parent = options.parent;
     }

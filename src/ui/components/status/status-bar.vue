@@ -12,7 +12,7 @@ import { MenuHeightStr } from '@/ui/style/common';
 </script>
 
 <template>
-  <div class="status-bar no-select bg-blur-nb">
+  <div class="status-bar no-select bg-blur-nb" @contextmenu.prevent>
     <Menu />
     <Center />
   </div>

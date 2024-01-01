@@ -14,8 +14,8 @@ export class SystemPreferences extends App {
             msgCount: 3,
         });
     }
-    onOpen (): void {
-        super.onOpen();
+    onOpen () {
         this.msgCount = 0;
+        return super.onOpen();
     }
 }

@@ -5,16 +5,19 @@
 -->
 <script setup lang="ts">
 // import { ref } from 'vue';
-import { ISelectItem } from '@/core/types/component';
+import type { ISelectItem } from '@/core/types/component';
 import List from './list.vue';
 
-defineProps<{
-    list: ISelectItem[]
-}>();
+withDefaults(defineProps<{
+    list: ISelectItem[],
+    background?: boolean,
+}>(), {
+    background: true
+});
 
 </script>
 
 <template>
-  <List :list="list" />
+  <List :list="list" :background="background" />
 </template>
 

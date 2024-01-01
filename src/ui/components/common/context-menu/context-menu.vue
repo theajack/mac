@@ -4,23 +4,42 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { createContextMenuRef } from './context-menu';
 import Select from '../select/index.vue';
+import type { ISelectItem } from '@/core/types/component';
+import { createContextMenuRef } from './context-menu';
+import { onMounted, ref } from 'vue';
+
+defineProps<{
+  list: ISelectItem[],
+}>();
+
+const menuDom = ref();
 
 const {
     position,
     visible,
-    list
-} = createContextMenuRef();
-// todo
+    contextmenu
+} = createContextMenuRef(() => {
+    return menuDom.value;
+});
+
+onMounted(() => {
+    const parent = menuDom.value.parentElement;
+    parent.addEventListener('contextmenu', (e: MouseEvent) => {
+        if (e.target !== parent) return;
+        contextmenu(e);
+    });
+});
 
 </script>
 
 <template>
   <div
+    ref="menuDom"
     :style="{
       left: `${position.left}px`,
-      top: `${position.top}px`
+      top: `${position.top}px`,
+      opacity: position.opacity,
     }" class="context-menu"
   >
     <Select v-show="visible" :list="list" />

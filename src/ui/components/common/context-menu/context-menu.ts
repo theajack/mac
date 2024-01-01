@@ -3,9 +3,11 @@
  * @Date: 2022-10-07 22:28:31
  * @Description: Coding something
  */
-import { ISelectItem } from '@/core/types/component';
+import type { ISelectItem } from '@/core/types/component';
 import { ref } from 'vue';
 import { toast } from '../toast/toast';
+import type { App } from '@/core/apps/app';
+import { CommonMargin, WinHeightNoDock, WindowHeight, WindowWidth } from '@/ui/style/common';
 
 const onClick = function (this: ISelectItem) {
     toast({
@@ -15,7 +17,52 @@ const onClick = function (this: ISelectItem) {
     });
 };
 
-const DefaultMenu: ISelectItem[] = [
+export function createDockAppMenuList (app: App): ISelectItem[] {
+    return [
+        {
+            name: 'New Window',
+            onClick () {
+                app.openNewWindow();
+            },
+        },
+        {
+            isSplit: true,
+        },
+        {
+            name: 'Options',
+            onClick,
+            children: [ {
+                name: '在程序坞中保留',
+                onClick,
+            }, {
+                name: '登录时打开',
+                onClick,
+            }, {
+                name: '在访达中显示',
+                onClick,
+            } ]
+        },
+        {
+            isSplit: true,
+        },
+        {
+            name: '显示所有窗口',
+            onClick,
+        },
+        {
+            name: '隐藏',
+            onClick,
+        },
+        {
+            name: '退出',
+            onClick () {
+                app.closeApp();
+            },
+        },
+    ];
+}
+
+export const DeskTopMenuList: ISelectItem[] = [
     {
         name: 'New Folder',
         onClick,
@@ -54,6 +101,25 @@ const DefaultMenu: ISelectItem[] = [
         }, {
             name: 'test2',
             onClick,
+            children: [ {
+                name: 'test2-1',
+                onClick,
+            }, {
+                name: 'test2-2',
+                onClick,
+            }, {
+                name: 'test2-3',
+                onClick,
+            }, {
+                name: 'test2-4',
+                onClick,
+            } ]
+        }, {
+            name: 'test3',
+            onClick,
+        }, {
+            name: 'test4',
+            onClick,
         } ]
     }, {
         name: 'Show View Options',
@@ -61,31 +127,66 @@ const DefaultMenu: ISelectItem[] = [
     }
 ];
 
-export function createContextMenuRef () {
-
+export function createContextMenuRef (getDom: ()=>HTMLElement) {
     const visible = ref(false);
-    const list = ref(DefaultMenu);// todo 适配app
     const position = ref({
         left: 0,
         top: 0,
+        opacity: 0,
     });
 
-    window.addEventListener('contextmenu', (e) => {
+    let cacheHeight = 0, cacheWidth = 0;
+
+    const shapeSize = (e: MouseEvent) => {
+        const { clientX, clientY } = e;
+        const minLeft = WindowWidth - CommonMargin - cacheWidth;
+        if (clientX > minLeft) {
+            // position.value.left = minLeft;
+            // 对齐macos的设计
+            position.value.left = clientX - cacheWidth;
+        }
+        const minTop = WinHeightNoDock - CommonMargin - cacheHeight;
+        if (clientY > minTop) {
+            position.value.top = minTop;
+        }
+        if (cacheHeight !== 0) {
+            position.value.opacity = 1;
+        }
+    };
+
+    const contextmenu = (e: MouseEvent) => {
+
+        const { clientX, clientY } = e;
+
         position.value = {
-            left: e.clientX,
-            top: e.clientY,
+            left: clientX,
+            top: clientY,
+            opacity: 0,
         };
-        // todo 超出屏幕部分进行重新定位计算
+
+        shapeSize(e);
+
+        setTimeout(() => {
+            const dom = getDom();
+            const { offsetHeight, offsetWidth } = dom;
+            if (cacheHeight !== offsetHeight || cacheWidth !== offsetWidth) {
+                cacheWidth = offsetWidth;
+                cacheHeight = offsetHeight;
+                shapeSize(e);
+            }
+            position.value.opacity = 1;
+        });
+
         visible.value = true;
         e.preventDefault();
-    }, true);
+    };
     window.addEventListener('click', () => {
         visible.value = false;
     }, true);
 
     return {
         position,
-        list,
-        visible
+        visible,
+        contextmenu,
     };
 }

@@ -26,7 +26,7 @@ const trash = getTrash();
 </script>
 
 <template>
-  <div class="dock-bar no-select bg-blur">
+  <div class="dock-bar no-select bg-blur" @contextmenu.prevent>
     <DockItem
       v-for="item in apps"
       :key="item.name"

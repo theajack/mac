@@ -592,11 +592,6 @@ video {
   height: 100%;
 }
 
-.h-fit {
-  height: -moz-fit-content;
-  height: fit-content;
-}
-
 .w-1\/2 {
   width: 50%;
 }
@@ -643,10 +638,6 @@ video {
   gap: 0.5rem;
 }
 
-.overflow-y-auto {
-  overflow-y: auto;
-}
-
 .border {
   border-width: 1px;
 }
@@ -654,11 +645,6 @@ video {
 .bg-black {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
-}
-
-.bg-gray-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
 }
 
 .bg-white {

@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { ISelectItem } from '../types/component';
+import type { ISelectItem } from '../types/component';
 import { toast } from '@/ui/components/common/toast/toast';
 import { getApps } from '../context';
 

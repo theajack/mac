@@ -27,7 +27,6 @@ function toggleFullWindow () {
     const status = props.status;
     if (!status.enableResize) return;
     if (status.isMax) {
-
         const [ x, y, width, height ] = prevSize;
         status.$animate(() => {
             status.isMax = false;

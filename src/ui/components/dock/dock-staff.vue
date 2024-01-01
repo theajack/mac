@@ -42,7 +42,7 @@ defineProps<{
       transform: translateX(-50%);
       position: absolute;
       white-space: nowrap;
-      top: -55px;
+      top: -60px;
       display: none;
     }
 

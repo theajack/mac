@@ -5,8 +5,14 @@
 -->
 <script setup lang="ts">
 import type { App } from '@/core/apps/app';
-import AppStaff from './dock-staff.vue';
+import DockTip from './dock-staff.vue';
+import DockMenu from './dock-menu.vue';
 import AppBlock from '../../components/app-block.vue';
+import { ref } from 'vue';
+import { createDockAppMenuList } from '../common/context-menu/context-menu';
+import { useGlobalStore } from '@/ui/store';
+
+const store = useGlobalStore();
 
 const props = defineProps<{
     app: App
@@ -16,16 +22,30 @@ const onClick = () => {
     props.app.onOpen();
 };
 
+const list = ref(createDockAppMenuList(props.app));
+
+const contextmenu = (e: MouseEvent) => {
+    store.openDockAppMenu(props.app.name);
+    e.preventDefault();
+};
+window.addEventListener('mousedown', e => {
+    store.closeDockAppMenu();
+});
+
 </script>
 
 <template>
   <div
     class="dock-item"
     :class="{first: app.status.firstWindowOpen}"
+    @contextmenu="contextmenu"
+    @mousedown.stop
+    @click="store.closeDockAppMenu()"
   >
     <div class="dock-icon">
       <AppBlock :app="app" :height="48" @click="onClick" />
-      <AppStaff :app="app" :icon="app.icon" @tap-app="onClick" />
+      <DockTip v-show="store.dockContextAppName !== app.name" :app="app" :icon="app.icon" @tap-app="onClick" />
+      <DockMenu :visible="store.dockContextAppName === app.name" :list="list" />
     </div>
     <span
       v-show="app.isRunning"

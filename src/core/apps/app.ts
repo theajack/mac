@@ -53,6 +53,8 @@ export class App implements IApp {
     canBackground = false;
     appType: AppType;
 
+    newWindowOptions: IWindowOptions|null = null;
+
     constructor ({
         name = '',
         icon = '',
@@ -109,22 +111,52 @@ export class App implements IApp {
         if (this.link) {
             window.open(this.link);
         } else {
-            // todo
-            toast({
-                from: this,
-                content: 'under development...'
-            });
+            const win = this.findLatestWindow();
+            if (!win) {
+                if (this.newWindowOptions) {
+                    return this.openNewWindow();
+                } else {
+                    // todo
+                    toast({
+                        from: this,
+                        content: 'under development...'
+                    });
+                }
+            } else {
+                win.status.$bringToTop();
+                return win;
+            }
         }
+        return null;
+    }
+
+    findLatestWindow () {
+        if (!this.windows.length) return null;
+
+        let maxZIndex = -1;
+        let index = -1;
+
+        this.windows.forEach((item, i) => {
+            const zIndex = item.status.zIndex;
+            if (zIndex > maxZIndex) {
+                index = i;
+                maxZIndex = zIndex;
+            }
+        });
+        return this.windows[index];
     }
 
     initStatusBar () {
 
     }
 
-    async openNewWindow (options: IWindowOptions = {
-        header: {},
-        events: {}
-    }) {
+    openNewWindow (options?: IWindowOptions) {
+        if (!options) {
+            options = this.newWindowOptions || {
+                header: {},
+                events: {}
+            };
+        }
         this.status.firstWindowOpen = this.windows.length === 0;
         if (!options.header) options.header = {};
         handleComponent(options);
@@ -160,11 +192,16 @@ export class App implements IApp {
         window.removeUI();
 
         if (this.windows.length === 0 && !this.canBackground) {
-            this.quit();
+            console.log(`app ${this.name} quit`);
+            this.manager.leaveApp(this);
         }
     }
 
-    quit () {
-        this.manager.leaveApp(this);
+    closeApp () {
+        const n = this.windows.length;
+        for (let i = n; i > 0; i--) {
+            this.windows[i - 1].close();
+        }
+
     }
 }

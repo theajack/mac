@@ -38,7 +38,7 @@ function createOffset (id: number) {
 }
 
 function initDrag (status: IWindowStatus) {
-    console.log('initDrag', status.id);
+    // console.log('initDrag', status.id);
     const store = useGlobalStore();
 
     let left = 0;
@@ -86,7 +86,7 @@ function initDrag (status: IWindowStatus) {
 
     function initPosition () {
         const { x, y } = parent.getBoundingClientRect();
-        const offset = createOffset(status.appWinId);
+        const offset = status.$getTotalCount() <= 1 ? 0 : createOffset(status.appWinId);
         setTransform(x + offset, y + offset);
         status.inited = true;
     }

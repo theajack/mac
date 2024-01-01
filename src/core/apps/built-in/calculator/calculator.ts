@@ -6,8 +6,20 @@
 import { App } from '../../app';
 import { AppNames } from '../../app-config';
 import CalculatorUI from './calculator.vue';
+import { markRaw } from 'vue';
 
 export class Calculator extends App {
+
+    newWindowOptions = markRaw({
+        component: CalculatorUI,
+        width: 250,
+        height: 'auto' as const,
+        header: {
+            enable: false,
+        },
+        enableResize: false,
+        background: 'var(--bg-gray-light)'
+    });
 
     constructor () {
         super({
@@ -16,17 +28,8 @@ export class Calculator extends App {
         });
     }
 
-    onOpen (): void {
+    openNewWindow () {
         this.msgCount = 0;
-        this.openNewWindow({
-            component: CalculatorUI,
-            width: 250,
-            height: 'auto',
-            header: {
-                enable: false,
-            },
-            enableResize: false,
-            background: 'var(--bg-gray-light)'
-        });
+        return super.openNewWindow();
     }
 }

@@ -6,11 +6,42 @@
 
 <script setup lang="ts">
 // import { ref } from 'vue';
-import { ISelectItem } from '@/core/types/component';
+import type { ISelectItem } from '@/core/types/component';
 import List from './list.vue';
-defineProps<{
-    item: ISelectItem
-}>();
+import { computed, ref } from 'vue';
+import { CommonMargin, WinHeightNoDock, WindowWidth } from '@/ui/style/common';
+const props = withDefaults(defineProps<{
+    item: ISelectItem,
+    parentOverScreen?: boolean,
+}>(), {
+    parentOverScreen: false,
+});
+const isOverScreen = ref(props.parentOverScreen);
+const top = ref(-5);
+
+const listParent = ref();
+
+const enterSelect = () => {
+    const el = listParent.value?.children[2];
+    if (!el) return;
+    const { right, bottom } = el.getBoundingClientRect();
+    console.log(right, bottom, props.parentOverScreen);
+    if (!props.parentOverScreen) {
+        if (right > WindowWidth - CommonMargin) {
+            isOverScreen.value = true;
+        }
+    }
+    if (bottom > WinHeightNoDock) {
+        top.value = -(bottom - WinHeightNoDock + 5);
+    }
+};
+
+const leaveSelect = () => {
+    isOverScreen.value = props.parentOverScreen;
+    top.value = -5;
+};
+
+const topPx = computed(() => `${top.value}px`);
 
 </script>
 
@@ -19,15 +50,22 @@ defineProps<{
     class="os-select-item"
     :class="{'is-split': item.isSplit}"
     @click="item.onClick"
+    @mouseenter="enterSelect"
+    @mouseleave="leaveSelect"
   >
     <div
       v-if="item.isSplit"
       class="os-select-split"
     />
-    <div v-else>
+    <div v-else ref="listParent" class="os-select-child">
       <span class="os-select-title">{{ item.name }}</span>
       <i v-if="item.children" class="ei-angle-right" />
-      <List v-if="item.children" :list="item.children" />
+      <List
+        v-if="item.children"
+        :is-over-screen="parentOverScreen || isOverScreen"
+        :is-child="true"
+        :list="item.children"
+      />
     </div>
   </div>
 </template>
@@ -42,22 +80,25 @@ defineProps<{
     position: absolute;
     right: 3px;
     font-size: 15px;
-    top: 2px;
+    top: 4px;
   }
-  .os-select-list{
-    position: absolute;
-    z-index: 1;
-    right: 0;
-    transform: translateX(100%);
-    top: -5px;
-    display: none;
-  }
-  .os-select-title{
-    margin-right: 20px;
+  >.os-select-child{
+
+    >.os-select-list{
+      position: absolute;
+      z-index: 1;
+      right: 0;
+      transform: translateX(100%);
+      top: v-bind(topPx);
+      display: none;
+    }
+    >.os-select-title{
+      margin-right: 20px;
+    }
   }
   &:hover {
     background-color: #3361c6;
-    .os-select-list{
+    >.os-select-child>.os-select-list{
       display: block;
     }
   }
