@@ -6,12 +6,12 @@
 import { markRaw } from 'vue';
 import { App } from '../../app';
 import { AppNames, createEmptyStatus } from '../../app-config';
-import type { IAppStatus } from '../../type';
 import FinderUI from './finder-ui.vue';
 
-const status: IAppStatus = createEmptyStatus();
-
 export class Finder extends App {
+
+    statusMenu = createEmptyStatus('Finder');
+
     newWindowOptions = markRaw({
         component: FinderUI,
         height: 0.6
@@ -19,7 +19,6 @@ export class Finder extends App {
     constructor () {
         super({
             name: AppNames.finder,
-            status,
         });
     }
 }

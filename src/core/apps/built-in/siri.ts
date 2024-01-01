@@ -4,10 +4,10 @@
  * @Description: Coding something
  */
 import { App } from '../app';
-import { AppNames } from '../app-config';
+import { AppNames, createEmptyStatus } from '../app-config';
 
 export class Siri extends App {
-
+    statusMenu = createEmptyStatus('Siri');
     constructor () {
         super({
             name: AppNames.siri

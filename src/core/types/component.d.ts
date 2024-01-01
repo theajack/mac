@@ -1,3 +1,5 @@
+import type { App } from '../apps/app';
+
 /*
  * @Author: tackchen
  * @Date: 2022-10-04 21:48:42
@@ -12,7 +14,7 @@ export interface ISelectItem {
     checked?: boolean;
     disabled?: boolean;
     isSearch?: boolean;
-    onClick?: () => void;
+    onClick?: (item: ISelectItem) => void;
     onSearchInput?: (text: string) => void;
     children?: ISelectItem[];
 }

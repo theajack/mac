@@ -48,6 +48,10 @@ export function getApps () {
     return getOS().value.appManager.installedApps;
 }
 
+export function getRealApps () {
+    return getOS().value.appManager.installedApps.filter(app => !app.isVirtualApp);
+}
+
 export function getRunningApps () {
     return getOS().value.appManager.runningApps;
 }

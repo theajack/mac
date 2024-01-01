@@ -15,7 +15,6 @@ import { Finder } from './built-in/finder/finder';
 import { SystemPreferences } from './built-in/prefer';
 import { Terminal } from './built-in/terminal';
 import { Trash } from './built-in/trash';
-import type { IAppStatus } from './type';
 import { Calculator } from './built-in/calculator/calculator';
 import { Launcher } from './built-in/launcher';
 import { Safari } from './built-in/safari/safari';
@@ -28,6 +27,7 @@ import { Meitu } from './third/meitu';
 import { WeChat } from './third/wechat';
 import { KWai } from './third/kwai';
 import { QQMusic } from './third/qqmusic';
+import type { IAppStatusTitle } from './type';
 
 export enum AppNames {
     finder = 'finder',
@@ -78,23 +78,28 @@ export function createDefaultApps ():
     {[prop in AppNames]: IAppConfig}
 {
     let dockIndex = 1;
+
+    const app = (name: AppNames) => ({
+        name, dockIndex: dockIndex++
+    });
+
     return {
-        [AppNames.github]: { name: AppNames.github, dockIndex: dockIndex++ },
-        [AppNames.terminal]: { name: AppNames.terminal, dockIndex: dockIndex++ },
-        [AppNames.safari]: { name: AppNames.safari, dockIndex: dockIndex++ },
-        [AppNames.calculator]: { name: AppNames.calculator, dockIndex: dockIndex++ },
-        [AppNames.wechat]: { name: AppNames.wechat, dockIndex: dockIndex++ },
-        [AppNames.vscode]: { name: AppNames.vscode, dockIndex: dockIndex++ },
-        [AppNames.meitu]: { name: AppNames.meitu, dockIndex: dockIndex++ },
-        [AppNames.bilibili]: { name: AppNames.bilibili, dockIndex: dockIndex++ },
-        [AppNames.qqmusic]: { name: AppNames.qqmusic, dockIndex: dockIndex++ },
-        [AppNames.kwai]: { name: AppNames.kwai, dockIndex: dockIndex++ },
-        [AppNames.finder]: { name: AppNames.finder, dockIndex: dockIndex++ },
-        [AppNames.launcher]: { name: AppNames.launcher, dockIndex: dockIndex++ },
-        [AppNames.appStore]: { name: AppNames.appStore, dockIndex: dockIndex++ },
-        [AppNames.notes]: { name: AppNames.notes, dockIndex: dockIndex++ },
-        [AppNames.siri]: { name: AppNames.siri, dockIndex: dockIndex++ },
-        [AppNames.systemPreferences]: { name: AppNames.systemPreferences, dockIndex: dockIndex++ },
+        [AppNames.github]: app(AppNames.github),
+        [AppNames.launcher]: app(AppNames.launcher),
+        [AppNames.terminal]: app(AppNames.terminal),
+        [AppNames.safari]: app(AppNames.safari),
+        [AppNames.calculator]: app(AppNames.calculator),
+        [AppNames.wechat]: app(AppNames.wechat),
+        [AppNames.vscode]: app(AppNames.vscode),
+        [AppNames.meitu]: app(AppNames.meitu),
+        [AppNames.bilibili]: app(AppNames.bilibili),
+        [AppNames.qqmusic]: app(AppNames.qqmusic),
+        [AppNames.kwai]: app(AppNames.kwai),
+        [AppNames.finder]: app(AppNames.finder),
+        [AppNames.appStore]: app(AppNames.appStore),
+        [AppNames.notes]: app(AppNames.notes),
+        [AppNames.siri]: app(AppNames.siri),
+        [AppNames.systemPreferences]: app(AppNames.systemPreferences),
         [AppNames.trash]: { name: AppNames.trash, dockIndex: 1000 },
     };
 }
@@ -157,18 +162,15 @@ function createEmptyStatusItem (title = '') {
     };
 }
 
-export function createEmptyStatus (): IAppStatus {
-
-    return {
-        dock: createEmptyStatusItem('Finder'),
-        list: [
-            createEmptyStatusItem('Finder'),
-            createEmptyStatusItem('File'),
-            createEmptyStatusItem('Edit'),
-            createEmptyStatusItem('View'),
-            createEmptyStatusItem('Go'),
-            createEmptyStatusItem('Window'),
-            createEmptyStatusItem('Help'),
-        ]
-    };
+export function createEmptyStatus (title: string): IAppStatusTitle[] {
+    // todo
+    return [
+        createEmptyStatusItem(title),
+        createEmptyStatusItem('File'),
+        createEmptyStatusItem('Edit'),
+        createEmptyStatusItem('View'),
+        createEmptyStatusItem('Go'),
+        createEmptyStatusItem('Window'),
+        createEmptyStatusItem('Help'),
+    ];
 }

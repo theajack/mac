@@ -4,15 +4,15 @@
  * @Description: Coding something
  */
 import { App } from '../../app';
-import { AppNames } from '../../app-config';
+import { AppNames, createEmptyStatus } from '../../app-config';
 import SafariUI from './safari-ui.vue';
 import SafariHeader from './safari-header.vue';
 import { MacEvent } from '@/core/os/event-bus';
 import { createSafariStore } from './safari-store';
 import { markRaw, nextTick } from 'vue';
-// import { nextTick } from 'vue';
 
 export class Safari extends App {
+    statusMenu = createEmptyStatus('Safari');
 
     newWindowOptions = markRaw({
         component: SafariUI,

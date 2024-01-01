@@ -4,11 +4,12 @@
  * @Description: Coding something
  */
 import { App } from '../../app';
-import { AppNames } from '../../app-config';
+import { AppNames, createEmptyStatus } from '../../app-config';
 import CalculatorUI from './calculator.vue';
 import { markRaw } from 'vue';
 
 export class Calculator extends App {
+    statusMenu = createEmptyStatus('Calculator');
 
     newWindowOptions = markRaw({
         component: CalculatorUI,

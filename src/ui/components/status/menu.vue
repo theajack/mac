@@ -8,8 +8,9 @@
 import { getAppManager } from '@/core/context';
 import Select from '@/ui/components/common/select/index.vue';
 import { createMenuStatus } from './menu';
+import { useGlobalStore } from '@/ui/store';
 
-const { list } = getAppManager().currentApp.status;
+const store = useGlobalStore();
 
 const { mainStatus } = getAppManager();
 
@@ -38,7 +39,7 @@ const {
     </div>
 
     <div
-      v-for="item,index in list"
+      v-for="item,index in store.statusMenu"
       :key="item.title"
       class="menu-bar-item"
       :class="{'active': index === activeIndex}"

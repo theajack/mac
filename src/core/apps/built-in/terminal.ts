@@ -6,13 +6,13 @@
 import type { IWindowOptions } from '@/core/os/window/window';
 import { App } from '../app';
 import { AppNames, createEmptyStatus } from '../app-config';
-import type { IAppStatus } from '../type';
 import { createTerm } from 'webos-term';
 import { markRaw, nextTick } from 'vue';
 
-const status: IAppStatus = createEmptyStatus();
 
 export class Terminal extends App {
+
+    statusMenu = createEmptyStatus('Terminal');
 
     newWindowOptions: IWindowOptions = markRaw({
         height: 500,
@@ -22,7 +22,6 @@ export class Terminal extends App {
     constructor () {
         super({
             name: AppNames.terminal,
-            status,
             msgCount: 1,
         });
     }

@@ -8,9 +8,8 @@ import type { App } from '@/core/apps/app';
 import DockTip from './dock-staff.vue';
 import DockMenu from './dock-menu.vue';
 import AppBlock from '../../components/app-block.vue';
-import { ref } from 'vue';
-import { createDockAppMenuList } from '../common/context-menu/context-menu';
 import { useGlobalStore } from '@/ui/store';
+import { AppNames } from '@/core/apps/app-config';
 
 const store = useGlobalStore();
 
@@ -19,10 +18,11 @@ const props = defineProps<{
 }>();
 
 const onClick = () => {
+    if (props.app.name !== AppNames.launcher) {
+        store.showLauncher = false;
+    }
     props.app.onOpen();
 };
-
-const list = ref(createDockAppMenuList(props.app));
 
 const contextmenu = (e: MouseEvent) => {
     store.openDockAppMenu(props.app.name);
@@ -31,21 +31,29 @@ const contextmenu = (e: MouseEvent) => {
 window.addEventListener('mousedown', e => {
     store.closeDockAppMenu();
 });
-
+if (props.app.name === 'trash') {
+    // @ts-ignore
+    props.app.proxy = () => props.app;
+}
 </script>
 
 <template>
   <div
     class="dock-item"
-    :class="{first: app.status.firstWindowOpen && !app.isVirtualApp}"
+    :class="{first: app.firstWindowOpen && !app.isVirtualApp}"
     @contextmenu="contextmenu"
     @mousedown.stop
     @click="store.closeDockAppMenu()"
   >
     <div class="dock-icon">
       <AppBlock :app="app" @click="onClick" />
-      <DockTip v-show="store.dockContextAppName !== app.name" :app="app" :icon="app.icon" @tap-app="onClick" />
-      <DockMenu :visible="store.dockContextAppName === app.name" :list="list" />
+      <DockTip
+        v-show="store.dockContextAppName !== app.name"
+        :app="app"
+        :icon="app.icon"
+        @tap-app="onClick"
+      />
+      <DockMenu :visible="store.dockContextAppName === app.name" :list="app.dockMenu" />
     </div>
     <span
       v-show="app.isRunning && !app.isVirtualApp"

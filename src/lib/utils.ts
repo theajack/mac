@@ -251,3 +251,9 @@ export function throttle (fn: any, time = 500) {
         }, time);
     };
 }
+
+export function upcaseFirstLetter (v: string) {
+    return v.split(' ').map(s => (
+        s[0].toUpperCase() + s.substring(1)
+    )).join(' ');
+}

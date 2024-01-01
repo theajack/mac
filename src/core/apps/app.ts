@@ -8,11 +8,15 @@ import { MacEvent, sendMessageToApp } from '@core/os/event-bus';
 import type { IWindowOptions } from '@/core/os/window/window';
 import { Window } from '@/core/os/window/window';
 import { OS } from '../os/os';
-import { appNameToTitle } from './app-config';
+import { AppNames, appNameToTitle, createEmptyStatus } from './app-config';
 import type { AppManager } from './app-manager';
-import type { IAppStatus, IApp, IAppMessageBase, IAppMessage } from './type';
+import type { IApp, IAppMessageBase, IAppMessage, IAppStatusTitle } from './type';
+import type { Ref } from 'vue';
 import { markRaw, type App as VueApp } from 'vue';
-import { cache, handleComponent, appIcon } from '@/lib/utils';
+import { cache, handleComponent, appIcon, upcaseFirstLetter } from '@/lib/utils';
+import type { ISelectItem } from '../types/component';
+import { useGlobalStore } from '@/ui/store';
+import { createDockAppMenuList } from '../../ui/components/common/context-menu/context-menu';
 
 export enum AppType {
     Normal,
@@ -26,13 +30,14 @@ export interface IAppOptions {
     iconRadius?: number;
     iconScale?: number|boolean;
     title?: string;
-    status?: IAppStatus;
     link?: string;
     msgCount?: number;
     onMessage?: (data: IAppMessage) => void;
     appType?: AppType;
+    statusMenu?: IAppStatusTitle[]; // 顶部 status bar的标题和菜单
 }
-export class App implements IApp {
+export class App<This extends App = App<any>> implements IApp {
+    proxy: ()=>This;
     isVirtualApp = false;
     name: string;
     icon: string;
@@ -40,7 +45,6 @@ export class App implements IApp {
     component?: VueApp;
     defCaptureSrc = '';
     title: string;
-    status: IAppStatus;
     manager: AppManager;
     link: string;
     iconScale: number;
@@ -56,13 +60,15 @@ export class App implements IApp {
 
     newWindowOptions: IWindowOptions|null = null;
 
+    firstWindowOpen?: boolean; // 用于显示docker动画
+    dockMenu: ISelectItem[]; // dock 的标题和菜单
+    statusMenu: IAppStatusTitle[]; // 顶部 status bar的标题和菜单
     constructor ({
         name = '',
         icon = '',
         iconRadius = 0.25,
         iconScale = 1,
         title = '',
-        status = {} as any,
         onMessage,
         link = '',
         msgCount = 0,
@@ -71,7 +77,6 @@ export class App implements IApp {
         this.link = link;
         if (link) appType = AppType.Link;
         this.name = name;
-        this.status = status;
         this.msgCount = msgCount;
         this.appType = appType;
 
@@ -87,6 +92,13 @@ export class App implements IApp {
                 this.onMessage(data);
             }
         });
+
+        if (!this.statusMenu) {
+            this.statusMenu = createEmptyStatus(upcaseFirstLetter(this.name));
+        }
+        if (!this.dockMenu) {
+            this.dockMenu = createDockAppMenuList(this);
+        }
     }
 
     @cache get on () {
@@ -108,7 +120,17 @@ export class App implements IApp {
         });
     }
 
+    private _initAppStatus () {
+        this.manager.currentApp = this;
+        if (this.name === AppNames.trash) {
+            useGlobalStore().statusMenu = this.manager.finder.statusMenu;
+        } else if (!this.isVirtualApp) {
+            useGlobalStore().statusMenu = this.statusMenu;
+        }
+    }
+
     onOpen (): Window|null|void {
+        this._initAppStatus();
         if (this.link) {
             window.open(this.link);
         } else {
@@ -158,7 +180,7 @@ export class App implements IApp {
                 events: {}
             }) as IWindowOptions;
         }
-        this.status.firstWindowOpen = this.windows.length === 0;
+        this.firstWindowOpen = this.windows.length === 0;
         if (!options.header) options.header = {};
         handleComponent(options);
         if (options.component) {
@@ -185,7 +207,7 @@ export class App implements IApp {
     }
 
     closeWindow (window: Window) {
-        this.status.firstWindowOpen = false;
+        this.firstWindowOpen = false;
         this.windows.splice(this.windows.indexOf(window), 1);
 
         this.manager.removeWindowStatus(window);

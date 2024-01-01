@@ -4,10 +4,11 @@
  * @Description: Coding something
  */
 import { App } from '../app';
-import { AppNames } from '../app-config';
+import { AppNames, createEmptyStatus } from '../app-config';
 
 export class SystemPreferences extends App {
 
+    statusMenu = createEmptyStatus('System Settings');
     constructor () {
         super({
             title: 'System Settings',

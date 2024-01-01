@@ -11,7 +11,7 @@
 <script lang='ts' setup>
 import { resource } from '@/lib/utils';
 import { useGlobalStore } from '../store';
-import { getApps } from '@/core/context';
+import { getRealApps } from '@/core/context';
 import { computed, ref } from 'vue';
 import type { App } from '@/core/apps/app';
 import AppBlock from '@/ui/components/app-block.vue';
@@ -21,7 +21,7 @@ import { DockTop, WindowWidth } from '../style/common';
 const store = useGlobalStore();
 const url = resource('desktop-bg.jpg');
 
-const allApps = getApps();
+const allApps = getRealApps();
 const PageSize = 9;
 const pages = computed(() => {
     const arr: App[][] = [];

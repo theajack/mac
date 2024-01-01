@@ -7,6 +7,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia';
 import { DeskTopMenuList } from '../components/common/context-menu/context-menu';
 import { WindowHeight, WindowWidth } from '../style/common';
 import { throttle } from '@/lib/utils';
+import { getAppManager } from '@/core/context';
 
 export const useGlobalStore = defineStore('store', {
     state: () => ({
@@ -17,6 +18,8 @@ export const useGlobalStore = defineStore('store', {
         showLauncher: false,
         windowWidth: WindowWidth,
         windowHeight: WindowHeight,
+
+        statusMenu: getAppManager().finder.statusMenu,
     }),
     actions: {
         drag (bool = true) {

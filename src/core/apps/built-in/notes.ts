@@ -4,9 +4,10 @@
  * @Description: Coding something
  */
 import { App } from '../app';
-import { AppNames } from '../app-config';
+import { AppNames, createEmptyStatus } from '../app-config';
 
 export class Notes extends App {
+    statusMenu = createEmptyStatus('Notes');
 
     constructor () {
         super({

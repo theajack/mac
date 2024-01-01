@@ -38,6 +38,7 @@ withDefaults(defineProps<{
 .app-block{
     position: relative;
     width: fit-content;
+    margin: 0 auto;
     img{
         filter: drop-shadow(1px 1px 1px #2229) drop-shadow(-1px 1px 1px #2229);
     }

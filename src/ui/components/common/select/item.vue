@@ -43,13 +43,24 @@ const leaveSelect = () => {
 
 const topPx = computed(() => `${top.value}px`);
 
+const onclick = (e: MouseEvent) => {
+    if (props.item.disabled) {
+        e.preventDefault();
+        return;
+    }
+    props.item.onClick?.(props.item);
+};
+
 </script>
 
 <template>
   <div
     class="os-select-item"
-    :class="{'is-split': item.isSplit}"
-    @click="item.onClick"
+    :class="{
+      'is-split': item.isSplit,
+      'disabled': item.disabled,
+    }"
+    @click="onclick"
     @mouseenter="enterSelect"
     @mouseleave="leaveSelect"
   >
@@ -107,6 +118,15 @@ const topPx = computed(() => `${top.value}px`);
   }
   .os-select-split{
     border-top: 1px solid var(--color-white-200);
+  }
+  &.disabled{
+    color: #5c5c5c;
+    &:hover {
+      background-color: transparent;
+      >.os-select-child>.os-select-list{
+        display: none;
+      }
+    }
   }
 }
 </style>

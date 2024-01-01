@@ -16,7 +16,7 @@ import { mainStatus } from '../status/main-status';
 import type { IWindowStatus, Window } from '../os/window/window';
 import { reactive } from 'vue';
 import type { Trash } from './built-in/trash';
-import type { Launcher } from './built-in/launcher';
+import type { Finder } from './built-in/finder/finder';
 
 export class AppManager {
     static DIR_NAME = StringText.appDir;
@@ -48,7 +48,8 @@ export class AppManager {
     windowStatus: IWindowStatus[] = reactive([]);
 
     trash: Trash; // 垃圾桶
-    launcher: Launcher; // 启动台
+
+    finder: Finder;
 
     constructor (os: OS) {
         this.parent = os;
@@ -102,6 +103,7 @@ export class AppManager {
 
         this.installedApps = installApps;
         this.trash = this.excludeApp(AppNames.trash) as Trash;
+        this.finder = installApps.find(app => app.name === AppNames.finder) as Finder;
 
         this.appConfig.installedApps = installApps.map(item => item.name);
 
@@ -116,6 +118,7 @@ export class AppManager {
             });
 
         this.appConfig.dockApps = this.dockApps.map(item => item.name);
+
     }
 
     removeWindowStatus (window: Window) {

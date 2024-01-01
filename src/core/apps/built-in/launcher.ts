@@ -18,7 +18,8 @@ export class Launcher extends App {
     }
 
     onOpen () {
-        useGlobalStore().showLauncher = true;
+        const store = useGlobalStore();
+        store.showLauncher = !store.showLauncher;
         return null;
     }
 }
