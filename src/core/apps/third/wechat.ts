@@ -10,6 +10,7 @@ export class WeChat extends WebApp {
 
     constructor () {
         super({
+            title: 'WeChat',
             name: AppNames.wechat,
             url: 'https://wx.qq.com/',
             msgCount: 99,

@@ -11,6 +11,7 @@ import ContextMenu from '../components/common/context-menu/context-menu.vue';
 import AppManager from '../components/app-manager.vue';
 import Loading from './loading.vue';
 import { useGlobalStore } from '@/ui/store';
+import Launcher from './launcher.vue';
 
 const store = useGlobalStore();
 
@@ -23,7 +24,8 @@ const store = useGlobalStore();
 </script>
 
 <template>
-  <div class="desktop-container">
+  <div class="desktop-container bg-cover">
+    <Launcher />
     <Loading />
     <StatusBar />
     <DockBar />
@@ -44,8 +46,5 @@ const store = useGlobalStore();
   left: 0;
   top: 0;
   background-image: url('/assets/desktop-bg.jpg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
 }
 </style>

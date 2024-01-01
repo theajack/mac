@@ -8,6 +8,9 @@ import { App } from '../app';
 import { AppNames } from '../app-config';
 
 export class Trash extends App {
+
+    isVirtualApp = true;
+
     constructor () {
         super({
             iconRadius: 0,

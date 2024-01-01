@@ -18,7 +18,7 @@ export interface ITabItem {
     // fromPrev?: boolean, // 是否是从别的窗口过来的
 }
 
-export const DefaultPH = '搜索或输入网站名称';
+export const DefaultPH = 'Search or enter website name';
 
 function createSingleStore (id: number) {
     let pageId = 1;

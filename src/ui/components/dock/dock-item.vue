@@ -37,18 +37,18 @@ window.addEventListener('mousedown', e => {
 <template>
   <div
     class="dock-item"
-    :class="{first: app.status.firstWindowOpen}"
+    :class="{first: app.status.firstWindowOpen && !app.isVirtualApp}"
     @contextmenu="contextmenu"
     @mousedown.stop
     @click="store.closeDockAppMenu()"
   >
     <div class="dock-icon">
-      <AppBlock :app="app" :height="48" @click="onClick" />
+      <AppBlock :app="app" @click="onClick" />
       <DockTip v-show="store.dockContextAppName !== app.name" :app="app" :icon="app.icon" @tap-app="onClick" />
       <DockMenu :visible="store.dockContextAppName === app.name" :list="list" />
     </div>
     <span
-      v-show="app.isRunning"
+      v-show="app.isRunning && !app.isVirtualApp"
       class="dock-dot"
     />
   </div>

@@ -10,7 +10,7 @@ export class Vscode extends WebApp {
 
     constructor () {
         super({
-            title: 'VsCode',
+            title: 'Visual Studio Code',
             name: AppNames.vscode,
             url: 'https://codingcorp.cloudstudio.net/ws/ikqyzt'
         });

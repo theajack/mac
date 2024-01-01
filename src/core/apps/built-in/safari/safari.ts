@@ -9,7 +9,7 @@ import SafariUI from './safari-ui.vue';
 import SafariHeader from './safari-header.vue';
 import { MacEvent } from '@/core/os/event-bus';
 import { createSafariStore } from './safari-store';
-import { markRaw } from 'vue';
+import { markRaw, nextTick } from 'vue';
 // import { nextTick } from 'vue';
 
 export class Safari extends App {
@@ -31,7 +31,8 @@ export class Safari extends App {
         MacEvent.on('new-window', async ({ name, data }) => {
             console.log(name, data);
             if (name === this.name) {
-                const window = await this.openNewWindow();
+                const window = this.openNewWindow();
+                await nextTick();
                 const store = createSafariStore(window.id);
                 store.initNewWindow(data);
                 // await nextTick();

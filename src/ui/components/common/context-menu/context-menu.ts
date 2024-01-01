@@ -32,13 +32,13 @@ export function createDockAppMenuList (app: App): ISelectItem[] {
             name: 'Options',
             onClick,
             children: [ {
-                name: '在程序坞中保留',
+                name: 'Remove from Dock',
                 onClick,
             }, {
-                name: '登录时打开',
+                name: 'Open at Login',
                 onClick,
             }, {
-                name: '在访达中显示',
+                name: 'Show in Finder',
                 onClick,
             } ]
         },
@@ -46,15 +46,19 @@ export function createDockAppMenuList (app: App): ISelectItem[] {
             isSplit: true,
         },
         {
-            name: '显示所有窗口',
-            onClick,
+            name: 'Show All Windows',
+            onClick () {
+                app.showAllWindows();
+            },
         },
         {
-            name: '隐藏',
-            onClick,
+            name: 'Hide',
+            onClick () {
+                app.hide();
+            }
         },
         {
-            name: '退出',
+            name: 'Quit',
             onClick () {
                 app.closeApp();
             },

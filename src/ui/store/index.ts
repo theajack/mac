@@ -5,7 +5,8 @@
  */
 import { defineStore, acceptHMRUpdate } from 'pinia';
 import { DeskTopMenuList } from '../components/common/context-menu/context-menu';
-// import { ref } from 'vue';
+import { WindowHeight, WindowWidth } from '../style/common';
+import { throttle } from '@/lib/utils';
 
 export const useGlobalStore = defineStore('store', {
     state: () => ({
@@ -13,6 +14,9 @@ export const useGlobalStore = defineStore('store', {
         inDragging: false,
         deskTopMenuList: DeskTopMenuList,
         dockContextAppName: '',
+        showLauncher: false,
+        windowWidth: WindowWidth,
+        windowHeight: WindowHeight,
     }),
     actions: {
         drag (bool = true) {
@@ -28,6 +32,12 @@ export const useGlobalStore = defineStore('store', {
     getters: {
     }
 });
+
+window.addEventListener('resize', throttle(() => {
+    const store = useGlobalStore();
+    store.windowWidth = WindowWidth;
+    store.windowHeight = WindowHeight;
+}));
 
 // @ts-ignore
 if (import.meta.hot) {

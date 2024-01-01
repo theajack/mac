@@ -7,6 +7,7 @@
 import type { Dir, File } from 'webos-term';
 import type { OS } from '../os/os';
 import type { IAppConfig } from './app-config';
+import { AppNames } from './app-config';
 import { createApp, createDefaultApps } from './app-config';
 import type { IJson } from '../type';
 import type { App } from './app';
@@ -15,6 +16,7 @@ import { mainStatus } from '../status/main-status';
 import type { IWindowStatus, Window } from '../os/window/window';
 import { reactive } from 'vue';
 import type { Trash } from './built-in/trash';
+import type { Launcher } from './built-in/launcher';
 
 export class AppManager {
     static DIR_NAME = StringText.appDir;
@@ -45,7 +47,8 @@ export class AppManager {
 
     windowStatus: IWindowStatus[] = reactive([]);
 
-    trash: Trash;
+    trash: Trash; // 垃圾桶
+    launcher: Launcher; // 启动台
 
     constructor (os: OS) {
         this.parent = os;
@@ -76,10 +79,9 @@ export class AppManager {
         }) as any as File;
     }
 
-    private initTrash () {
-        const index = this.installedApps.findIndex(app => app.name === 'trash');
-        this.trash = this.installedApps[index];
-        this.installedApps.splice(index, 1);
+    private excludeApp (name: AppNames) {
+        const index = this.installedApps.findIndex(app => app.name === name);
+        return this.installedApps.splice(index, 1)[0] as App;
     }
 
     private async initApps () {
@@ -99,7 +101,7 @@ export class AppManager {
         const installApps = await Promise.all(all);
 
         this.installedApps = installApps;
-        this.initTrash();
+        this.trash = this.excludeApp(AppNames.trash) as Trash;
 
         this.appConfig.installedApps = installApps.map(item => item.name);
 

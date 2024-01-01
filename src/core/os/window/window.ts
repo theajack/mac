@@ -28,7 +28,7 @@ export interface IWindowOptions {
     appName?: string,
     url?: string,
     background?: string,
-    $getTotalCount: ()=>number,
+    $getTotalCount?: ()=>number,
 }
 
 const createWinIds = (() => {

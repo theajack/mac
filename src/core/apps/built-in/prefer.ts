@@ -10,6 +10,7 @@ export class SystemPreferences extends App {
 
     constructor () {
         super({
+            title: 'System Settings',
             name: AppNames.systemPreferences,
             msgCount: 3,
         });

@@ -23,7 +23,7 @@ import { MenuHeightStr } from '@/ui/style/common';
     width: 100%;
     height: v-bind(MenuHeightStr);
     display: flex;
-    z-index: 10,
+    z-index: 8,
   }
   // background-color: #2224;
 </style>

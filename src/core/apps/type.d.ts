@@ -19,9 +19,9 @@ export interface IAppStatusTitle {
 
 export interface IAppStatus {
     firstWindowOpen?: boolean; // 用于显示docker动画
-    dock: IAppStatusTitle;
-    center?: IAppStatusTitle;
-    list: IAppStatusTitle[];
+    dock: IAppStatusTitle; // dock 的标题和菜单
+    // center?: IAppStatusTitle;
+    list: IAppStatusTitle[]; // 顶部 status bar的标题和菜单
 }
 
 export interface IAppMessageBase {

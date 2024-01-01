@@ -5,12 +5,20 @@
  */
 import { App } from '../app';
 import { AppNames } from '../app-config';
+import { useGlobalStore } from '@/ui/store';
 
 export class Launcher extends App {
+
+    isVirtualApp = true;
 
     constructor () {
         super({
             name: AppNames.launcher
         });
+    }
+
+    onOpen () {
+        useGlobalStore().showLauncher = true;
+        return null;
     }
 }

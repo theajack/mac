@@ -8,10 +8,12 @@ import { AppType, type App } from '@/core/apps/app';
 
 defineEmits([ 'click' ]);
 
-defineProps<{
+withDefaults(defineProps<{
     app: App,
-    height: number,
-}>();
+    height?: number,
+}>(), {
+    height: 48
+});
 </script>
 
 <template>
@@ -35,6 +37,7 @@ defineProps<{
 <style lang="less">
 .app-block{
     position: relative;
+    width: fit-content;
     img{
         filter: drop-shadow(1px 1px 1px #2229) drop-shadow(-1px 1px 1px #2229);
     }

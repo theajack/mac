@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<{
 }>(), {
     parentOverScreen: false,
 });
-const isOverScreen = ref(props.parentOverScreen);
+const isOverScreen = ref(false);
 const top = ref(-5);
 
 const listParent = ref();
@@ -24,8 +24,8 @@ const listParent = ref();
 const enterSelect = () => {
     const el = listParent.value?.children[2];
     if (!el) return;
+    isOverScreen.value = props.parentOverScreen;
     const { right, bottom } = el.getBoundingClientRect();
-    console.log(right, bottom, props.parentOverScreen);
     if (!props.parentOverScreen) {
         if (right > WindowWidth - CommonMargin) {
             isOverScreen.value = true;
@@ -37,7 +37,7 @@ const enterSelect = () => {
 };
 
 const leaveSelect = () => {
-    isOverScreen.value = props.parentOverScreen;
+    isOverScreen.value = false;
     top.value = -5;
 };
 

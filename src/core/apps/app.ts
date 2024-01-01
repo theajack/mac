@@ -33,6 +33,7 @@ export interface IAppOptions {
     appType?: AppType;
 }
 export class App implements IApp {
+    isVirtualApp = false;
     name: string;
     icon: string;
     iconRadius: string;
@@ -107,7 +108,7 @@ export class App implements IApp {
         });
     }
 
-    onOpen () {
+    onOpen (): Window|null|void {
         if (this.link) {
             window.open(this.link);
         } else {
@@ -151,11 +152,11 @@ export class App implements IApp {
     }
 
     openNewWindow (options?: IWindowOptions) {
-        if (!options) {
-            options = this.newWindowOptions || {
+        if (typeof options === 'undefined') {
+            options = (this.newWindowOptions || {
                 header: {},
                 events: {}
-            };
+            }) as IWindowOptions;
         }
         this.status.firstWindowOpen = this.windows.length === 0;
         if (!options.header) options.header = {};
@@ -202,6 +203,18 @@ export class App implements IApp {
         for (let i = n; i > 0; i--) {
             this.windows[i - 1].close();
         }
+    }
 
+    hide () {
+        this.windows.forEach(win => {
+            win.status.visible = false;
+        });
+    }
+
+    showAllWindows () {
+        this.windows.forEach(win => {
+            win.status.$bringToTop();
+            win.status.visible = true;
+        });
     }
 }

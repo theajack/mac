@@ -16,7 +16,7 @@ defineProps<{
     v-show="status.visible"
     class="os-window window-blur"
     :style="{
-      'visibility': status.inited ? 'visible': 'hidden',
+      'visibility': (status.inited && status.visible) ? 'visible': 'hidden',
       'z-index': status.zIndex,
       width: status.width + 'px',
       height: status.height + 'px',

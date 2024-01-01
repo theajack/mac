@@ -240,3 +240,14 @@ export function fetchProcess (url: string, onprogress: (progress: number)=>void)
             return null;
         });
 }
+
+export function throttle (fn: any, time = 500) {
+    let timer: any = null;
+    return (...args: any[]) => {
+        if (timer) return;
+        timer = setTimeout(() => {
+            fn(...args);
+            timer = null;
+        }, time);
+    };
+}
