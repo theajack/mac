@@ -33,6 +33,7 @@ window.addEventListener('mousedown', e => {
 });
 if (props.app.name === 'trash') {
     // @ts-ignore
+    // eslint-disable-next-line vue/no-mutating-props
     props.app.proxy = () => props.app;
 }
 </script>

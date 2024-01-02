@@ -53,6 +53,7 @@ const bwidth = `${props.angleWidth * Math.cos(degToArc(45))}px`;
     --bwidth: v-bind(bwidth);
     .pop-border{
       .common-bg;
+
       position: absolute;
       z-index: -1;
       width: 100%;
@@ -75,12 +76,13 @@ const bwidth = `${props.angleWidth * Math.cos(degToArc(45))}px`;
     }
     .pop-angle{
       .common-bg;
+      backdrop-filter: blur(10px);
       background-color: v-bind(backgroundColor);
       width: var(--bwidth);
       height: var(--bwidth);
       position: absolute;
       left: var(--left);
-      bottom: 0.5px;
+      bottom: 0.4px;
       transform-origin: center center;
       // transform: rotate(45deg) translate(-50%, -100%);
       transform: translate(-50%, v-bind(oy)) rotate(45deg);

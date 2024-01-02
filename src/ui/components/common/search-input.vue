@@ -27,7 +27,6 @@ const value = ref('');
 watch(value, () => {
     emit('update:modelValue', value.value);
 });
-
 </script>
 
 <template>
@@ -56,18 +55,18 @@ watch(value, () => {
 @import url(@/ui/style/common.less);
 .c-search-input-w{
     cursor: text;
-    background-color: rgb(42,42,42);
+    background-color: rgba(42,42,42, .5);
     width: 400px;
     height: 28px;
     padding: 0 8px;
     border-radius: 5px;
     width: fit-content;
     .flex-center;
-    border: 3px solid rgb(56,56,56);
+    border: 1px solid rgb(56,56,56);
     transition: border-color .3s ease;
     .search-input{
         padding-left: 4px;
-        background-color: inherit;
+        background-color: transparent;
         outline: none;
         border: none;
         transition: width .3s ease;
@@ -83,7 +82,7 @@ watch(value, () => {
     user-select: none;
     &.focus{
         user-select: auto;
-        border-color: rgb(52,113,156);
+        // border-color: rgb(52,113,156);
     }
 }
 </style>

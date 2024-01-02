@@ -4,16 +4,26 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { AppType, type App } from '@/core/apps/app';
+import type { App } from '@/core/apps/app';
+import { AppType } from '@/core/apps/app';
 
 defineEmits([ 'click' ]);
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
     app: App,
     height?: number,
+    dotSize?: 'normal'|'large'
 }>(), {
-    height: 48
+    height: 48,
+    dotSize: 'normal',
 });
+
+const isNormalDot = props.dotSize === 'normal';
+
+const dotFontSize = isNormalDot ? '12px' : '18px';
+const paddingX = isNormalDot ? '4px' : '8px';
+const dotRadius = isNormalDot ? '10px' : '20px';
+
 </script>
 
 <template>
@@ -30,6 +40,7 @@ withDefaults(defineProps<{
         margin: '0 auto',
       }"
       @click="$emit('click')"
+      @mousedown.stop
     >
   </div>
 </template>
@@ -50,15 +61,15 @@ withDefaults(defineProps<{
         filter: drop-shadow(1px 1px 1px #222d) drop-shadow(-1px 1px 1px #222d);
         right: -3px;
         bottom: -1px;
-        font-size: 12px;
+        font-size: v-bind(dotFontSize);
     }
     .app-msg{
         background-color: rgb(237,57,47);
-        font-size: 12px;
-        line-height: 12px;
+        font-size: v-bind(dotFontSize);
+        line-height: v-bind(dotFontSize);
         min-width: 18px;
-        border-radius: 10px;
-        padding: 3px 4px;
+        border-radius: v-bind(dotRadius);
+        padding: 3px v-bind(paddingX);
         text-align: center;
         right: -5px;
         box-shadow: 1px 1px 1px #2229;

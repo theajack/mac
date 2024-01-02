@@ -36,6 +36,7 @@ const searchHeight = 50;
 const pageDotHeight = 50;
 const launcherLines = 5;
 const launcherPadding = 30;
+const launcherAppHeight = 80;
 
 const lineHeight = computed(() => {
     return `${(store.windowHeight - DockTop - searchHeight - pageDotHeight - launcherPadding * 2) / launcherLines}px`;
@@ -51,6 +52,8 @@ let isSwitchPage = false;
 function closeLauncher () {
     if (isSwitchPage) return;
     store.showLauncher = false;
+    isMouseDown = false;
+    switchPageIndex(activeIndex.value);
 }
 
 const launcherSearch = ref('');
@@ -74,6 +77,7 @@ const mouseDown = (e: MouseEvent) => {
 };
 const mouseMove = (e: MouseEvent) => {
     if (!isMouseDown) return;
+    isSwitchPage = true;
     const offset = (e.clientX - lastX) / 20;
     const nv = launcherLeft.value - offset;
     const maxBoundary = 60;
@@ -112,6 +116,7 @@ const mouseUp = (e: MouseEvent) => {
       @mouseup="mouseUp"
       @mousemove="mouseMove"
       @click="closeLauncher"
+      @contextmenu.prevent
     >
       <div
         class="launcher-search flex-center"
@@ -133,21 +138,20 @@ const mouseUp = (e: MouseEvent) => {
           :style="{
             padding: `${launcherPadding}px 110px`,
           }"
-          @mouseup.stop
         >
           <div
             v-for="app in page" :key="app.name"
             :style="{width: `${100/singleLineCount}%`}"
             class="launcher-app flex-center"
           >
-            <AppBlock :height="70" :app="app" @click="clickLauncherApp(app)" />
+            <AppBlock :dot-size="'large'" :height="launcherAppHeight" :app="app" @click="clickLauncherApp(app)" />
             <div class="launcher-title">{{ app.title }}</div>
           </div>
         </div>
       </div>
       <div class="launcher-page-dot flex-center" :style="{height: `${pageDotHeight}px`}" @mousedown.stop>
         <span
-          v-for="(i, index) in pages"
+          v-for="(_, index) in pages"
           :key="index"
           :class="{active: index === activeIndex}"
           @click.stop="switchPageIndex(index)"
@@ -204,8 +208,8 @@ const mouseUp = (e: MouseEvent) => {
       span{
         background-color: #fefefe;
         border-radius: 50%;
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         opacity: .3;
         transition: opacity .3s ease;
         &.active{
