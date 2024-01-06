@@ -257,3 +257,18 @@ export function upcaseFirstLetter (v: string) {
         s[0].toUpperCase() + s.substring(1)
     )).join(' ');
 }
+
+export function getHost () {
+    const host = location.host;
+
+    const def = 'theajack.gitee.io';
+
+    if ([
+        def,
+        'theajack.github.io',
+        'shiyix.cn'
+    ].includes(host)) {
+        return host;
+    }
+    return def;
+}

@@ -33,7 +33,7 @@ export class OS {
         initAudioPlayer();
         await this.disk.initFileSystem();
         await this.appManager.initAppsDirectory();
-        console.log(this.disk.deepLs());
+        // console.log(this.disk.deepLs());
     }
 }
 

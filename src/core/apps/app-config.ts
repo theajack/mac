@@ -29,6 +29,8 @@ import { KWai } from './third/kwai';
 import { QQMusic } from './third/qqmusic';
 import type { IAppStatusTitle } from './type';
 import { TextEdit } from './built-in/text-edit/text-edit';
+import { BomberMan } from './third/bomberman';
+import { PlaneGame } from './third/plane-game';
 
 export enum AppNames {
     finder = 'finder',
@@ -51,6 +53,8 @@ export enum AppNames {
     wechat = 'wechat',
     kwai = 'kwai',
     qqmusic = 'qqmusic',
+    bomberman = 'bomberman',
+    planeGame = 'plane-game',
 }
 
 export const DefaultApps: {
@@ -75,6 +79,8 @@ export const DefaultApps: {
     [AppNames.wechat]: WeChat,
     [AppNames.qqmusic]: QQMusic,
     [AppNames.kwai]: KWai,
+    [AppNames.bomberman]: BomberMan,
+    [AppNames.planeGame]: PlaneGame,
 };
 
 export function createDefaultApps ():
@@ -99,6 +105,8 @@ export function createDefaultApps ():
         [AppNames.bilibili]: app(AppNames.bilibili),
         [AppNames.qqmusic]: app(AppNames.qqmusic),
         [AppNames.kwai]: app(AppNames.kwai),
+        [AppNames.planeGame]: app(AppNames.planeGame),
+        [AppNames.bomberman]: app(AppNames.bomberman),
         [AppNames.finder]: app(AppNames.finder),
         [AppNames.textEdit]: app(AppNames.textEdit),
         [AppNames.appStore]: app(AppNames.appStore),

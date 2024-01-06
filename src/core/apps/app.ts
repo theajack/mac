@@ -215,7 +215,7 @@ export class App<This extends App = App<any>> implements IApp {
         window.removeUI();
 
         if (this.windows.length === 0 && !this.canBackground) {
-            console.log(`app ${this.name} quit`);
+            // console.log(`app ${this.name} quit`);
             this.manager.leaveApp(this);
         }
     }
