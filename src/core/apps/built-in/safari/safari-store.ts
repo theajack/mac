@@ -9,6 +9,19 @@ import { defineStore } from 'pinia';
 import { AppNames } from '../../app-config';
 import { underDevelopment } from '@/ui/components/common/toast/toast';
 
+export interface IFavorite {
+    name: string,
+    icon?: string,
+    url: string,
+    iframe?: boolean,
+    short?: string,
+    src?: string,
+    bg?: string,
+    color?: string,
+    svg?: string,
+    scale?: boolean,
+}
+
 export interface ITabItem {
     url: string,
     title: string,
@@ -68,17 +81,30 @@ function createSingleStore (id: number) {
             _findItemIndex (id: number) {
                 return this.tabs.findIndex(item => item.id === id);
             },
-            newTab () {
+            _newTabItem (item: Omit<ITabItem, 'id'>) {
                 const id = pageId++;
-                this.tabs.push({
-                    id: id,
+                const newItem = item as ITabItem;
+                newItem.id = id;
+                this.tabs.push(newItem);
+                this.setActiveId(id);
+                return id;
+            },
+            openNewUrl (url: string) {
+                const Url = new URL(url);
+                return this._newTabItem({
+                    url: url,
+                    title: Url.host,
+                    icon: 'ei-safari',
+                    isStart: false,
+                });
+            },
+            newTab () {
+                return this._newTabItem({
                     url: '',
                     title: 'Start Page',
                     icon: 'el-star-off',
                     isStart: true,
                 });
-                this.setActiveId(id);
-                return id;
             },
             back () {
                 underDevelopment();

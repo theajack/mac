@@ -46,8 +46,8 @@ export class Trash extends App<Trash> {
         this.icon = appIcon('trash-full');
     }
     emptyTrash () {
-        console.log(111);
-        window.t2 = this;
+        // console.log(111);
+        // window.t2 = this;
         this.icon = appIcon(this.name);
     }
 }

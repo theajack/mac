@@ -61,7 +61,7 @@ function clickTab (item: ITabItem) {
       </div>
     </div>
     <div
-      class="h-full" :style="{
+      class="h-full overflow-auto" :style="{
         height: store.showTab ? `calc(100% - ${TabHeight}px)`: '100%'
       }"
     >

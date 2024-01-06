@@ -28,6 +28,7 @@ import { WeChat } from './third/wechat';
 import { KWai } from './third/kwai';
 import { QQMusic } from './third/qqmusic';
 import type { IAppStatusTitle } from './type';
+import { TextEdit } from './built-in/text-edit/text-edit';
 
 export enum AppNames {
     finder = 'finder',
@@ -40,6 +41,7 @@ export enum AppNames {
     notes = 'notes',
     safari = 'safari',
     siri = 'siri',
+    textEdit = 'text-edit',
 
     // 三方App
     github = 'github',
@@ -52,7 +54,7 @@ export enum AppNames {
 }
 
 export const DefaultApps: {
-    [key in AppNames]: typeof App
+    [key in AppNames]: any
 } = {
     [AppNames.finder]: Finder,
     [AppNames.systemPreferences]: SystemPreferences,
@@ -64,6 +66,7 @@ export const DefaultApps: {
     [AppNames.safari]: Safari,
     [AppNames.notes]: Notes,
     [AppNames.siri]: Siri,
+    [AppNames.textEdit]: TextEdit,
     // 三方App
     [AppNames.github]: Github,
     [AppNames.bilibili]: Bilibili,
@@ -89,6 +92,7 @@ export function createDefaultApps ():
         [AppNames.terminal]: app(AppNames.terminal),
         [AppNames.safari]: app(AppNames.safari),
         [AppNames.calculator]: app(AppNames.calculator),
+
         [AppNames.wechat]: app(AppNames.wechat),
         [AppNames.vscode]: app(AppNames.vscode),
         [AppNames.meitu]: app(AppNames.meitu),
@@ -96,6 +100,7 @@ export function createDefaultApps ():
         [AppNames.qqmusic]: app(AppNames.qqmusic),
         [AppNames.kwai]: app(AppNames.kwai),
         [AppNames.finder]: app(AppNames.finder),
+        [AppNames.textEdit]: app(AppNames.textEdit),
         [AppNames.appStore]: app(AppNames.appStore),
         [AppNames.notes]: app(AppNames.notes),
         [AppNames.siri]: app(AppNames.siri),
