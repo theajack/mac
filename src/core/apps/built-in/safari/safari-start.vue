@@ -243,7 +243,7 @@ function host (url: string) {
   border-radius: 10px;
 }
 .reading-item{
-  padding: 5px 15px;
+  padding: 10px;
   width: 32%;
 }
 </style>

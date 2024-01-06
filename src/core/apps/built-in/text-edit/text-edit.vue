@@ -4,16 +4,19 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
+import { ref } from 'vue';
+import keyDown from './keydown-event';
 function keydown (e: KeyboardEvent) {
-    if (e.key === 'Tab') {
-        e.preventDefault();
-    }
+    keyDown.call(e.target, e, '    ');
 }
+const testCode = ref(`function main () {
+    console.log("Hello World");
+}`);
 </script>
 
 <template>
   <div class="flex-center text-white h-full text-edit-w">
-    <textarea class="text-input w-full h-full" @keydown="keydown" />
+    <textarea v-model="testCode" class="text-input w-full h-full" @keydown="keydown" />
   </div>
 </template>
 

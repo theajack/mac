@@ -12,7 +12,8 @@ export class Vscode extends WebApp {
         super({
             title: 'Visual Studio Code',
             name: AppNames.vscode,
-            url: 'https://codingcorp.cloudstudio.net/ws/ikqyzt'
+            // url: 'https://codingcorp.cloudstudio.net/tty/ygcyzi/',
+            url: 'https://github1s.com/theajack/mac',
         });
     }
 }

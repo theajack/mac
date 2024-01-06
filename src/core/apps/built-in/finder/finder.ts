@@ -7,14 +7,23 @@ import { markRaw } from 'vue';
 import { App } from '../../app';
 import { AppNames, createEmptyStatus } from '../../app-config';
 import FinderUI from './finder-ui.vue';
+import FinderHeader from './finder-header.vue';
+import type { IWindowOptions } from '@/core/os/window/window';
 
 export class Finder extends App {
 
     statusMenu = createEmptyStatus('Finder');
 
-    newWindowOptions = markRaw({
+    newWindowOptions: IWindowOptions = markRaw({
         component: FinderUI,
-        height: 0.6
+        background: 'transparent',
+        height: 600,
+        width: 900,
+        header: {
+            component: FinderHeader,
+            height: 50,
+            bgColor: 'transparent'
+        }
     });
     constructor () {
         super({

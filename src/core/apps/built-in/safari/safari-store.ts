@@ -8,6 +8,7 @@ import { isUrl } from '@/lib/utils';
 import { defineStore } from 'pinia';
 import { AppNames } from '../../app-config';
 import { underDevelopment } from '@/ui/components/common/toast/toast';
+import { createAppDataStore } from '@/ui/store/common';
 
 export interface IFavorite {
     name: string,
@@ -33,7 +34,7 @@ export interface ITabItem {
 
 export const DefaultPH = 'Search or enter website name';
 
-function createSingleStore (id: number) {
+export const createSafariStore = createAppDataStore((id: number) => {
     let pageId = 1;
     return defineStore(`safari-store-${id}`, {
         state: () => ({
@@ -194,17 +195,4 @@ function createSingleStore (id: number) {
             },
         }
     });
-}
-
-const storeMap: Record<number, ReturnType<typeof createSingleStore>> = {};
-
-export function createSafariStore (id: number) {
-
-    if (storeMap[id]) return storeMap[id]();
-
-    const useStore = createSingleStore(id);
-
-    storeMap[id] = useStore;
-
-    return useStore();
-}
+});

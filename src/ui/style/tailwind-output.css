@@ -581,6 +581,18 @@ video {
   margin-right: 0.5rem;
 }
 
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.ml-1 {
+  margin-left: 0.25rem;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
 .block {
   display: block;
 }
@@ -664,6 +676,10 @@ video {
   gap: 0.5rem;
 }
 
+.gap-0 {
+  gap: 0px;
+}
+
 .overflow-auto {
   overflow: auto;
 }
@@ -710,6 +726,11 @@ video {
   background-position: top;
 }
 
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
 .text-right {
   text-align: right;
 }
@@ -742,6 +763,11 @@ video {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .font-bold {

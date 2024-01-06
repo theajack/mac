@@ -67,14 +67,14 @@ export default function keyDown (this: HTMLTextAreaElement, e: KeyboardEvent, ta
             }
         }
     } else if (e.keyCode === 13 && e.shiftKey === false && e.ctrlKey === false) {
-        let cursorPos = this.selectionStart,
-            d = _findStartIndices(this),
-            numStartIndices = d.length,
-            startIndex = 0,
-            endIndex = 0,
-            tabMatch = new RegExp('^' + a.replace('\t', '\\t').replace(/ /g, '\\s') + '+', 'g'),
-            lineText = '',
-            tabs = null;
+        const cursorPos = this.selectionStart;
+        const d = _findStartIndices(this);
+        const numStartIndices = d.length;
+        const tabMatch = new RegExp('^' + a.replace('\t', '\\t').replace(/ /g, '\\s') + '+', 'g');
+        let lineText = '';
+        let tabs = null;
+        let startIndex = 0;
+        let endIndex = 0;
         for (let x = 0; x < numStartIndices; x++) {
             if (d[x + 1] && (cursorPos >= d[x]) && (cursorPos < d[x + 1])) {
                 startIndex = d[x];
@@ -102,7 +102,7 @@ export default function keyDown (this: HTMLTextAreaElement, e: KeyboardEvent, ta
         }
     }
 }
-function _isMultiLine (a) {
+function _isMultiLine (a: HTMLTextAreaElement) {
     const b = a.value.slice(a.selectionStart, a.selectionEnd),
         nlRegex = new RegExp(/\n/);
     if (nlRegex.test(b)) return true;
