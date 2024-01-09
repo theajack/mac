@@ -126,7 +126,7 @@ export function createWindowStatus (
                 this.zIndex = ++store.windowMaxZIndex;
             }
         },
-        $getTotalCount: options.$getTotalCount,
+        $getTotalCount: options.$getTotalCount || (() => 0),
     };
 }
 export type IWindowStatus = ReturnType<typeof createWindowStatus>;

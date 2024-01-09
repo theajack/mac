@@ -77,6 +77,9 @@ function initDrag (status: IWindowStatus) {
     }
 
     function onMouseDown (e: MouseEvent) {
+        if (e.button !== 0) {
+            return;
+        }
         store.drag();
         isMouseDown = true;
         const { left, top } = target.getBoundingClientRect();

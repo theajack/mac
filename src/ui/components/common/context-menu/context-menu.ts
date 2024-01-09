@@ -66,7 +66,7 @@ export function createDockAppMenuList (app: App): ISelectItem[] {
     ];
 }
 
-export const DeskTopMenuList: ISelectItem[] = [
+export const globalMenuList: ISelectItem[] = [
     {
         name: 'New Folder',
         onClick,

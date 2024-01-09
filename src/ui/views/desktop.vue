@@ -31,7 +31,7 @@ const store = useGlobalStore();
     <DockBar />
     <Toast />
     <ContextMenu
-      :list="store.deskTopMenuList"
+      :list="store.globalMenuList"
     />
     <AppManager />
   </div>
