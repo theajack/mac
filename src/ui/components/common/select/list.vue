@@ -5,9 +5,9 @@
 -->
 <script setup lang="ts">
 // import { ref } from 'vue';
-import type { ISelectItem } from '@/core/types/component';
+import type { ISelectList, ISelectItem } from '@/core/types/component';
 import Item from './item.vue';
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
     list: ISelectItem[],
     background?: boolean,
     isChild?: boolean,
@@ -18,6 +18,8 @@ withDefaults(defineProps<{
     isOverScreen: false,
 });
 
+// eslint-disable-next-line vue/no-mutating-props
+(props.list as ISelectList).proxy = () => props.list;
 
 </script>
 

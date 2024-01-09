@@ -4,7 +4,6 @@
  * @Description: Coding something
  */
 import { defineStore, acceptHMRUpdate } from 'pinia';
-import { globalMenuList } from '../components/common/context-menu/context-menu';
 import { WindowHeight, WindowWidth } from '../style/common';
 import { throttle } from '@/lib/utils';
 import { getAppManager } from '@/core/context';
@@ -13,7 +12,7 @@ export const useGlobalStore = defineStore('store', {
     state: () => ({
         windowMaxZIndex: -1,
         inDragging: false,
-        globalMenuList: globalMenuList,
+        globalMenuList: DefaultMenuList,
         dockContextAppName: '',
         showLauncher: false,
         windowWidth: WindowWidth,
@@ -49,4 +48,5 @@ window.addEventListener('resize', throttle(() => {
 if (import.meta.hot) {
     // @ts-ignore
     import.meta.hot.accept(acceptHMRUpdate(useGlobalStore, import.meta.hot));
-} import type { ISelectItem } from '../../core/types/component.d';
+} import type { ISelectItem } from '../../core/types/component.d'; import { DefaultMenuList } from '../components/common/context-menu/context-menu';
+

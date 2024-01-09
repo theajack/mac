@@ -5,7 +5,6 @@
 -->
 
 <script setup lang="ts">
-// import { ref } from 'vue';
 import type { ISelectItem } from '@/core/types/component';
 import List from './list.vue';
 import { computed, ref } from 'vue';
@@ -22,8 +21,9 @@ const top = ref(-5);
 const listParent = ref();
 
 const enterSelect = () => {
-    const el = listParent.value?.children[2];
-    if (!el) return;
+    const children = listParent.value?.children;
+    if (!children || children.length === 0) return;
+    const el = children[children.length - 1];
     isOverScreen.value = props.parentOverScreen;
     const { right, bottom } = el.getBoundingClientRect();
     if (!props.parentOverScreen) {
@@ -43,12 +43,17 @@ const leaveSelect = () => {
 
 const topPx = computed(() => `${top.value}px`);
 
+const isCheckedItem = typeof props.item.checked === 'boolean';
+
 const onclick = (e: MouseEvent) => {
     if (props.item.disabled) {
         e.preventDefault();
         return;
     }
     props.item.onClick?.(props.item);
+    if (isCheckedItem) {
+        e.stopPropagation();
+    }
 };
 
 </script>
@@ -69,7 +74,13 @@ const onclick = (e: MouseEvent) => {
       class="os-select-split"
     />
     <div v-else ref="listParent" class="os-select-child">
+      <i
+        v-if="isCheckedItem"
+        :style="{visibility: item.checked?'visible':'hidden'}"
+        class="el-check mr-1"
+      />
       <span class="os-select-title">{{ item.name }}</span>
+      <!-- todo icon -->
       <i v-if="item.children" class="ei-angle-right" />
       <List
         v-if="item.children"

@@ -9,8 +9,8 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { createFinderStore } from './finder-store';
-import type { IFindMenuItem } from './finder-menu-data';
+import { createFinderStore } from './js/finder-store';
+import type { IFindMenuItem } from './js/finder-menu-data';
 const props = defineProps<{
     id: number,
     list: IFindMenuItem[],
@@ -90,3 +90,4 @@ const chooseItem = (item: any) => {
 }
 </style>
 
+./js/finder-store./js/finder-menu-data

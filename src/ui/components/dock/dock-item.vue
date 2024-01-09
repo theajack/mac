@@ -28,7 +28,7 @@ const contextmenu = (e: MouseEvent) => {
     store.openDockAppMenu(props.app.name);
     e.preventDefault();
 };
-window.addEventListener('mousedown', e => {
+window.addEventListener('mousedown', () => {
     store.closeDockAppMenu();
 });
 if (props.app.name === 'trash') {

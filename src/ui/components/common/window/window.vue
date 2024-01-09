@@ -37,7 +37,7 @@ defineProps<{
         backgroundColor: status.background ? status.background: 'var(--bg-gray)',
       }"
     >
-      <component :is="status.component" :status="status" />
+      <component :is="status.component" :id="status.id" :status="status" />
     </div>
   </div>
 </template>

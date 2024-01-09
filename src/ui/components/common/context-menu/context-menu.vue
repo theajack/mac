@@ -5,30 +5,18 @@
 -->
 <script setup lang="ts">
 import Select from '../select/index.vue';
-import type { ISelectItem } from '@/core/types/component';
-import { createContextMenuRef } from './context-menu';
+import { useContextMenuRef, initDom } from './context-menu';
 import { onMounted, ref } from 'vue';
-
-defineProps<{
-  list: ISelectItem[],
-}>();
-
+import { useGlobalStore } from '@/ui/store';
 const menuDom = ref();
 
 const {
     position,
     visible,
-    contextmenu
-} = createContextMenuRef(() => {
-    return menuDom.value;
-});
+} = useContextMenuRef();
 
 onMounted(() => {
-    const parent = menuDom.value.parentElement;
-    parent.addEventListener('contextmenu', (e: MouseEvent) => {
-        if (e.target !== parent) return;
-        contextmenu(e);
-    });
+    initDom(menuDom.value);
 });
 
 </script>
@@ -42,7 +30,7 @@ onMounted(() => {
       opacity: position.opacity,
     }" class="context-menu"
   >
-    <Select v-show="visible" :list="list" />
+    <Select v-show="visible" :list="useGlobalStore().globalMenuList" />
   </div>
 </template>
 

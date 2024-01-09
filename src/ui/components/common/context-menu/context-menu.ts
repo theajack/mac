@@ -3,11 +3,12 @@
  * @Date: 2022-10-07 22:28:31
  * @Description: Coding something
  */
-import type { ISelectItem } from '@/core/types/component';
+import type { ISelectItem, ISelectList } from '@/core/types/component';
 import { ref } from 'vue';
 import { toast } from '../toast/toast';
 import type { App } from '@/core/apps/app';
 import { CommonMargin, WinHeightNoDock, WindowHeight, WindowWidth } from '@/ui/style/common';
+import { useGlobalStore } from '@/ui/store';
 
 const onClick = function (this: ISelectItem) {
     toast({
@@ -66,7 +67,59 @@ export function createDockAppMenuList (app: App): ISelectItem[] {
     ];
 }
 
-export const globalMenuList: ISelectItem[] = [
+export function createSortByMenu (): ISelectItem[] {
+    return checkContextCheckList([
+        {
+            name: 'None',
+            onClick,
+        },
+        {
+            isSplit: true,
+        },
+        {
+            name: 'Snap to Grid',
+            onClick,
+        },
+        {
+            isSplit: true,
+        },
+        {
+            name: 'Name',
+            checked: true,
+            onClick,
+        },
+        {
+            name: 'Kind',
+            onClick,
+        },
+        {
+            name: 'Date Last Opened',
+            onClick,
+        },
+        {
+            name: 'Date Added',
+            onClick,
+        },
+        {
+            name: 'Date Modified',
+            onClick,
+        },
+        {
+            name: 'Date Created',
+            onClick,
+        },
+        {
+            name: 'Size',
+            onClick,
+        },
+        {
+            name: 'Tags',
+            onClick,
+        },
+    ] as ISelectList);
+}
+
+export const DefaultMenuList: ISelectItem[] = [
     {
         name: 'New Folder',
         onClick,
@@ -76,7 +129,10 @@ export const globalMenuList: ISelectItem[] = [
         name: 'Get Info',
         onClick,
     }, {
-        name: 'Change Desktop Background...',
+        name: 'Change Wallpaper...',
+        onClick,
+    }, {
+        name: 'Edit Widgets...',
         onClick,
     }, {
         isSplit: true,
@@ -84,20 +140,7 @@ export const globalMenuList: ISelectItem[] = [
         name: 'Use Stacks',
         onClick,
     }, {
-        name: 'Sort By',
-        onClick,
-        children: [ {
-            name: 'test1',
-            onClick,
-        }, {
-            name: 'test2',
-            onClick,
-        } ]
-    }, {
-        name: 'Clean Up',
-        onClick,
-    }, {
-        name: 'Clean Up By',
+        name: 'Test Multi',
         onClick,
         children: [ {
             name: 'test1',
@@ -106,32 +149,33 @@ export const globalMenuList: ISelectItem[] = [
             name: 'test2',
             onClick,
             children: [ {
-                name: 'test2-1',
+                name: 'test1',
                 onClick,
             }, {
-                name: 'test2-2',
-                onClick,
-            }, {
-                name: 'test2-3',
-                onClick,
-            }, {
-                name: 'test2-4',
+                name: 'test2',
                 onClick,
             } ]
         }, {
             name: 'test3',
             onClick,
-        }, {
-            name: 'test4',
-            onClick,
-        } ]
+        }, ]
+    }, {
+        name: 'Sort By',
+        onClick,
+        children: createSortByMenu(),
     }, {
         name: 'Show View Options',
         onClick,
     }
 ];
 
-export function createContextMenuRef (getDom: ()=>HTMLElement) {
+let dom: HTMLElement;
+
+export function initDom (domRef: HTMLElement) {
+    dom = domRef;
+}
+
+function createContextMenuRef () {
     const visible = ref(false);
     const position = ref({
         left: 0,
@@ -144,22 +188,22 @@ export function createContextMenuRef (getDom: ()=>HTMLElement) {
     const shapeSize = (e: MouseEvent) => {
         const { clientX, clientY } = e;
         const minLeft = WindowWidth - CommonMargin - cacheWidth;
-        if (clientX > minLeft) {
-            // position.value.left = minLeft;
-            // 对齐macos的设计
-            position.value.left = clientX - cacheWidth;
-        }
+
+        // 对齐macos的设计
+        position.value.left = (clientX > minLeft) ?
+            clientX - cacheWidth : clientX;
+
         const minTop = WinHeightNoDock - CommonMargin - cacheHeight;
-        if (clientY > minTop) {
-            position.value.top = minTop;
-        }
+        // console.log('shapeSize', clientY, minTop, cacheHeight);
+        position.value.top = (clientY > minTop) ? minTop : clientY;
+
         if (cacheHeight !== 0) {
             position.value.opacity = 1;
         }
     };
 
-    const contextmenu = (e: MouseEvent) => {
-
+    const contextmenu = (e: MouseEvent, list: ISelectItem[] = DefaultMenuList) => {
+        useGlobalStore().replaceMenuList(list);
         const { clientX, clientY } = e;
 
         position.value = {
@@ -171,7 +215,6 @@ export function createContextMenuRef (getDom: ()=>HTMLElement) {
         shapeSize(e);
 
         setTimeout(() => {
-            const dom = getDom();
             const { offsetHeight, offsetWidth } = dom;
             if (cacheHeight !== offsetHeight || cacheWidth !== offsetWidth) {
                 cacheWidth = offsetWidth;
@@ -179,18 +222,63 @@ export function createContextMenuRef (getDom: ()=>HTMLElement) {
                 shapeSize(e);
             }
             position.value.opacity = 1;
-        });
+        }, 0);
 
         visible.value = true;
         e.preventDefault();
     };
-    window.addEventListener('click', () => {
+    window.document.addEventListener('click', () => {
         visible.value = false;
-    }, true);
+    }, false);
 
     return {
         position,
         visible,
         contextmenu,
     };
+}
+
+let ContextMenuRef: ReturnType<typeof createContextMenuRef>;
+
+export function useContextMenuRef (list = DefaultMenuList) {
+    if (!ContextMenuRef) {
+        ContextMenuRef = createContextMenuRef();
+    }
+    return {
+        ...ContextMenuRef,
+        contextmenu (e: MouseEvent) {
+            ContextMenuRef.contextmenu(e, list);
+        }
+    } as typeof ContextMenuRef;
+}
+
+export function checkContextCheckList (list: ISelectItem[]) {
+
+    const isCheckList = list.find(item => item.checked === true);
+
+    if (isCheckList) {
+        list.forEach(item => {
+            if (!item.checked && !item.isSplit) {
+                item.checked = false;
+            }
+            const origin = item.onClick;
+            if (origin) {
+                item.onClick = (...args: any[]) => {
+                    const proxy = (list as ISelectList).proxy();
+                    // list.
+                    const selfProxy = proxy.find(each => {
+                        return each.name === item.name;
+                    });
+                    const checkedProxy = proxy.find(each => {
+                        return each.checked === true;
+                    });
+                    // console.log(selfProxy, checkedProxy);
+                    checkedProxy!.checked = false;
+                    selfProxy!.checked = true;
+                    origin?.apply(item, args);
+                };
+            }
+        });
+    }
+    return list;
 }

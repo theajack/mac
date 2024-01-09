@@ -6,14 +6,18 @@
 -->
 <script setup lang="ts">
 import { resource } from '@/lib/utils';
-import { createFinderStore } from './finder-store';
+import { createFinderStore } from './js/finder-store';
 import FinderMenuBlock from './finder-dir-block.vue';
 import FinderFile from './finder-file-item.vue';
-import { faviList, iCloudList, tagList } from './finder-menu-data';
-const props = defineProps<{
-    id: number
-}>();
+import { faviList, iCloudList, tagList } from './js/finder-menu-data';
+import { useContextMenuRef } from '@/ui/components/common/context-menu/context-menu';
+import { MainFinderMenu } from './js/finder-context-menu';
+import type { IWindowCompProp } from '@/core/os/window/window';
+const props = defineProps<IWindowCompProp>();
 const store = createFinderStore(props.id);
+
+const { contextmenu } = useContextMenuRef(MainFinderMenu);
+
 </script>
 
 <template>
@@ -26,7 +30,7 @@ const store = createFinderStore(props.id);
       <FinderMenuBlock :id="id" :list="iCloudList" title="iClouds" :bg-image="resource('finder-icons-2.png')" />
       <FinderMenuBlock :id="id" :list="tagList" title="Tags" :is-tag="true" />
     </div>
-    <div class="right-block flex-1 h-full flex bg-header overflow-auto">
+    <div class="right-block flex-1 h-full flex bg-header overflow-auto" @contextmenu.stop="contextmenu">
       <div class="flex gap-8 flex-wrap h-fit flex-1 p-8">
         <FinderFile
           v-for="item in store.curDirInfo"
@@ -52,3 +56,4 @@ const store = createFinderStore(props.id);
 }
 </style>
 
+./js/finder-store./js/finder-menu-data

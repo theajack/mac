@@ -202,3 +202,8 @@ export class Window {
         return this._dom;
     }
 }
+
+export interface IWindowCompProp {
+    status: IWindowStatus,
+    id: number,
+}

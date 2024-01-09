@@ -7,9 +7,9 @@ import type { App } from '../apps/app';
  */
 export interface ISelectItem {
     name?: string;
-    hotKey?: string[];
+    hotKey?: string[]; // 快捷键
     icon?: string;
-    tip?: string;
+    tip?: string; //
     isSplit?: boolean;
     checked?: boolean;
     disabled?: boolean;
@@ -17,4 +17,9 @@ export interface ISelectItem {
     onClick?: (item: ISelectItem) => void;
     onSearchInput?: (text: string) => void;
     children?: ISelectItem[];
+}
+
+
+export type ISelectList = ISelectItem[] & {
+    proxy: () => ISelectItem[]
 }

@@ -4,11 +4,9 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { createFinderStore } from './finder-store';
-
-const props = defineProps<{
-    id: number
-}>();
+import type { IWindowCompProp } from '@/core/os/window/window';
+import { createFinderStore } from './js/finder-store';
+const props = defineProps<IWindowCompProp>();
 const store = createFinderStore(props.id);
 </script>
 
@@ -70,3 +68,4 @@ const store = createFinderStore(props.id);
 }
 </style>
 
+./js/finder-store
