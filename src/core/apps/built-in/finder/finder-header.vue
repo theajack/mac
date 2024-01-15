@@ -5,9 +5,9 @@
 -->
 <script setup lang="ts">
 import type { IWindowCompProp } from '@/core/os/window/window';
-import { createFinderStore } from './js/finder-store';
+import { useFinderStore } from './js/finder-store';
 const props = defineProps<IWindowCompProp>();
-const store = createFinderStore(props.id);
+const store = useFinderStore(props.id);
 </script>
 
 <template>

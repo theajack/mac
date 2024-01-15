@@ -5,12 +5,12 @@
 -->
 <script setup lang="ts">
 import { resource } from '@/lib/utils';
-import { createSafariStore, type IFavorite } from './safari-store';
+import { useSafariStore, type IFavorite } from './safari-store';
 import FaviIcon from './favi-icon.vue';
 const props = defineProps<{
     id: number
 }>();
-const store = createSafariStore(props.id);
+const store = useSafariStore(props.id);
 
 const favoritesList: IFavorite[] = [
     {

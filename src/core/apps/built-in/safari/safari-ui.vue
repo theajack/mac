@@ -4,7 +4,7 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { createSafariStore, type ITabItem } from './safari-store';
+import { useSafariStore, type ITabItem } from './safari-store';
 import SafariStart from './safari-start.vue';
 import { createDragScope } from '@/ui/lib/drag-scope';
 import type { IWindowStatus } from '@/core/os/window/window';
@@ -12,7 +12,7 @@ import IFrame from '@/ui/components/common/iframe.vue';
 const props = defineProps<{
     status: IWindowStatus
 }>();
-const store = createSafariStore(props.status.id);
+const store = useSafariStore(props.status.id);
 
 const TabHeight = 28;
 

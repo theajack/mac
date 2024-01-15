@@ -8,7 +8,7 @@ import { AppNames, createEmptyStatus } from '../../app-config';
 import SafariUI from './safari-ui.vue';
 import SafariHeader from './safari-header.vue';
 import { MacEvent } from '@/core/os/event-bus';
-import { createSafariStore } from './safari-store';
+import { useSafariStore } from './safari-store';
 import { markRaw, nextTick } from 'vue';
 
 export class Safari extends App {
@@ -33,7 +33,7 @@ export class Safari extends App {
             if (name === this.name) {
                 const window = this.openNewWindow();
                 await nextTick();
-                const store = createSafariStore(window.id);
+                const store = useSafariStore(window.id);
                 store.initNewWindow(data);
                 // await nextTick();
                 // document.getElementById(`SAFARI_ITEM_${window.id}_${data.id}`)?.appendChild(iframe);

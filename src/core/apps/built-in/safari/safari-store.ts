@@ -34,7 +34,7 @@ export interface ITabItem {
 
 export const DefaultPH = 'Search or enter website name';
 
-export const createSafariStore = createAppDataStore((id: number) => {
+export const useSafariStore = createAppDataStore((id: number) => {
     let pageId = 1;
     return defineStore(`safari-store-${id}`, {
         state: () => ({

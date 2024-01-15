@@ -9,7 +9,7 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { createFinderStore } from './js/finder-store';
+import { useFinderStore } from './js/finder-store';
 import type { IFindMenuItem } from './js/finder-menu-data';
 const props = defineProps<{
     id: number,
@@ -18,7 +18,7 @@ const props = defineProps<{
     isTag?: boolean,
     bgImage?: string,
 }>();
-const store = createFinderStore(props.id);
+const store = useFinderStore(props.id);
 
 const chooseItem = (item: any) => {
     store.activeFinderItemName = item.name;

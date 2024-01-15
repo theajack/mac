@@ -16,7 +16,7 @@ export interface IFileInfo {
     kind: string,
 }
 
-export const createFinderStore = createAppDataStore(id => {
+export const useFinderStore = createAppDataStore(id => {
     return defineStore(`finder-store-${id}`, {
         state: () => {
             let id = 0;
@@ -24,6 +24,7 @@ export const createFinderStore = createAppDataStore(id => {
                 leftPanelWidth: 150,
                 activeFinderItemName: '',
                 curDirName: 'Home Dir',
+                activeIds: new Set() as Set<number>,
                 curDirInfo: [
                     {
                         id: id++,
@@ -31,13 +32,13 @@ export const createFinderStore = createAppDataStore(id => {
                         isDir: true
                     }, {
                         id: id++,
-                        name: 'test2',
-                        isDir: false
+                        name: 'looooooooooooooooog name test',
+                        isDir: true
                     },
                     {
                         id: id++,
                         name: 'test1',
-                        isDir: true
+                        isDir: false
                     }, {
                         id: id++,
                         name: 'test2',
@@ -46,7 +47,7 @@ export const createFinderStore = createAppDataStore(id => {
                     {
                         id: id++,
                         name: 'test1',
-                        isDir: true
+                        isDir: false
                     }, {
                         id: id++,
                         name: 'test2',
@@ -100,5 +101,11 @@ export const createFinderStore = createAppDataStore(id => {
                 ] as IFileInfo[]
             };
         },
+        actions: {
+            chooseSingleFile (id: number) {
+                this.activeIds.clear();
+                this.activeIds.add(id);
+            }
+        }
     });
 });

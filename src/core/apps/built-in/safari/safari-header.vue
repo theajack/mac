@@ -5,14 +5,14 @@
 -->
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { createSafariStore } from './safari-store';
+import { useSafariStore } from './safari-store';
 import type { IWindowStatus } from '@/core/os/window/window';
 import { underDevelopment } from '@/ui/components/common/toast/toast';
 
 const props = defineProps<{
     status: IWindowStatus
 }>();
-const store = createSafariStore(props.status.id);
+const store = useSafariStore(props.status.id);
 const queryInput = ref();
 const widthEle = ref();
 function queryKeyDown (e: KeyboardEvent) {
