@@ -7,6 +7,8 @@ import { defineStore, acceptHMRUpdate } from 'pinia';
 import { WindowHeight, WindowWidth } from '../style/common';
 import { throttle } from '@/lib/utils';
 import { getAppManager } from '@/core/context';
+import type { ISelectItem } from '../../core/types/component.d';
+import { DefaultMenuList } from '../components/common/context-menu/context-menu';
 
 export const useGlobalStore = defineStore('store', {
     state: () => ({
@@ -48,5 +50,5 @@ window.addEventListener('resize', throttle(() => {
 if (import.meta.hot) {
     // @ts-ignore
     import.meta.hot.accept(acceptHMRUpdate(useGlobalStore, import.meta.hot));
-} import type { ISelectItem } from '../../core/types/component.d'; import { DefaultMenuList } from '../components/common/context-menu/context-menu';
+}
 
