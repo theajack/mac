@@ -18,9 +18,10 @@ const img = resource(props.file.isDir ? 'folder.png' : 'file.png');
 const { contextmenu } = useContextMenuRef(props.file.isDir ? FolderMenu : FileMenu);
 
 const store = useFinderStore(props.id);
-
 const fileContextMenu = (e: MouseEvent) => {
-    store.chooseSingleFile(props.file.id + '');
+    if (!store.activeIds.has(props.file.id)) {
+        store.chooseSingleFile(props.file.id);
+    }
     contextmenu(e);
 };
 

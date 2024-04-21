@@ -10,6 +10,7 @@ import { MacEvent } from '@/core/os/event-bus';
 import { AppNames } from '@/core/apps/app-config';
 import { getLatestWindow } from '@/core/os/os';
 import { createUseInstance } from '@/lib/use-instance';
+import { isMouseLeft } from '@/lib/is';
 
 export const FileLength = 70;
 
@@ -108,6 +109,7 @@ class FinderLayoutManager {
     }
 
     onMouseDown (e: MouseEvent) {
+        if (!isMouseLeft(e)) return;
         this.mouseDownPos = this.parsePos(e);
         this.mouseDownClient = this.parseClientPos(e);
         if (this.parseTargetType(e) === 'finder') {
@@ -129,6 +131,7 @@ class FinderLayoutManager {
     }
 
     onMouseMove (e: MouseEvent) {
+        if (!isMouseLeft(e)) return;
         if (!this._isSelectAreaActive) return;
 
         const pos = this.countOffsetPos(e);
@@ -146,13 +149,14 @@ class FinderLayoutManager {
         style.width = `${width}px`;
         style.height = `${height}px`;
 
-        console.log('offset', x, y);
+        // console.log('offset', x, y);
 
         const selectO = { x: x + width / 2, y: y + height / 2 };
         this.checkFilesIsSelected(selectO, width / 2, height / 2);
     }
 
     async onMouseUp (e: MouseEvent) {
+        if (!isMouseLeft(e)) return;
         const type = this.parseTargetType(e);
 
         if (type !== 'file' && type !== 'finder') return;
@@ -184,7 +188,6 @@ class FinderLayoutManager {
                     if (dir === 'true') {
                         store.entryDir(path);
                     } else {
-                        console.log('click file');
                         const content = await getFileContent(path);
                         MacEvent.emit('new-window', { name: AppNames.textEdit, data: { content } });
                     }
@@ -229,7 +232,6 @@ class FinderLayoutManager {
             };
         });
     }
-
 }
 
 export const useFinderLayoutManager = createUseInstance(FinderLayoutManager);

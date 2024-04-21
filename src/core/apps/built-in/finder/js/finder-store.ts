@@ -12,7 +12,8 @@ import { useHistory } from '@/lib/history';
 export interface IFileInfo {
     name: string,
     isDir: boolean,
-    id: number|string,
+    // id: number,
+    id: string,
 
     path: string,
 
@@ -95,8 +96,8 @@ function parseDirName (path: string) {
 }
 
 
-window.parseDirName = parseDirName;
-window.useFinderStore = useFinderStore;
+// window.parseDirName = parseDirName;
+// window.useFinderStore = useFinderStore;
 
 function mockFilesInfo () {
     let id = 0;

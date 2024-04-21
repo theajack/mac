@@ -6,7 +6,7 @@
 -->
 <script setup lang="ts">
 import { resource } from '@/lib/utils';
-import { getFileContent, useFinderStore } from './js/finder-store';
+import { useFinderStore } from './js/finder-store';
 import FinderMenuBlock from './finder-dir-block.vue';
 import FinderFile from './finder-file-item.vue';
 import { faviList, iCloudList, tagList } from './js/finder-menu-data';
@@ -19,7 +19,6 @@ const props = defineProps<IWindowCompProp>();
 const store = useFinderStore(props.id);
 const finderContainer = ref();
 
-// todo 滑动选择多个
 const { contextmenu } = useContextMenuRef(MainFinderMenu);
 
 const manager = useFinderLayoutManager(props.id);
