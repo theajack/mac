@@ -7,6 +7,7 @@ import { defineStore } from 'pinia';
 import { createAppDataStore } from '@/ui/store/common';
 import { getDisk } from '@/core/os/os';
 import { Path, type FileBase } from 'webos-term';
+import { useHistory } from '@/lib/history';
 
 export interface IFileInfo {
     name: string,
@@ -36,11 +37,13 @@ export function generateFilesData (files: FileBase[]): IFileInfo[] {
             name: file.name,
             isDir: file.isDir,
             path: file.path.path,
+            curIndex: -1,
         };
     });
 }
 
 export const useFinderStore = createAppDataStore(id => {
+    const history = useHistory()(id);
     return defineStore(`finder-store-${id}`, {
         state: () => {
             return {
@@ -58,12 +61,23 @@ export const useFinderStore = createAppDataStore(id => {
             },
 
             async entryDir (path: string) {
-                // const files = await loadFilesInDir(path);
-                // this.curDirInfo = generateFilesData(files);
-                // this.curDirName = parseDirName(path);
-
-                this.curDirInfo = mockFilesInfo();
+                await this._refreshDirInfo(path);
+                history.add(path);
+                // this.curDirInfo = mockFilesInfo();
             },
+            async _refreshDirInfo (path: string) {
+                const files = await loadFilesInDir(path);
+                this.curDirInfo = generateFilesData(files);
+                this.curDirName = parseDirName(path);
+            },
+            back () {
+                history.back();
+                this._refreshDirInfo(history.current);
+            },
+            forward () {
+                history.forward();
+                this._refreshDirInfo(history.current);
+            }
         }
     });
 });

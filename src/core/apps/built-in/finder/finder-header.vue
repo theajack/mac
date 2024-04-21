@@ -21,8 +21,8 @@ const store = useFinderStore(props.id);
         select-none cursor-default justify-between"
     >
       <span class="flex flex-1">
-        <i class="el-arrow-left common-icon" @click.stop />
-        <i class="el-arrow-right common-icon" @click.stop />
+        <i class="el-arrow-left common-icon" @click.stop="store.back" />
+        <i class="el-arrow-right common-icon" @click.stop="store.forward" />
         <span class="px-2 flex-center font-bold">{{ store.curDirName }}</span>
       </span>
 

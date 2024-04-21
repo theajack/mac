@@ -5,16 +5,13 @@
  */
 import type { IPos } from '@/core/type';
 import { isClick, isTwoRectIntersect } from '@/lib/utils';
-import type { IJson } from '@/types';
 import { getFileContent, useFinderStore } from './finder-store';
 import { MacEvent } from '@/core/os/event-bus';
 import { AppNames } from '@/core/apps/app-config';
 import { getLatestWindow } from '@/core/os/os';
-
-const Map: IJson<FinderLayoutManager> = {};
+import { createUseInstance } from '@/lib/use-instance';
 
 export const FileLength = 70;
-
 
 class FinderLayoutManager {
 
@@ -235,9 +232,4 @@ class FinderLayoutManager {
 
 }
 
-export function useFinderLayoutManager (id: number) {
-    if (!Map[id]) {
-        Map[id] = new FinderLayoutManager();
-    }
-    return Map[id];
-}
+export const useFinderLayoutManager = createUseInstance(FinderLayoutManager);
