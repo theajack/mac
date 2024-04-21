@@ -4,19 +4,24 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { ref } from 'vue';
 import keyDown from './keydown-event';
+import type { IWindowStatus } from '@/core/os/window/window';
+import { useTextEditStore } from './text-edit-store';
+
+const props = defineProps<{
+    status: IWindowStatus
+}>();
+
+const store = useTextEditStore(props.status.id);
+
 function keydown (e: KeyboardEvent) {
     keyDown.call(e.target, e, '    ');
 }
-const testCode = ref(`function main () {
-    console.log("Hello World");
-}`);
 </script>
 
 <template>
   <div class="flex-center text-white h-full text-edit-w">
-    <textarea v-model="testCode" class="text-input w-full h-full" @keydown="keydown" />
+    <textarea v-model="store.content" class="text-input w-full h-full" @keydown="keydown" />
   </div>
 </template>
 

@@ -5,6 +5,7 @@
  */
 
 import { isDev } from '@/core/context';
+import type { IPos } from '@/core/type';
 import { markRaw } from 'vue';
 
 export function cache (
@@ -271,4 +272,19 @@ export function getHost () {
         return host;
     }
     return def;
+}
+
+// halfWidth halfHeight
+export function isTwoRectIntersect (
+    oPos1: IPos, hw1: number, hh1: number,
+    oPos2: IPos, hw2: number, hh2: number,
+) {
+    return (
+        Math.abs(oPos1.x - oPos2.x) < hw1 + hw2 &&
+        Math.abs(oPos1.y - oPos2.y) < hh1 + hh2
+    );
+}
+
+export function isClick (pos1: IPos, pos2: IPos) {
+    return (Math.abs(pos1.x - pos2.x) < 3 && Math.abs(pos1.y - pos2.y) < 3);
 }

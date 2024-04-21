@@ -35,11 +35,32 @@ export class OS {
         await this.appManager.initAppsDirectory();
         // console.log(this.disk.deepLs());
     }
+
+    get currentApp () {
+        return this.appManager.currentApp;
+    }
+    get latestWindow () {
+        return this.currentApp.findLatestWindow();
+    }
 }
 
-export function getOSInstance () {
+export function getOS () {
     return OS.instance;
 }
+
+export function getDisk () {
+    return OS.instance.disk;
+}
+
+export function getCurrentApp () {
+    return OS.instance.currentApp;
+}
+
+export function getLatestWindow () {
+    return getCurrentApp().findLatestWindow();
+}
+
+window.getLatestWindow = getLatestWindow;
 
 export async function createOS () {
     if (OS.instance) return OS.instance;

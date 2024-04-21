@@ -9,6 +9,7 @@ import { resource } from '@/lib/utils';
 import { useFinderStore, type IFileInfo } from './js/finder-store';
 import { useContextMenuRef } from '@/ui/components/common/context-menu/context-menu';
 import { FileMenu, FolderMenu } from './js/finder-context-menu';
+import { FileLength } from './js/finder-layout-manager';
 const props = defineProps<{
     id: number,
     file: IFileInfo
@@ -19,7 +20,7 @@ const { contextmenu } = useContextMenuRef(props.file.isDir ? FolderMenu : FileMe
 const store = useFinderStore(props.id);
 
 const fileContextMenu = (e: MouseEvent) => {
-    store.chooseSingleFile(props.file.id);
+    store.chooseSingleFile(props.file.id + '');
     contextmenu(e);
 };
 
@@ -37,13 +38,14 @@ const fileContextMenu = (e: MouseEvent) => {
 <template>
   <div
     class="file-item items-start flex-col"
-    :class="{active: store.activeIds.has(file.id)}"
+    :class="{active: store.activeIds.has(file.id+'')}"
     :data-dir="file.isDir"
     :data-id="file.id"
+    :data-path="file.path"
     data-type="file"
     @contextmenu.capture.stop="fileContextMenu"
   >
-    <img :src="img" alt="">
+    <img :src="img" alt="" :style="`height: ${FileLength}px; width: ${FileLength}px`">
     <div class="file-name">{{ file.name }}</div>
   </div>
 </template>
@@ -51,8 +53,8 @@ const fileContextMenu = (e: MouseEvent) => {
 
 <style scoped lang="less">
 .file-item{
+    pointer-events: all;
     width: 70px;
-    height: 90px;
     user-select: none;
     height: fit-content;
     * {
@@ -82,5 +84,3 @@ const fileContextMenu = (e: MouseEvent) => {
     }
 }
 </style>
-
-./js/finder-store

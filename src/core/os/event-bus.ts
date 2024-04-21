@@ -7,8 +7,7 @@ import Eveit from 'eveit';
 import type { IAppMessage } from '../apps/type';
 import type { OS } from './os';
 import type { AppNames } from '../apps/app-config';
-import type { ITabItem } from '../apps/built-in/safari/safari-store';
-
+import type { IJson } from 'webos-term';
 
 export const ApiSymbol = Symbol('api');
 // todo 当有新事件加入时 请在下面加入声明
@@ -16,7 +15,7 @@ export const ApiSymbol = Symbol('api');
 export const MacEvent = new Eveit<{ // EEvent
     'app-message': [IAppMessage];
     'os-inited': [OS];
-    'new-window': [{name: AppNames, data: ITabItem}],
+    'new-window': [{name: AppNames, data: IJson}],
     // 'new-window': [{name: AppNames, data: ITabItem, iframe: HTMLIFrameElement}],
 }>();
 

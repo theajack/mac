@@ -25,6 +25,7 @@ export class Finder extends App {
             bgColor: 'transparent'
         }
     });
+
     constructor () {
         super({
             name: AppNames.finder,

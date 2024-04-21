@@ -6,41 +6,32 @@
 -->
 <script setup lang="ts">
 import { resource } from '@/lib/utils';
-import { useFinderStore } from './js/finder-store';
+import { getFileContent, useFinderStore } from './js/finder-store';
 import FinderMenuBlock from './finder-dir-block.vue';
 import FinderFile from './finder-file-item.vue';
 import { faviList, iCloudList, tagList } from './js/finder-menu-data';
 import { useContextMenuRef } from '@/ui/components/common/context-menu/context-menu';
 import { MainFinderMenu } from './js/finder-context-menu';
+import { useFinderLayoutManager } from './js/finder-layout-manager';
 import type { IWindowCompProp } from '@/core/os/window/window';
+import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 const props = defineProps<IWindowCompProp>();
 const store = useFinderStore(props.id);
+const finderContainer = ref();
+
 // todo 滑动选择多个
 const { contextmenu } = useContextMenuRef(MainFinderMenu);
-const clickFinder = (e: MouseEvent) => {
-    const el = e.target as HTMLElement;
 
-    const type = el.dataset.type;
+const manager = useFinderLayoutManager(props.id);
 
-    switch (type) {
-        case 'finder':
-            store.activeIds.clear();
-            break;
-        case 'file':
-            const id = parseInt(el.dataset.id as string);
-            if (e.metaKey || e.ctrlKey) {
-                if (store.activeIds.has(id)) {
-                    store.activeIds.delete(id);
-                } else {
-                    store.activeIds.add(id);
-                }
-            } else {
-                store.chooseSingleFile(id);
-            }
-            break;
-        default: return;
-    }
-};
+onMounted(async () => {
+    await store.entryDir('/');
+    await nextTick();
+    manager.initContainer(finderContainer.value, props.id);
+});
+onUnmounted(() => {
+    manager.releaseEvent();
+});
 </script>
 
 <template>
@@ -55,20 +46,27 @@ const clickFinder = (e: MouseEvent) => {
     </div>
     <div
       data-type="finder"
-      class="right-block flex-1 h-full flex bg-header overflow-auto"
-      @click="clickFinder"
+      class="right-block relative flex-1 h-full flex bg-header overflow-auto"
+      @mousedown="manager.onMouseDown"
       @contextmenu.stop="contextmenu"
     >
+      <!-- @mousemove="manager.onMouseMove"
+      @mouseup="manager.onMouseUp" -->
       <div
-        data-type="finder"
-        class="flex gap-8 flex-wrap h-fit flex-1 p-8"
+        ref="finderContainer"
+        class="flex relative pointer-events-none"
       >
-        <FinderFile
-          v-for="item in store.curDirInfo"
-          :id="id"
-          :key="item.id"
-          :file="item"
-        />
+        <div
+          class="flex gap-8 flex-wrap h-fit flex-1 p-8"
+        >
+          <FinderFile
+            v-for="item in store.curDirInfo"
+            :id="id"
+            :key="item.id"
+            :file="item"
+          />
+        </div>
+        <div ref="finderSelectArea" class="select-area" />
       </div>
     </div>
   </div>
@@ -84,7 +82,17 @@ const clickFinder = (e: MouseEvent) => {
 }
 .right-block{
   background-color: #222;
+
+  .select-area{
+    position: fixed;
+    pointer-events: none;
+    width: 100px;
+    height: 100px;
+    left: 10px;
+    top: 10px;
+    background-color: #fff2;
+    border: 1px solid #fff5;
+    display: none;
+  }
 }
 </style>
-
-./js/finder-store./js/finder-menu-data

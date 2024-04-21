@@ -8,7 +8,7 @@ import type { IToastData } from '@/ui/components/common/toast/toast';
 import type { Ref } from 'vue';
 import { ref } from 'vue';
 import type { OS } from './os/os';
-import { getOSInstance } from './os/os';
+import { getOS } from './os/os';
 import type { IJson } from './type';
 import type { App } from './apps/app';
 
@@ -32,42 +32,42 @@ export const getToast = createGetStoreFunc<IToastData>('toast', () => ({
     content: '', visible: false
 }));
 
-export const getOS = createGetStoreFunc<OS>('os', getOSInstance);
+export const getOSRef = createGetStoreFunc<OS>('os', getOS);
 
 export function getDockApps (): App[] {
-    return getOS().value.appManager.dockApps;
+    return getOSRef().value.appManager.dockApps;
 }
 export function getTempDockApps () {
-    return getOS().value.appManager.tempDockApps;
+    return getOSRef().value.appManager.tempDockApps;
 }
 export function getTrash () {
-    return getOS().value.appManager.trash;
+    return getOSRef().value.appManager.trash;
 }
 
 export function getApps () {
-    return getOS().value.appManager.installedApps;
+    return getOSRef().value.appManager.installedApps;
 }
 
 export function getRealApps () {
-    return getOS().value.appManager.installedApps.filter(app => !app.isVirtualApp);
+    return getOSRef().value.appManager.installedApps.filter(app => !app.isVirtualApp);
 }
 
 export function getRunningApps () {
-    return getOS().value.appManager.runningApps;
+    return getOSRef().value.appManager.runningApps;
 }
 
 export function getAppConfig () {
-    return getOS().value.appManager.appConfig;
+    return getOSRef().value.appManager.appConfig;
 }
 
 export function getAppManager () {
-    return getOS().value.appManager;
+    return getOSRef().value.appManager;
 }
 
 export function getFile (path: string) {
-    // return getStore('app-config', getOS().appManager.appConfig);
+    // return getStore('app-config', getOSRef().appManager.appConfig);
     // todo
-    return getOS().value.disk.findFileByPath(path);
+    return getOSRef().value.disk.findFileByPath(path);
 }
 
 export const isDev = location.host.indexOf('localhost:') === 0;

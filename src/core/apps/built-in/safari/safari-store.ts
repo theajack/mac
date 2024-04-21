@@ -9,6 +9,7 @@ import { defineStore } from 'pinia';
 import { AppNames } from '../../app-config';
 import { underDevelopment } from '@/ui/components/common/toast/toast';
 import { createAppDataStore } from '@/ui/store/common';
+import type { IJson } from '@/types';
 
 export interface IFavorite {
     name: string,

@@ -17,3 +17,8 @@ export interface IPosition {
     left: number;
     top: number;
 }
+
+export interface IPos {
+    x: number;
+    y: number;
+}
