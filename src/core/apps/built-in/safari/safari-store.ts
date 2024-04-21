@@ -10,6 +10,7 @@ import { AppNames } from '../../app-config';
 import { underDevelopment } from '@/ui/components/common/toast/toast';
 import { createAppDataStore } from '@/ui/store/common';
 import type { IJson } from '@/types';
+import { callApp } from '../../app';
 
 export interface IFavorite {
     name: string,
@@ -163,8 +164,7 @@ export const useSafariStore = createAppDataStore((id: number) => {
                     // const iframe: any = document.getElementById(`SAFARI_ITEM_${id}_${item.id}`)?.children[0];
                     // item.fromPrev = true;
                     this.close(item.id);
-                    MacEvent.emit('new-window', { name: AppNames.safari, data: item });
-                    // MacEvent.emit('new-window', { name: AppNames.safari, data: item, iframe: 1 });
+                    callApp({ name: AppNames.safari, data: item });
                     return;
                 }
                 const targetIndex = this._findItemIndex(target);

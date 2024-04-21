@@ -143,4 +143,8 @@ export class AppManager {
             1,
         );
     }
+
+    findApp (name: string) {
+        return this.installedApps.find(app => app.name === name)!;
+    }
 }

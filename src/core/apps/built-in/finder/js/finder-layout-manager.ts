@@ -11,6 +11,7 @@ import { AppNames } from '@/core/apps/app-config';
 import { getLatestWindow } from '@/core/os/os';
 import { createUseInstance } from '@/lib/use-instance';
 import { isMouseLeft } from '@/lib/is';
+import { callApp } from '@/core/apps/app';
 
 export const FileLength = 70;
 
@@ -59,7 +60,7 @@ class FinderLayoutManager {
         setTimeout(() => {
             const rect = this.container.getBoundingClientRect();
             const status = getLatestWindow()!.status;
-            console.log(rect.x, rect.y, status.x, status.y);
+            // console.log(rect.x, rect.y, status.x, status.y);
             this._areaOffset = {
                 x: rect.x - status.x,
                 y: rect.y - status.y,
@@ -163,12 +164,12 @@ class FinderLayoutManager {
 
         const pos2 = this.countOffsetPos(e);
         const clicked = isClick(this.mouseDownPos, pos2);
-        console.log(pos2, clicked);
+        // console.log(pos2, clicked);
 
         if (clicked) {
             const store = useFinderStore(this._finderId);
             if (type === 'file') {
-                console.log('clicked isOnFile!');
+                // console.log('clicked isOnFile!');
                 const el = e.target as HTMLElement;
                 const id = el.dataset.id || '';
                 // console.log(type, id, store.activeIds);
@@ -189,7 +190,7 @@ class FinderLayoutManager {
                         store.entryDir(path);
                     } else {
                         const content = await getFileContent(path);
-                        MacEvent.emit('new-window', { name: AppNames.textEdit, data: { content } });
+                        callApp({ name: AppNames.textEdit, data: { content } });
                     }
                 }
             } else if (type === 'finder') {

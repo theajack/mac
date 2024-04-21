@@ -8,6 +8,7 @@ import type { IAppMessage } from '../apps/type';
 import type { OS } from './os';
 import type { AppNames } from '../apps/app-config';
 import type { IJson } from 'webos-term';
+import type { App } from '../apps/app';
 
 export const ApiSymbol = Symbol('api');
 // todo 当有新事件加入时 请在下面加入声明
@@ -15,9 +16,11 @@ export const ApiSymbol = Symbol('api');
 export const MacEvent = new Eveit<{ // EEvent
     'app-message': [IAppMessage];
     'os-inited': [OS];
-    'new-window': [{name: AppNames, data: IJson}],
-    // 'new-window': [{name: AppNames, data: ITabItem, iframe: HTMLIFrameElement}],
+    'call-app': [ICallAppInfo],
+    // 'call-app': [{name: AppNames, data: ITabItem, iframe: HTMLIFrameElement}],
 }>();
+
+export interface ICallAppInfo {name: AppNames, from?: App, data: IJson}
 
 MacEvent.usePrevEmit = true;
 

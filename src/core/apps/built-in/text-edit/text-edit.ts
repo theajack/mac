@@ -7,6 +7,7 @@ import { markRaw } from 'vue';
 import { App } from '../../app';
 import { AppNames, createEmptyStatus } from '../../app-config';
 import TextEditUI from './text-edit.vue';
+import type { ICallAppInfo } from '@/core/os/event-bus';
 import { MacEvent } from '@/core/os/event-bus';
 import { useTextEditStore } from './text-edit-store';
 
@@ -23,16 +24,13 @@ export class TextEdit extends App {
             name: AppNames.textEdit,
             iconScale: true,
         });
+    }
 
-        MacEvent.on('new-window', async ({ name, data }) => {
-            console.log(name, data);
-            if (name === this.name) {
-                const window = this.openNewWindow();
-                const text = data.content;
-                if (typeof text === 'string') {
-                    useTextEditStore(window.id).content = text;
-                }
-            }
-        });
+    onAppCall ({ data }: ICallAppInfo): void {
+        const window = this.ref.openNewWindow();
+        const text = data.content;
+        if (typeof text === 'string') {
+            useTextEditStore(window.id).content = text;
+        }
     }
 }

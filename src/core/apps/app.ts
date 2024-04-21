@@ -4,6 +4,7 @@
  * @Description: Coding something
  */
 import { toast } from '@/ui/components/common/toast/toast';
+import type { ICallAppInfo } from '@core/os/event-bus';
 import { MacEvent, sendMessageToApp } from '@core/os/event-bus';
 import type { IWindowOptions } from '@/core/os/window/window';
 import { Window } from '@/core/os/window/window';
@@ -17,6 +18,8 @@ import { cache, handleComponent, appIcon, upcaseFirstLetter } from '@/lib/utils'
 import type { ISelectItem } from '../types/component';
 import { useGlobalStore } from '@/ui/store';
 import { createDockAppMenuList } from '../../ui/components/common/context-menu/context-menu';
+import { getOSRef } from '../context';
+import type { IJson } from '../type';
 
 export enum AppType {
     Normal,
@@ -32,11 +35,10 @@ export interface IAppOptions {
     title?: string;
     link?: string;
     msgCount?: number;
-    onMessage?: (data: IAppMessage) => void;
     appType?: AppType;
     statusMenu?: IAppStatusTitle[]; // 顶部 status bar的标题和菜单
 }
-export class App<This extends App = App<any>> implements IApp {
+export abstract class App<This extends App = App<any>> implements IApp {
     proxy: ()=>This;
     isVirtualApp = false;
     name: string;
@@ -49,7 +51,14 @@ export class App<This extends App = App<any>> implements IApp {
     link: string;
     iconScale: number;
     msgCount: number; // 小红点数量
-    onMessage?: (data: IAppMessage) => void;
+
+    onMessage (data: IAppMessage) {}
+    onAppCall (info: ICallAppInfo) {}
+
+    // ! 使用响应式数据
+    get ref (): this {
+        return getOSRef().value.appManager.findApp(this.name) as any;
+    }
 
     windows: Window[] = [];
 
@@ -69,7 +78,6 @@ export class App<This extends App = App<any>> implements IApp {
         iconRadius = 0.25,
         iconScale = 1,
         title = '',
-        onMessage,
         link = '',
         msgCount = 0,
         appType = AppType.Normal,
@@ -85,11 +93,15 @@ export class App<This extends App = App<any>> implements IApp {
         this.iconRadius = iconRadius < 1 ? `${iconRadius * 100}%` : `${iconRadius}px`;
         this.title = title || appNameToTitle(name);
         this.iconScale = typeof iconScale === 'number' ? iconScale : (iconScale ? 1.22 : 1);
-        this.onMessage = onMessage;
 
         MacEvent.on('app-message', (data) => {
-            if (this.onMessage && data.to === this.name) {
+            if (data.to === this.name) {
                 this.onMessage(data);
+            }
+        });
+        MacEvent.on('call-app', (data) => {
+            if (data.name === this.name) {
+                this.onAppCall(data);
             }
         });
 
@@ -239,4 +251,13 @@ export class App<This extends App = App<any>> implements IApp {
             win.status.visible = true;
         });
     }
+
+    // ! app间互相调用
+    callApp (name: AppNames, data: IJson = {}) {
+        return callApp({ name, data, from: this });
+    }
+}
+
+export function callApp (info: ICallAppInfo) {
+    return MacEvent.emit('call-app', info);
 }
