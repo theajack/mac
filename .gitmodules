@@ -1,0 +1,3 @@
+[submodule "webos"]
+	path = webos
+	url = git@github.com:theajack/webos.git
