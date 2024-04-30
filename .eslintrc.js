@@ -76,5 +76,6 @@ module.exports = {
         '@typescript-eslint/no-this-alias': 0,
         'no-unused-vars': 'warn',
         '@typescript-eslint/no-unused-vars': 'warn',
+        '@typescript-eslint/no-var-requires': 0
     }
 };

@@ -1,37 +1,38 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "outDir": "dist",
-        "sourceMap": false,
-        "target": "es5",
-        "module": "esnext",
-        "moduleResolution": "node",
-        "allowJs": true,
-        "noUnusedLocals": true,
-        "strictNullChecks": true,
-        "noImplicitAny": true,
-        "noImplicitThis": true,
-        "experimentalDecorators": true,
-        "resolveJsonModule": true,
-        "esModuleInterop": true,
-        "removeComments": false,
-        "jsx": "preserve",
-        "lib": ["esnext", "dom"],
-        // "types": ["jest", "puppeteer", "node"],
-        "rootDir": ".",
-        // "paths": {
-        //   "@vue/*": ["packages/*/src"]
-        // }
-        "noEmit": false,
-        "paths": {
-            "@/*": ["src/*"],
-            "@core/*": ["src/core/*"],
-        }
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "sourceMap": false,
+    "target": "es2016",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    // "noImplicitAny": true,
+    "noImplicitThis": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "removeComments": false,
+    "jsx": "preserve",
+    "lib": ["esnext", "dom"],
+    "types": ["./build/env.d.ts"],
+    "rootDir": ".",
+    "noEmit": false,
+    "paths": {
     },
-    "include": [
-        "src/**/*", "src/babel.min.js",
-    ],
-    "exclude": [
-        "./node_modules",
-    ]
+    "noImplicitAny": false,
+    "declaration": true, // 需要设置为 true 来支持类型
+    "declarationDir": "dist", // 类型文件的导出目录
+    "emitDeclarationOnly": true, // 只生成类型文件
+  },
+  "include": [
+    "packages",
+    ".eslintrc.cjs", 
+    "vite.config.ts",
+    "build/env.d.ts",
+    "build/*.js",
+    "dev/**/*.ts"
+  ]
 }

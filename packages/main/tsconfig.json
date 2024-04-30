@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "types": ["../../build/env.d.ts"],
+    "paths": {
+      "vm-utils": ["../utils/src/index.ts"],
+    }
+  },
+  "include": [
+    "src"
+  ]
+}
