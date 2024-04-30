@@ -200,7 +200,7 @@ function execBin (name, cmd = name) {
 }
 
 function buildPackageName (dirName) {
-    return `vm-${dirName}`; // todo 修改包命名规则
+    return `webos-${dirName}`; // todo 修改包命名规则
 }
 
 function isNodeExec () {

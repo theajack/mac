@@ -1,0 +1,33 @@
+{
+    "name": "webos-term",
+    "version": "0.0.0",
+    "main": "src/index.ts",
+    "module": "src/index.ts",
+    "types": "src/index.ts",
+    "sideEffects": [
+        "*.css",
+        "*.less",
+        "*.scss",
+        "*.sass"
+    ],
+    "files": [
+        "es",
+        "dist"
+    ],
+    "dependencies": {
+        "alins": "0.0.18",
+        "alins-style": "0.0.18",
+        "webos-disk": "workspace:*",
+        "webos-module": "workspace:*",
+        "webos-utils": "workspace:*"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/"
+    },
+    "typings": "src/index.ts",
+    "unpkg": "dist/vm-utils.iife.min.js",
+    "jsdelivr": "dist/vm-utils.iife.min.js"
+}

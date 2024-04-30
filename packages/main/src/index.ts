@@ -1,16 +1,50 @@
 /*
- * @Author: chenzhongsheng
- * @Date: 2024-04-30 11:04:54
+ * @Author: tackchen
+ * @Date: 2022-09-10 22:08:00
  * @Description: Coding something
  */
-import { add } from 'vm-utils';
+import type { OS } from './core/os/os';
+import { createOS } from './core/os/os';
+import { StringText } from './core/string';
+import { log } from './lib/utils';
+import { initUI } from './ui';
+import * as Context from './core/context';
+import { toast } from './ui/components/common/toast/toast';
 
-console.log(add(1, 2));
+async function main () {
+    const os = await createOS();
+    initUI();
+    initDevHelper(os);
+}
 
-const div = document.createElement('div');
+function initDevHelper (os: OS) {
+    os.appManager.refreshConfigFiles();
+    if (!Context.isDev) return;
+    log(os);
+    (window as any).os = os;
+    (window as any).dev = {
+        ...Context,
+        async clearAppConfig () {
+            // todo 自动刷新或者每次重新取值
+            (await os.disk.findFileByPath(`${StringText.appDir}/${StringText.appConfigFile}`))?.remove();
+        },
+        clear () {
+            os.disk.clear();
+            location.reload();
+        },
+        toast (content = 'Some content', duration = 3000) {
+            toast({
+                from: this.getApps()[0],
+                title: 'New Message',
+                content,
+                buttonText: 'Button',
+                duration
+            });
+        },
+        refreshApps () {
+            os.appManager.refreshConfigFiles();
+        }
+    };
+}
 
-div.innerHTML = `
-    <div class='bg-black'>111</div>
-`;
-
-document.body.appendChild(div);
+main();

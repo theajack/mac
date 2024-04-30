@@ -39,8 +39,7 @@
     "typescript-eslint": "0.0.1-alpha.0",
     "up-fs": "^0.0.1",
     "vite": "^5.0.6",
-    "vm-main": "workspace:*",
-    "vm-utils": "workspace:*",
+    "webos-main": "workspace:*",
     "vue": "^3.2.45"
   }
 }

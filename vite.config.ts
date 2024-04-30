@@ -35,17 +35,19 @@ export default defineConfig(({ mode }: {mode: string}) => {
         [Mode.BuildApp]: geneBuildAppConfig,
         [Mode.BuildLib]: () => geneBuildLibConfig(dirName),
     };
+    const isDev = buildMode === Mode.Dev;
     const CommonConfig: UserConfig = {
         define: {
-            __DEV__: `${buildMode === Mode.Dev}`,
-            __APP__: `${buildMode === Mode.Dev || buildMode === Mode.BuildApp}`,
+            __DEV__: `${isDev}`,
+            __APP__: `${isDev || buildMode === Mode.BuildApp}`,
             __VERSION__: `"${getVersion()}"`,
         },
+        base: isDev ? '/mac' : 'https://cdn.jsdelivr.net/gh/theajack/mac@gh-pages/',
         plugins: [
         ],
         resolve: {
             alias: {
-                // 'src/': '/packages/main/src/',
+                '@/': '/packages/main/src/',      // 格式一定要写对喽不然没有代码提示或者报错
             },
         },
     };

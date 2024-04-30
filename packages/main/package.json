@@ -1,5 +1,5 @@
 {
-    "name": "vm-main",
+    "name": "webos-main",
     "version": "0.0.0",
     "main": "src/index.ts",
     "module": "src/index.ts",
@@ -15,7 +15,13 @@
         "dist"
     ],
     "dependencies": {
-        "vm-utils": "workspace:*"
+        "easy-dom-util": "0.0.29",
+        "eveit": "^0.0.1",
+        "html2canvas": "^1.4.1",
+        "pinia": "^2.0.33",
+        "vue": "^3.2.47",
+        "vue-router": "^4.0.12",
+        "webos-term": "workspace:*"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,6 +30,6 @@
         "registry": "https://registry.npmjs.org/"
     },
     "typings": "src/index.ts",
-    "unpkg": "dist/vm-main.iife.min.js",
-    "jsdelivr": "dist/vm-main.iife.min.js"
+    "unpkg": "dist/vm-utils.iife.min.js",
+    "jsdelivr": "dist/vm-utils.iife.min.js"
 }

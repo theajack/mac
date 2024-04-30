@@ -1,0 +1,31 @@
+{
+    "name": "webos-module",
+    "version": "0.0.0",
+    "main": "src/index.ts",
+    "module": "src/index.ts",
+    "types": "src/index.ts",
+    "sideEffects": [
+        "*.css",
+        "*.less",
+        "*.scss",
+        "*.sass"
+    ],
+    "files": [
+        "es",
+        "dist"
+    ],
+    "dependencies": {
+        "@types/whatwg-fetch": "^0.0.33",
+        "webos-path": "workspace:*",
+        "whatwg-fetch": "^3.6.2"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/"
+    },
+    "typings": "src/index.ts",
+    "unpkg": "dist/vm-utils.iife.min.js",
+    "jsdelivr": "dist/vm-utils.iife.min.js"
+}

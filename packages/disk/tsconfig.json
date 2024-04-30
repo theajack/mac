@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "types": ["../../build/env.d.ts"],
+    "paths": {
+    }
+  },
+  "include": [
+    "src"
+  ]
+}
