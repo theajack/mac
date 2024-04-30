@@ -93,10 +93,10 @@ export function createDefaultApps ():
     });
 
     return {
-        [AppNames.github]: app(AppNames.github),
+        [AppNames.finder]: app(AppNames.finder),
         [AppNames.launcher]: app(AppNames.launcher),
-        [AppNames.terminal]: app(AppNames.terminal),
         [AppNames.safari]: app(AppNames.safari),
+        [AppNames.terminal]: app(AppNames.terminal),
         [AppNames.calculator]: app(AppNames.calculator),
 
         [AppNames.wechat]: app(AppNames.wechat),
@@ -107,12 +107,12 @@ export function createDefaultApps ():
         [AppNames.kwai]: app(AppNames.kwai),
         [AppNames.planeGame]: app(AppNames.planeGame),
         [AppNames.bomberman]: app(AppNames.bomberman),
-        [AppNames.finder]: app(AppNames.finder),
         [AppNames.textEdit]: app(AppNames.textEdit),
         [AppNames.appStore]: app(AppNames.appStore),
         [AppNames.notes]: app(AppNames.notes),
         [AppNames.siri]: app(AppNames.siri),
         [AppNames.systemPreferences]: app(AppNames.systemPreferences),
+        [AppNames.github]: app(AppNames.github),
         [AppNames.trash]: { name: AppNames.trash, dockIndex: 1000 },
     };
 }
