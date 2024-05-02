@@ -1,12 +1,12 @@
-import { Term } from '../../term';
+import type { Term } from '../../term';
 import { parseJSON } from '../../utils/utils';
-import { Dir, File, IJson } from 'webos-disk';
+import type { Dir, File, IJson } from 'webos-disk';
 /*
  * @Author: chenzhongsheng
  * @Date: 2022-11-10 18:39:27
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-04-29 23:06:26
+ * @LastEditTime: 2024-05-02 20:21:54
  */
 export interface ICommandResult {
     success: boolean;
@@ -33,7 +33,7 @@ export abstract class Command {
 
     term: Term;
 
-    commandName: string = '';
+    commandName = '';
     args: string[] = [];
     subCommands: ISubCommands = {};
 
@@ -120,12 +120,12 @@ export abstract class Command {
 
 
     async createSoftwareDir (name = this.commandName) {
-        this.softwareDir = await this.term.disk.createChildByPath(`/System/Software/${name}`, true, true) as Dir;
+        this.softwareDir = await this.term.disk.createChildByPath(`/System/Command/${name}`, true, true) as Dir;
     }
     async createSoftwareFile (name: string) {
         if (!name) throw new Error('File name is Empty: ' + name);
         if (name in this.files) throw new Error('File is already exists: ' + name);
-        this.files[name] = await this.term.disk.createChildByPath(`/System/Software/${this.commandName}/${name}`, false, true) as File;
+        this.files[name] = await this.term.disk.createChildByPath(`/System/Command/${this.commandName}/${name}`, false, true) as File;
         return this.files[name];
     }
 

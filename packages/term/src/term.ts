@@ -6,7 +6,8 @@
  * @LastEditTime: 2023-02-04 00:18:11
  */
 
-import { Disk, Dir } from 'webos-disk';
+import type { Dir } from 'webos-disk';
+import { Disk } from 'webos-disk';
 import { installFromLocal } from './command/applications/install';
 import { CommandManager } from './command/command-handler';
 import { createGlobalData } from './state/global-info';
@@ -55,8 +56,8 @@ export class Term {
         })();
     }
 
-    destory () {
-        this.commands.destory();
+    destroy () {
+        this.commands.destroy();
         Term.List.splice(Term.List.indexOf(this), 1);
     }
 
@@ -68,6 +69,7 @@ export class Term {
         await this.disk.initFileSystem();
         // console.log(this.disk.deepLs());
         this.commands = new CommandManager(this);
+        await this.commands.initDir();
         installFromLocal(this);
     }
 

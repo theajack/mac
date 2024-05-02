@@ -39,7 +39,7 @@ export interface IAppOptions {
     statusMenu?: IAppStatusTitle[]; // 顶部 status bar的标题和菜单
 }
 export abstract class App<This extends App = App<any>> implements IApp {
-    proxy: ()=>This;
+    proxy: ()=>This; // ! 获取当前app的代理对象，以便获得响应式能力
     isVirtualApp = false;
     name: string;
     icon: string;
@@ -260,7 +260,7 @@ export abstract class App<This extends App = App<any>> implements IApp {
 
     async initDir () {
         this.dir = await this.manager.appDir.ensureDir({
-            name: upcaseFirstLetter(this.name)
+            name: upcaseFirstLetter(this.name),
         });
     }
 }

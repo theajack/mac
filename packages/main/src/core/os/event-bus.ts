@@ -17,7 +17,8 @@ export const MacEvent = new Eveit<{ // EEvent
     'app-message': [IAppMessage];
     'os-inited': [OS];
     'call-app': [ICallAppInfo],
-    'current-window-change': []
+    'current-window-change': [],
+    'on-refresh-dir': [string],
     // 'call-app': [{name: AppNames, data: ITabItem, iframe: HTMLIFrameElement}],
 }>();
 

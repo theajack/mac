@@ -22,7 +22,6 @@ export class OS {
     constructor () {
         if (OS.instance) return OS.instance;
         this.disk = new Disk();
-        this.appManager = new AppManager(this);
         OS.instance = this;
         // @ts-ignore
         window.os = this;
@@ -34,6 +33,7 @@ export class OS {
     async init () {
         initAudioPlayer();
         await this.disk.initFileSystem();
+        this.appManager = new AppManager(this);
         await this.appManager.initAppsDirectory();
         // console.log(this.disk.deepLs());
     }
@@ -46,7 +46,7 @@ export class OS {
     }
 }
 
-export function getOS () {
+export function getOS (): OS {
     return OS.instance;
 }
 

@@ -14,18 +14,19 @@ export const FileUtils = {
     splitFileName (filename: string): [string, string] {
         return this.splitLastStr(filename, '.');
     },
-    ensureCopyName (name: string, list: {name: string}[]) {
+    ensureFileRepeatName (name: string, list: {name: string}[], repeatMark = '') {
+        const reg = new RegExp(`^(.*?)${repeatMark}(\\(([0-9]*)\\))?$`, 'i');
+        let numTail = '';
         while (list.find(item => item.name === name)) {
             const arr = FileUtils.splitFileName(name);
             let head = arr[0];
             const ext = arr[1];
-            const result = head.match(/^(.*?)\.Copy(\(([0-9]*)\))?$/);
-            let tail = '.Copy';
+            const result = head.match(reg);
             if (result) {
                 head = result[1];
-                tail += `(${parseInt(result[3] || '0') + 1})`;
+                numTail = `(${parseInt(result[3] || '0') + 1})`;
             }
-            name = `${head}${tail}.${ext}`;
+            name = `${head}${repeatMark}${numTail}${ext ? `.${ext}` : ''}`;
         }
         return name;
     },
@@ -68,7 +69,13 @@ export const FileUtils = {
             s = str;
         }
         return s;
-    }
+    },
+    extractDirPath (path: string) {
+        return this.splitLastStr(path, '/')[0] || '/';
+    },
+    extractFileName (path: string) {
+        return this.splitLastStr(path, '/')[1];
+    },
 };
 
-// window.FiluUtils = FileUtils;
+window.FiluUtils = FileUtils;

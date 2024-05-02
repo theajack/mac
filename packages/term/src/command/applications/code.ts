@@ -3,14 +3,14 @@
  * @Date: 2022-11-10 18:37:32
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-04-30 00:02:07
+ * @LastEditTime: 2024-05-02 08:30:16
  */
 
 import type { File } from 'webos-disk';
 import { catFile } from '../commands/cat';
 import { Command } from '../commands/command-base';
 import {
-    compressString,
+    compressString
 } from 'webos-utils';
 
 export class CodeCommand extends Command {

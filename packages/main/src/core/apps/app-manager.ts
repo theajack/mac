@@ -88,18 +88,18 @@ export class AppManager {
 
     async initAppsDirectory () {
         const { disk } = this.parent;
-        const systemDir = await disk.findChildByPath('System');
+        const systemDir = await disk.ensureDir({ name: 'System', isSystemFile: true });
 
-        if (!systemDir) throw new Error('System Directory not found');
         this.systemDir = systemDir as Dir;
         this.appDir = await this.systemDir.ensureDir({
             name: AppManager.DIR_NAME,
+            isSystemFile: true,
         });
         await this.initAppConfig();
         await this.initApps();
-        [ 'Desktop', 'Documents', 'Downloads' ].forEach(async (name) => {
-            await this.systemDir.ensureDir({ name });
-        });
+        await Promise.all([ 'Desktop', 'Documents', 'Downloads' ].map(async (name) => {
+            await this.systemDir.ensureDir({ name, isSystemFile: true });
+        }));
     }
 
     refreshConfigFiles () {
@@ -136,7 +136,6 @@ export class AppManager {
         this.installedApps = installApps;
         this.trash = this.excludeApp(AppNames.trash) as Trash;
         this.finder = installApps.find(app => app.name === AppNames.finder) as Finder;
-
         this.appConfig.installedApps = installApps.map(item => item.name);
 
         this.dockApps = installApps

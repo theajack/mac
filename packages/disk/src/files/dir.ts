@@ -24,19 +24,17 @@ export interface ICreateConfig {
     returnIfExists?: boolean;
 }
 
+interface IFileContentOptions extends IFileOption {
+    content?: Uint8Array;
+}
 
 export class Dir extends FileBase {
     children: FileBase[] = [];
-    constructor ({
-        name,
-        children = [],
-        entry,
-        path
-    }: IDirOption) {
-        super({ name, entry, path });
+    constructor (options: IDirOption) {
+        super(options);
         this.type = 'dir';
         this.isDir = true;
-        this.initChildren(children);
+        this.initChildren(options.children || []);
     }
 
     initChildren (children: FileBase[]) {
@@ -102,18 +100,21 @@ export class Dir extends FileBase {
         log('create dir', options.name);
         if (this.exists(options.name)) {
             if (config.returnIfExists) {
-                return await this.findDirByPath(options.name);
+                const dir = await this.findDirByPath(options.name);
+                // @ts-ignore
+                dir!.isSystemFile = options.isSystemFile;
+                return dir;
             }
             log('warn', '目录已经存在', `${this.path.path}/${options.name}`);
             return null;
         }
         return this.addChild(new Dir(options));
     }
-    ensureFile (options: IFileOption): Promise<File> {
+    ensureFile (options: IFileContentOptions): Promise<File> {
         // @ts-ignore
         return this.createFile(options, { returnIfExists: true });
     }
-    async createFile (options: IFileOption, {
+    async createFile (options: IFileContentOptions, {
         returnIfExists,
     }: ICreateConfig = {
         returnIfExists: false,
@@ -122,12 +123,20 @@ export class Dir extends FileBase {
         log('create file', options.name);
         if (this.exists(options.name)) {
             if (returnIfExists) {
-                return await this.findFileByPath(options.name) as File;
+                const file = await this.findFileByPath(options.name) as File;
+                // @ts-ignore
+                file!.isSystemFile = options.isSystemFile;
+                return file;
             }
             log('warn', '文件已存在');
             return null;
         }
-        return await this.addChild(new File(options));
+        const file = await this.addChild(new File(options));
+        // 先 addChild，add 会在 FileSystem 中创建文件
+        if (options.content) {
+            await file.write(options.content);
+        }
+        return file;
     }
 
     exists (name: string) {
@@ -135,7 +144,7 @@ export class Dir extends FileBase {
     }
 
     async paste (file: FileBase) {
-        const name = FileUtils.ensureCopyName(file.name, this.children);
+        const name = FileUtils.ensureFileRepeatName(file.name, this.children, '_Copy');
         const entry = await fs().cp(file.pathString, this.pathString, name);
         const value = new (file.isDir ? Dir : File)({ name, entry });
         await this.addChild(value);

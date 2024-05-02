@@ -21,7 +21,8 @@
         "pinia": "^2.0.33",
         "vue": "^3.2.47",
         "vue-router": "^4.0.12",
-        "webos-term": "workspace:*"
+        "webos-term": "workspace:*",
+        "webos-utils": "workspace:*"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"

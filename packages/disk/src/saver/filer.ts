@@ -10,6 +10,7 @@ import type { FileBase } from '../files/base';
 import { Dir } from '../files/dir';
 import { withResolve } from '../utils';
 import { File } from '../files/file';
+import { FileUtils } from '../files/file-utils';
 
 export function fs () {
     return new DiskFiler();
@@ -103,7 +104,7 @@ export class DiskFiler {
         return promiseify(this.filer.mv)(source, target, newName);
     }
     rename (path: string, newName: string) {
-        return promiseify(this.filer.mv)(path, '.', newName);
+        return promiseify(this.filer.mv)(path, FileUtils.extractDirPath(path), newName);
     }
 
     private async _initDir (path: string): Promise<FileBase[]> {

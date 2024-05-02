@@ -5,9 +5,11 @@
  */
 import { defineStore } from 'pinia';
 import { createAppDataStore } from '@/ui/store/common';
-import { getDisk } from '@/core/os/os';
-import { Path, type FileBase } from 'webos-term';
+import { getDisk, getOS } from '@/core/os/os';
+import { Path, type FileBase, FileUtils } from 'webos-term';
 import { useHistory } from '@/lib/history';
+import { nextTick } from 'vue';
+import { selectInputText } from 'webos-utils';
 
 export interface IFileInfo {
     name: string,
@@ -16,6 +18,7 @@ export interface IFileInfo {
     id: string,
 
     path: string,
+    isEdit: boolean,
 
     // file: FileBase,
     // modTime: string,
@@ -39,47 +42,107 @@ export function generateFilesData (files: FileBase[]): IFileInfo[] {
             isDir: file.isDir,
             path: file.path.path,
             curIndex: -1,
+            isEdit: false,
         };
     });
 }
 
 export const useFinderStore = createAppDataStore(id => {
     const history = useHistory()(id);
+    window.hh = history;
     return defineStore(`finder-store-${id}`, {
         state: () => {
             return {
                 leftPanelWidth: 150,
                 activeFinderItemName: '',
-                curDirName: 'Home Dir',
+                curDirName: '',
                 activeIds: new Set() as Set<string>,
                 curDirInfo: [] as IFileInfo[],
+                historyIndex: 0,
             };
         },
+        getters: {
+            canBack (state) {
+                return state.historyIndex > 0;
+            },
+            canForward (state) {
+                return state.historyIndex < history.size - 1;
+            },
+        },
         actions: {
+            async editFile (fileId?: string) {
+                if (fileId) {
+                    this.chooseSingleFile(fileId);
+                } else {
+                    if (this.activeIds.size > 0) {
+                        fileId = this.activeIds.values().next().value;
+                        if (this.activeIds.size > 1) {
+                            this.chooseSingleFile(fileId!);
+                        }
+                    } else {
+                        throw new Error(`edit file error`);
+                    }
+                }
+                const file = this.curDirInfo.find(file => file.id === fileId);
+                if (!file) {
+                    throw new Error(`edit file error`);
+                }
+                file.isEdit = true;
+                await nextTick();
+                const nameInput = document.getElementById(`file-name-input-${id}-${fileId}`)!;
+                selectInputText(nameInput);
+            },
+
+            async saveFileName (e: Event, file: IFileInfo) {
+                file.isEdit = false;
+                // @ts-ignore
+                let value = e.target?.innerText;
+                if (value === file.name) return;
+                const targetFile = await getOS().disk.findChildByPath(file.path);
+                if (value === '') {
+                    // @ts-ignore
+                    value = FileUtils.ensureFileRepeatName('untitled_folder', targetFile?.parent?.children);
+                }
+                file.name = value;
+                targetFile?.rename(value);
+            },
+
             chooseSingleFile (id: string) {
-                this.activeIds.clear();
+                this.clearSelect();
                 this.activeIds.add(id);
             },
 
+            clearSelect () {
+                this.activeIds.clear();
+            },
+
             async entryDir (path: string) {
-                await this._refreshDirInfo(path);
-                history.add(path);
+                await this.refreshDirInfo(path);
+                this.historyIndex = history.add(path);
                 // this.curDirInfo = mockFilesInfo();
             },
-            async _refreshDirInfo (path: string) {
+            async refreshDirInfo (path?: string) {
+                if (!path) {
+                    path = this.getCurPath();
+                }
                 const files = await loadFilesInDir(path);
                 this.curDirInfo = generateFilesData(files);
                 this.curDirName = parseDirName(path);
             },
             back () {
-                history.back();
-                this._refreshDirInfo(history.current);
+                this.clearSelect();
+                this.historyIndex = history.back();
+                this.refreshDirInfo(history.current);
             },
             forward () {
-                history.forward();
-                this._refreshDirInfo(history.current);
+                this.clearSelect();
+                this.historyIndex = history.forward();
+                this.refreshDirInfo(history.current);
+            },
+            getCurPath () {
+                return history.current;
             }
-        }
+        },
     });
 });
 

@@ -3,7 +3,7 @@
  * @Date: 2022-10-01 23:06:03
  * @Description: 文件内容解析器
  */
-import { BaseParser } from './parser/base-parser';
+import type { BaseParser } from './parser/base-parser';
 import { BinaryParser } from './parser/binary-parser';
 import { JsonParser } from './parser/json-parser';
 import { TextParser } from './parser/text-parser';
@@ -35,7 +35,6 @@ export class FileParser {
     }
 
     async read<T extends any = any> (data: Uint8Array, filename: string, type = ''): Promise<T> {
-        debugger;
         const parser = this.parsers.find(item => {
             item.matcher(type, filename);
         }) || this.binaryParser;

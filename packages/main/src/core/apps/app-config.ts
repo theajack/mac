@@ -93,7 +93,6 @@ export function createDefaultApps ():
     });
 
     return {
-        [AppNames.finder]: app(AppNames.finder),
         [AppNames.launcher]: app(AppNames.launcher),
         [AppNames.safari]: app(AppNames.safari),
         [AppNames.terminal]: app(AppNames.terminal),
@@ -102,6 +101,7 @@ export function createDefaultApps ():
         [AppNames.wechat]: app(AppNames.wechat),
         [AppNames.vscode]: app(AppNames.vscode),
         [AppNames.meitu]: app(AppNames.meitu),
+        [AppNames.finder]: app(AppNames.finder), // todo 调试放到中间
         [AppNames.bilibili]: app(AppNames.bilibili),
         [AppNames.qqmusic]: app(AppNames.qqmusic),
         [AppNames.kwai]: app(AppNames.kwai),

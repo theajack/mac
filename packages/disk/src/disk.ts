@@ -46,3 +46,7 @@ export class Disk extends Dir {
         }
     }
 }
+
+export function getDisk () {
+    return new Disk();
+}

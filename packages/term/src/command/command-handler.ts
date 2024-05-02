@@ -3,13 +3,13 @@
  * @Date: 2022-11-10 18:29:42
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-02-02 08:43:55
+ * @LastEditTime: 2024-05-02 20:29:00
  */
 import { splitTwoPart } from '../utils/utils';
-import { IJson } from 'webos-disk';
+import type { Dir, IJson } from 'webos-disk';
 import { CDCommand } from './commands/cd';
 import { ClearCommand } from './commands/clear';
-import { Command, ICommandResult } from './commands/command-base';
+import type { Command, ICommandResult } from './commands/command-base';
 import { LSCommand } from './commands/ls';
 import { PWDCommand } from './commands/pwd';
 import { MkdirCommand } from './commands/mkdir';
@@ -22,7 +22,8 @@ import { PingCommand } from './commands/ping';
 import { HelpCommand } from './commands/help';
 import { FindCommand } from './commands/find';
 import { getApplications } from './applications/applications';
-import { Term } from '../term';
+import type { Term } from '../term';
+import { MoveCommand } from './commands/mv';
 
 const CommandClassList: (typeof Command)[] = [
     ClearCommand,
@@ -38,6 +39,7 @@ const CommandClassList: (typeof Command)[] = [
     PingCommand,
     HelpCommand,
     FindCommand,
+    MoveCommand,
     ...getApplications()
 ];
 
@@ -48,18 +50,26 @@ export class CommandManager {
 
     private commandList: Command[] = [];
 
+    commandDir: Dir;
+
     term: Term;
 
     constructor (term: Term) {
         this.term = term;
         CommandClassList.forEach(c => this.addNewCommand(c));
+
+    }
+
+    async initDir () {
+        this.commandDir = await this.term.disk.createChildByPath(`/System/Command`, true, true) as Dir;
+        this.commandDir.isSystemFile = true;
     }
 
     getCommand (name: string) {
         return this.commands[name];
     }
 
-    destory () {
+    destroy () {
         CommandManager.List.splice(CommandManager.List.indexOf(this), 1);
     }
 

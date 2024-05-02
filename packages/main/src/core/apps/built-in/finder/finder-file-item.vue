@@ -25,6 +25,14 @@ const fileContextMenu = (e: MouseEvent) => {
     contextmenu(e);
 };
 
+const onNameKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+        store.saveFileName(e, props.file);
+        e.preventDefault();
+    }
+};
+
+
 // // 选择文件
 // const clickFile = (e: MouseEvent) => {
 //     if (e.metaKey || e.ctrlKey) {
@@ -47,7 +55,15 @@ const fileContextMenu = (e: MouseEvent) => {
     @contextmenu.capture.stop="fileContextMenu"
   >
     <img :src="img" alt="" :style="`height: ${FileLength}px; width: ${FileLength}px`">
-    <div class="file-name">{{ file.name }}</div>
+    <div
+      :id="`file-name-input-${props.id}-${file.id}`"
+      class="file-name"
+      :contenteditable="file.isEdit"
+      @blur="e => store.saveFileName(e, file)"
+      @keydown="onNameKeyDown"
+    >
+      {{ file.name }}
+    </div>
   </div>
 </template>
 
@@ -74,6 +90,12 @@ const fileContextMenu = (e: MouseEvent) => {
         font-size: 13px;
         flex-shrink: 0;
         word-break: break-all;
+        &[contenteditable=true]{
+            outline: none;
+            pointer-events: all;
+            box-shadow: 2px 2px 0 0 #3a668e, -2px -2px 0 0 #3a668e, 2px -2px 0 0 #3a668e,-2px 2px 0 0 #3a668e;
+            background-color: transparent!important;
+        }
     }
     &.active{
         img{

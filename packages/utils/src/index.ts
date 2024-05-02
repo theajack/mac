@@ -4,3 +4,4 @@
  * @Description: Coding something
  */
 export * from './str-codec';
+export * from './dom';

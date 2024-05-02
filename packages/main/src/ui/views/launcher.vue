@@ -17,7 +17,6 @@ import type { App } from '@/core/apps/app';
 import AppBlock from '@/ui/components/app-block.vue';
 import SearchInput from '@/ui/components/common/search-input.vue';
 import { DockTop, WindowWidth } from '../style/common';
-
 const store = useGlobalStore();
 const url = resource('desktop-bg.jpg');
 

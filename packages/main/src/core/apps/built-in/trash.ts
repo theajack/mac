@@ -7,6 +7,7 @@ import { appIcon } from '@/lib/utils';
 import { App } from '../app';
 import { AppNames } from '../app-config';
 import type { ISelectItem } from '@/core/types/component';
+import type { FileBase } from 'webos-term';
 
 export class Trash extends App<Trash> {
 
@@ -36,8 +37,12 @@ export class Trash extends App<Trash> {
         });
         // todo
         this.fullTrash();
-        this.initDir().then(() => {
-            this.setIcon(this.dir.isEmpty);
+        this.manager.systemDir.ensureDir({
+            name: 'Trash',
+            isSystemFile: true,
+        }).then((dir) => {
+            this.dir = dir;
+            this.setIcon(dir.isEmpty);
         });
     }
 
@@ -56,5 +61,20 @@ export class Trash extends App<Trash> {
 
     private setIcon (isEmpty: boolean) {
         this.icon = appIcon(isEmpty ? 'trash' : 'trash-full');
+    }
+
+    async recycleFiles (items: FileBase[]) {
+        // this.manager.
+        for (let i = 0; i < items.length; i++) {
+            const file = items[i];
+            await file.moveTo(
+                this.manager.trash.dir.pathString,
+                true,
+                '.Recycle'
+            );
+        }
+    }
+
+    async putFilesBack (items: FileBase[]) {
     }
 }

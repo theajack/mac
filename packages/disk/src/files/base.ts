@@ -7,12 +7,15 @@
 import { Path } from 'webos-path';
 import { timeId } from '../lib/utils';
 import { fs } from '../saver/filer';
-import { Dir } from './dir';
+import type { Dir } from './dir';
+import { FileUtils } from './file-utils';
+import { getDisk } from '../disk';
 
 export interface IFileBaseOption {
     name: string,
     entry?: any,
     path?: string,
+    isSystemFile?: boolean,
 }
 
 export interface IFileBaseInfo {
@@ -36,6 +39,8 @@ export abstract class FileBase implements IFileBaseInfo {
     isDir = false;
     path: Path;
 
+    isSystemFile = false;
+
     entry: any; // 第三方底层file对象，本项目中是filer中的entry
 
     parent: Dir | null;
@@ -43,10 +48,12 @@ export abstract class FileBase implements IFileBaseInfo {
     constructor ({
         name = '',
         entry = null,
+        isSystemFile = false,
         path
     }: IFileBaseOption) {
         this.id = timeId();
         this.entry = entry;
+        this.isSystemFile = isSystemFile;
         this.name = name;
         if (path) {
             this.path = new Path(path);
@@ -87,5 +94,38 @@ export abstract class FileBase implements IFileBaseInfo {
     abstract getType(): Promise<string>;
     get pathString () {
         return this.path.path;
+    }
+
+    async rename (name: string) {
+        await fs().rename(this.pathString, name);
+        this.name = name;
+    }
+
+    async moveTo (targetDirPath: string, renameIfConflict = false, repeatMark = '.Move') {
+        const dir = await getDisk().findDirByPath(targetDirPath);
+
+        if (!dir) {
+            throw new Error(`Could not find targer Dir: ${targetDirPath}`);
+        }
+
+        let name = this.name;
+        if (!renameIfConflict) {
+            name = FileUtils.ensureFileRepeatName(
+                this.name,
+                dir.children,
+                repeatMark
+            );
+        } else {
+            if (dir.children.find(file => file.name === name)) {
+                throw new Error(`File already exists: ${name}`);
+            }
+        }
+
+        await fs().mv(this.pathString, targetDirPath, name);
+        return name;
+    }
+
+    isInTrash () {
+        return this.pathString.startsWith('/System/Application/Trash/');
     }
 }

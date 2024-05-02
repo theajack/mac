@@ -8,7 +8,7 @@
 import { $, div, mounted, text } from 'alins';
 import { EditorStyle } from '../../ui/css/main-css';
 import { Color } from '../../ui/css/styles/atoms';
-import { File } from 'webos-disk';
+import type { File } from 'webos-disk';
 import { catFile } from '../commands/cat';
 import { Command } from '../commands/command-base';
 import { Application } from 'webos-module';
@@ -110,7 +110,6 @@ export class RunCommand extends Command {
                     },
                     // iifeNameMap: { vue: 'Vue' },
                     onLoaded: () => {
-                        debugger;
                         runningTitle.value = `Done![Installed ${index} new packages in ${Date.now() - timeStart}ms]`;
                         runningInfo.value = '';
                         dot.value = '';

@@ -19,25 +19,24 @@ class History<T = string> {
     }
 
     add (v: T) {
-        this.list.splice(this.index + 1);
+        this.index ++;
+        this.list.splice(this.index);
         this.list.push(v);
-        this.forward();
+        return this.forward();
     }
 
     back () {
         if (this.index > 0) {
             this.index --;
-            return true;
         }
-        return false;
+        return this.index;
     }
 
     forward () {
         if (this.index < this.size - 1) {
             this.index ++;
-            return true;
         }
-        return false;
+        return this.index;
     }
 }
 

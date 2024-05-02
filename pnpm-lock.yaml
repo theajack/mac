@@ -119,6 +119,9 @@ importers:
       webos-term:
         specifier: workspace:*
         version: link:../term
+      webos-utils:
+        specifier: workspace:*
+        version: link:../utils
 
   packages/module:
     dependencies:

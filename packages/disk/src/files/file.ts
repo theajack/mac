@@ -12,7 +12,6 @@ import { fileParser } from './file-parser';
 import { createLocker } from '../lib/create';
 
 export interface IFileOption extends IFileBaseOption {
-    content?: Uint8Array;
     mimetype?: string;
 }
 
@@ -28,12 +27,8 @@ export class File extends FileBase {
         return this._file;
     }
 
-    constructor ({
-        name,
-        entry,
-        path,
-    }: IFileOption) {
-        super({ name, entry, path });
+    constructor (options: IFileOption) {
+        super(options);
         this.type = 'file';
     }
 
