@@ -11,6 +11,7 @@ import { Path, type FileBase, FileUtils } from 'webos-term';
 import { useHistory } from '@/lib/history';
 import { nextTick } from 'vue';
 import { selectInput } from 'webos-utils';
+import { StringText } from '@/core/string';
 
 export interface IFileInfo {
     name: string,
@@ -225,12 +226,13 @@ function mockFilesInfo () {
 
 export const FinderUtils = {
     getStore () {
-        const id = getOS().currentWindow!.id;
+        const id = getOS().currentWindow?.id;
+        if (typeof id !== 'number') return null;
         return useFinderStore(id);
     },
     async getCurDir (): Promise<Dir> {
         const store = this.getStore();
-        const path = store.getCurPath();
+        const path = store!.getCurPath();
         const os = getOS();
         return await os.disk.findDirByPath(path) as Dir;
     },
@@ -238,11 +240,11 @@ export const FinderUtils = {
         const store = this.getStore();
         const dir = await this.getCurDir();
         return dir.children.filter(child => {
-            return store.activeIds.has(child.id);
+            return store!.activeIds.has(child.id);
         });
     },
     async editFile (fileId?: string) {
-        const store = this.getStore();
+        const store = this.getStore()!;
         if (fileId) {
             store.chooseSingleFile(fileId);
         } else {
@@ -265,12 +267,21 @@ export const FinderUtils = {
         selectInput(nameInput);
     },
     async newFile (isDir = false) {
-        const store = FinderUtils.getStore();
+        const store = FinderUtils.getStore()!;
         const dir = await FinderUtils.getCurDir();
         const name = FileUtils.ensureFileRepeatName(`Untitled${isDir ? '_folder' : ''}`, dir.children);
         const target = await dir[isDir ? 'createDir' : 'createFile']({ name });
         await store.refreshDirInfo();
         store.chooseSingleFile(target!.id);
         this.editFile();
+    },
+
+
+    isInTrash (path: string) {
+        return path === StringText.trashDir || path.startsWith(`${StringText.trashDir}/`);
+    },
+
+    isFileLocked (isSystemFile: boolean, path: string) {
+        return isSystemFile || this.isInTrash(path);
     }
 };

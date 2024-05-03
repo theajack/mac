@@ -8,6 +8,7 @@ import { checkContextCheckList, createSortByMenu } from '@/ui/components/common/
 import { underDevelopment } from '@/ui/components/common/toast/toast';
 import { FinderUtils } from './finder-store';
 import { SelectType } from '@/core/enum';
+import { getOS } from '@/core/os/os';
 
 const onClick = () => {
     underDevelopment();
@@ -16,12 +17,14 @@ const onClick = () => {
 export const MainFinderMenu: ISelectItem[] = [
     {
         name: 'New Folder ✅',
+        type: SelectType.NoTrash,
         async onClick () {
             await FinderUtils.newFile(true);
         },
     },
     {
         name: 'New File ✅',
+        type: SelectType.NoTrash,
         async onClick () {
             await FinderUtils.newFile();
         },
@@ -80,8 +83,12 @@ const FileCommonMenu = () => [
     },
     {
         name: 'Move to Trash',
-        type: SelectType.NotSystemFile,
-        onClick,
+        type: SelectType.FileLocked,
+        async onClick () {
+            const files = await FinderUtils.getSelectedFiles();
+            await getOS().appManager.trash.recycleFiles(files);
+            await FinderUtils.getStore()!.refreshDirInfo();
+        }
     },
     {
         isSplit: true,
@@ -94,7 +101,7 @@ const FileCommonMenu = () => [
         name: 'Rename ✅',
         type: [
             SelectType.SingleFile,
-            SelectType.NotSystemFile,
+            SelectType.FileLocked,
         ],
         onClick () {
             FinderUtils.editFile();

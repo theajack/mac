@@ -6,7 +6,7 @@
 -->
 <script setup lang="ts">
 import { resource } from '@/lib/utils';
-import { useFinderStore, type IFileInfo } from './js/finder-store';
+import { useFinderStore, type IFileInfo, FinderUtils } from './js/finder-store';
 import { useContextMenuRef } from '@/ui/components/common/context-menu/context-menu';
 import { FileMenu, FolderMenu } from './js/finder-context-menu';
 import { FileLength } from './js/finder-layout-manager';
@@ -58,6 +58,7 @@ const onNameKeyDown = (e: KeyboardEvent) => {
     <div class="img-w relative">
       <img :src="img" alt="" :style="`height: ${FileLength}px; width: ${FileLength}px`">
       <i v-if="file.isSystemFile" class="ei-lock img-marker" />
+      <i v-else-if="FinderUtils.isInTrash(file.path)" class="ei-trash img-marker" />
     </div>
     <div
       :id="`file-name-input-${props.id}-${file.id}`"

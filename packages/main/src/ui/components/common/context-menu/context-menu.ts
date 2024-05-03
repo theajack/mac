@@ -247,28 +247,43 @@ export function useContextMenuRef (listGene = DefaultMenuList) {
     if (!ContextMenuRef) {
         ContextMenuRef = createContextMenuRef();
     }
+
     return {
         ...ContextMenuRef,
         async contextmenu (e: MouseEvent) {
             const list = listGene();
-            const files = await FinderUtils.getSelectedFiles();
+            const store = FinderUtils.getStore();
 
-            console.log(files, list);
+            if (store) {
+                // 在finder中右键的
+                // console.log(files, list);
+                const files = await FinderUtils.getSelectedFiles();
 
-            const isAllSystemFile = !files.find(item => !item.isSystemFile);
-            const isSingleFile = files.length === 1;
-
-            list.forEach(item => {
-                item.disabled = false;
-                const types = Array.isArray(item.type) ? item.type : [ item.type ];
-                types.forEach(type => {
-                    if (type === SelectType.NotSystemFile) {
-                        item.disabled = item.disabled || isAllSystemFile;
-                    } else if (type === SelectType.SingleFile) {
-                        item.disabled = item.disabled || !isSingleFile;
+                const isAllFileLocked = !files.find(item => !(
+                    FinderUtils.isFileLocked(item.isSystemFile, item.pathString)
+                ));
+                const isSingleFile = files.length === 1;
+                const isInTrash = FinderUtils.isInTrash(store.getCurPath() + '/');
+                list.forEach(item => {
+                    item.disabled = false;
+                    const types = Array.isArray(item.type) ? item.type : [ item.type ];
+                    for (const type of types) {
+                        if (item.disabled) return;
+                        switch (type) {
+                            case SelectType.FileLocked:
+                                item.disabled = isAllFileLocked;
+                                break;
+                            case SelectType.SingleFile:
+                                item.disabled = !isSingleFile;
+                                break;
+                            case SelectType.NoTrash:
+                                item.disabled = isInTrash;
+                                break;
+                            default: break;
+                        }
                     }
                 });
-            });
+            }
 
             ContextMenuRef.contextmenu(e, list);
         }

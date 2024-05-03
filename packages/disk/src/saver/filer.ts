@@ -6,7 +6,7 @@
 import { log } from '../lib/utils';
 import { promiseify } from '../saver/promiseify-map';
 import Filer from 'filer.js';
-import type { FileBase } from '../files/base';
+import type { FileBase, IFileEntry } from '../files/base';
 import { Dir } from '../files/dir';
 import { withResolve } from '../utils';
 import { File } from '../files/file';
@@ -108,9 +108,13 @@ export class DiskFiler {
         return promiseify(this.filer.mv)(path, FileUtils.extractDirPath(path), newName);
     }
 
+    ls (path: string): Promise<IFileEntry[]> {
+        return promiseify(this.filer.ls)(path);
+    }
+
     private async _initDir (path: string): Promise<FileBase[]> {
         log('travese', path);
-        const files = await promiseify<any[]>(this.filer.ls)(path);
+        const files = await this.ls(path);
         if (files.length === 0) return [];
         // @ts-ignore
         return Promise.all(files.map(async entry => {

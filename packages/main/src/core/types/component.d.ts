@@ -6,6 +6,7 @@ import type { SelectType } from '../enum';
  * @Description: Coding something
  */
 export interface ISelectItem {
+    id?: string;
     name?: string;
     hotKey?: string[]; // 快捷键
     icon?: string;

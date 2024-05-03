@@ -14,7 +14,7 @@ export const useGlobalStore = defineStore('store', {
     state: () => ({
         windowMaxZIndex: -1,
         inDragging: false,
-        globalMenuList: DefaultMenuList,
+        globalMenuList: DefaultMenuList(),
         dockContextAppName: '',
         showLauncher: false,
         windowWidth: WindowWidth,

@@ -9,6 +9,8 @@ import { AppNames, createEmptyStatus } from '../../app-config';
 import FinderUI from './finder-ui.vue';
 import FinderHeader from './finder-header.vue';
 import type { IWindowOptions } from '@/core/os/window/window';
+import type { ICallAppInfo } from '@/core/os/event-bus';
+import { FinderUtils } from './js/finder-store';
 
 export class Finder extends App {
 
@@ -32,7 +34,9 @@ export class Finder extends App {
         });
     }
 
-    cd () {
-
+    async onAppCall ({ data }: ICallAppInfo) {
+        this.openNewWindow();
+        const store = FinderUtils.getStore();
+        await store?.entryDir(data.path);
     }
 }

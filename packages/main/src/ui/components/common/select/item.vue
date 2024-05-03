@@ -48,6 +48,7 @@ const isCheckedItem = typeof props.item.checked === 'boolean';
 const onclick = (e: MouseEvent) => {
     if (props.item.disabled) {
         e.preventDefault();
+        e.stopPropagation();
         return;
     }
     props.item.onClick?.(props.item);

@@ -8,6 +8,8 @@ import { App } from '../app';
 import { AppNames } from '../app-config';
 import type { ISelectItem } from '@/core/types/component';
 import type { FileBase } from 'webos-term';
+import { FinderUtils } from './finder/js/finder-store';
+import { StringText } from '@/core/string';
 
 export class Trash extends App<Trash> {
 
@@ -21,6 +23,7 @@ export class Trash extends App<Trash> {
             isSplit: true
         },
         {
+            id: 'EmptyTrash',
             name: 'Empty Trash',
             disabled: false,
             onClick: (item: ISelectItem) => {
@@ -30,38 +33,48 @@ export class Trash extends App<Trash> {
         },
     ];
 
+    onOpenCustom = () => {
+        console.log('onOpenCustom Trash');
+        this.callApp(AppNames.finder, {
+            path: StringText.trashDir
+        });
+    };
+
     constructor () {
         super({
             iconRadius: 0,
             name: AppNames.trash
         });
-        // todo
-        this.fullTrash();
         this.manager.systemDir.ensureDir({
             name: 'Trash',
             isSystemFile: true,
         }).then((dir) => {
             this.dir = dir;
-            this.setIcon(dir.isEmpty);
+            this.refreshTrashIcon();
         });
     }
 
-    // onOpen (): void | Window | null {
-    //     return null;
-    // }
+    private refreshTrashIcon () {
+        const target = this.proxy ? this.proxy() : this;
+        target.icon = appIcon(this.dir.isEmpty ? 'trash' : 'trash-full');
 
-    fullTrash () {
-        this.setIcon(false);
-    }
-    emptyTrash () {
-        // console.log(111);
-        // window.t2 = this;
-        this.setIcon(true);
+        // ! docker 里的图标的右键菜单
+        const item = target.dockMenu.find(item => item.id === 'EmptyTrash');
+        if (item) {
+            item.disabled = this.dir.isEmpty;
+        }
     }
 
-    private setIcon (isEmpty: boolean) {
-        this.icon = appIcon(isEmpty ? 'trash' : 'trash-full');
+    async emptyTrash () {
+        if (this.dir.isEmpty) return;
+        await this.dir.clearDir();
+        const store = FinderUtils.getStore();
+        if (store && FinderUtils.isInTrash(store.getCurPath())) {
+            store.entryDir(StringText.trashDir);
+        }
+        this.refreshTrashIcon();
     }
+
 
     async recycleFiles (items: FileBase[]) {
         // this.manager.
@@ -73,8 +86,11 @@ export class Trash extends App<Trash> {
                 '.Recycle'
             );
         }
+        this.refreshTrashIcon();
     }
 
     async putFilesBack (items: FileBase[]) {
     }
+
+
 }

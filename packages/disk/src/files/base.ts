@@ -30,6 +30,12 @@ export interface IFileDisplayInfo extends IFileBaseInfo {
     type: string,
 }
 
+export interface IFileEntry {
+    fullPath: string;
+    isDirectory: boolean;
+    isFile: boolean;
+    name: string;
+}
 
 export abstract class FileBase implements IFileBaseInfo {
     isDisk = false;
@@ -43,7 +49,7 @@ export abstract class FileBase implements IFileBaseInfo {
 
     isSystemFile = false;
 
-    entry: any; // 第三方底层file对象，本项目中是filer中的entry
+    entry: IFileEntry; // 第三方底层file对象，本项目中是filer中的entry
 
     parent: Dir | null;
 
@@ -89,7 +95,11 @@ export abstract class FileBase implements IFileBaseInfo {
 
         list.splice(index, 1);
 
-        return fs().rm(this.path.path); // , this.isDir
+        return fs().rm(this.pathString); // , this.isDir
+    }
+
+    pureRemove () {
+        return fs().rm(this.pathString);
     }
 
     abstract getSize(): Promise<number>;
@@ -130,12 +140,22 @@ export abstract class FileBase implements IFileBaseInfo {
             }
         }
 
-        await fs().mv(this.pathString, targetDirPath, name);
-        // todo disk中需要调整
+        const newEntry = await fs().mv(this.pathString, targetDirPath, name);
+
+        // 修改name和path
+        this.name = name;
+        this.updateEntry(newEntry);
+
+        // 调整children
+        const children = this.parent?.children || [];
+        children.splice(children.indexOf(this), 1);
+        dir.addChild(this);
+
         return name;
     }
 
-    isInTrash () {
-        return this.pathString.startsWith('/System/Application/Trash/');
+    async updateEntry (newEntry: IFileEntry) {
+        this.path = new Path(newEntry.fullPath);
+        this.setEntry(newEntry);
     }
 }

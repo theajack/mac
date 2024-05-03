@@ -8,11 +8,9 @@ import { AppNames, createEmptyStatus } from '../../app-config';
 import SafariUI from './safari-ui.vue';
 import SafariHeader from './safari-header.vue';
 import type { ICallAppInfo } from '@/core/os/event-bus';
-import { MacEvent } from '@/core/os/event-bus';
 import type { ITabItem } from './safari-store';
 import { useSafariStore } from './safari-store';
 import { markRaw, nextTick } from 'vue';
-import type { IAppMessage } from '../../type';
 
 export class Safari extends App {
     statusMenu = createEmptyStatus('Safari');

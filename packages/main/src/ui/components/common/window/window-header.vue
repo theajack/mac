@@ -8,6 +8,7 @@ import { ref } from 'vue';
 import type { IWindowStatus } from '@/core/os/window/window';
 import { initWindow } from '../drag';
 import { createDoubleClick } from '@/lib/utils';
+import { matchStopEvent, StopEvents } from '@/core/utils/dom-event';
 import { MenuHeight, WindowWidth, WindowHeight, DockTop } from '@/ui/style/common';
 const props = defineProps<{
   status: IWindowStatus
@@ -50,9 +51,13 @@ function toggleFullWindow () {
     }
 }
 
-async function onClick () {
+async function onClick (e: PointerEvent) {
     if (!isDoubleClick()) return;
+    if (matchStopEvent(e, StopEvents.WindowResize)) {
+        return;
+    }
     toggleFullWindow();
+    console.warn('toggleFullWindow');
 }
 
 

@@ -13,6 +13,7 @@ export enum WindowSizeStatus {
 }
 
 export enum SelectType {
-    NotSystemFile,
+    FileLocked,
     SingleFile,
+    NoTrash,
 }

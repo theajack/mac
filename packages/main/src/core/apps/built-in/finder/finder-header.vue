@@ -6,9 +6,9 @@
 <script setup lang="ts">
 import type { IWindowCompProp } from '@/core/os/window/window';
 import { useFinderStore } from './js/finder-store';
+import { StopEvents } from '@/core/utils/dom-event';
 const props = defineProps<IWindowCompProp>();
 const store = useFinderStore(props.id);
-window.fhs = store;
 </script>
 
 <template>
@@ -22,8 +22,8 @@ window.fhs = store;
         select-none cursor-default justify-between"
     >
       <span class="flex flex-1">
-        <i :class="{disabled: !store.canBack}" class="el-arrow-left common-icon" @click.stop="store.back" />
-        <i :class="{disabled: !store.canForward}" class="el-arrow-right common-icon" @click.stop="store.forward" />
+        <i :data-event-stop="StopEvents.WindowResize" :class="{disabled: !store.canBack}" class="el-arrow-left common-icon" @click="store.back" />
+        <i :data-event-stop="StopEvents.WindowResize" :class="{disabled: !store.canForward}" class="el-arrow-right common-icon" @click="store.forward" />
         <span class="px-2 flex-center font-bold">{{ store.curDirName }}</span>
       </span>
 

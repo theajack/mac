@@ -142,6 +142,8 @@ export abstract class App<This extends App = App<any>> implements IApp {
         }
     }
 
+    onOpenCustom?: ()=> void;
+
     onOpen (): Window|null|void {
         this._initAppStatus();
         if (this.link) {
@@ -151,6 +153,8 @@ export abstract class App<This extends App = App<any>> implements IApp {
             if (!win) {
                 if (this.newWindowOptions) {
                     return this.openNewWindow();
+                } else if (this.onOpenCustom) {
+                    this.onOpenCustom();
                 } else {
                     // todo
                     toast({

@@ -8,7 +8,7 @@ import type { IJson } from '../type.d';
 import { log } from '../lib/utils';
 import { fs } from '../saver/filer';
 import { split } from '../utils';
-import type { IFileDisplayInfo, IFileBaseOption } from './base';
+import type { IFileDisplayInfo, IFileBaseOption, IFileEntry } from './base';
 import { FileBase } from './base';
 import type { IFileOption } from './file';
 import { File } from './file';
@@ -253,5 +253,30 @@ export class Dir extends FileBase {
 
     get isEmpty () {
         return this.children.length === 0;
+    }
+
+    async clearDir () {
+        await Promise.all(this.children.map(async file => {
+            await file.pureRemove();
+        }));
+        this.children = [];
+    }
+
+    async updateEntry (newEntry: IFileEntry) {
+        await super.updateEntry(newEntry);
+
+        if (this.children.length === 0) return;
+
+        const entries = await fs().ls(newEntry.fullPath);
+
+        for (const file of this.children) {
+            const index = entries.findIndex(entry => entry.name === file.name);
+            if (index === -1) {
+                throw new Error(`Target not exist`);
+            }
+            const entry = entries.splice(index, 1)[0];
+            file.updateEntry(entry);
+        }
+
     }
 }
