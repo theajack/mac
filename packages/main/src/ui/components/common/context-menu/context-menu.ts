@@ -3,12 +3,15 @@
  * @Date: 2022-10-07 22:28:31
  * @Description: Coding something
  */
-import type { ISelectItem, ISelectList } from '@/core/types/component';
+import { type ISelectItem, type ISelectList } from '@/core/types/component';
 import { ref } from 'vue';
 import { toast } from '../toast/toast';
 import type { App } from '@/core/apps/app';
-import { CommonMargin, WinHeightNoDock, WindowHeight, WindowWidth } from '@/ui/style/common';
+import { CommonMargin, WinHeightNoDock, WindowWidth } from '@/ui/style/common';
 import { useGlobalStore } from '@/ui/store';
+import { FinderUtils } from '@/core/apps/built-in/finder/js/finder-store';
+import { SelectType } from '@/core/enum';
+import type { FileBase } from 'webos-term';
 
 const onClick = function (this: ISelectItem) {
     toast({
@@ -119,7 +122,7 @@ export function createSortByMenu (): ISelectItem[] {
     ] as ISelectList);
 }
 
-export const DefaultMenuList: ISelectItem[] = [
+export const DefaultMenuList: ()=>ISelectItem[] = () => [
     {
         name: 'New Folder',
         onClick,
@@ -202,8 +205,8 @@ function createContextMenuRef () {
         }
     };
 
-    const contextmenu = (e: MouseEvent, list: ISelectItem[] = DefaultMenuList) => {
-        useGlobalStore().replaceMenuList(list);
+    const contextmenu = (e: MouseEvent, list?: ISelectItem[]) => {
+        useGlobalStore().replaceMenuList(list || DefaultMenuList());
         const { clientX, clientY } = e;
 
         position.value = {
@@ -240,13 +243,33 @@ function createContextMenuRef () {
 
 let ContextMenuRef: ReturnType<typeof createContextMenuRef>;
 
-export function useContextMenuRef (list = DefaultMenuList) {
+export function useContextMenuRef (listGene = DefaultMenuList) {
     if (!ContextMenuRef) {
         ContextMenuRef = createContextMenuRef();
     }
     return {
         ...ContextMenuRef,
-        contextmenu (e: MouseEvent) {
+        async contextmenu (e: MouseEvent) {
+            const list = listGene();
+            const files = await FinderUtils.getSelectedFiles();
+
+            console.log(files, list);
+
+            const isAllSystemFile = !files.find(item => !item.isSystemFile);
+            const isSingleFile = files.length === 1;
+
+            list.forEach(item => {
+                item.disabled = false;
+                const types = Array.isArray(item.type) ? item.type : [ item.type ];
+                types.forEach(type => {
+                    if (type === SelectType.NotSystemFile) {
+                        item.disabled = item.disabled || isAllSystemFile;
+                    } else if (type === SelectType.SingleFile) {
+                        item.disabled = item.disabled || !isSingleFile;
+                    }
+                });
+            });
+
             ContextMenuRef.contextmenu(e, list);
         }
     } as typeof ContextMenuRef;

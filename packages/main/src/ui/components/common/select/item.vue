@@ -131,7 +131,7 @@ const onclick = (e: MouseEvent) => {
     border-top: 1px solid var(--color-white-200);
   }
   &.disabled{
-    color: #5c5c5c;
+    color: #6e6e6e;
     &:hover {
       background-color: transparent;
       >.os-select-child>.os-select-list{

@@ -1,4 +1,4 @@
-import type { App } from '../apps/app';
+import type { SelectType } from '../enum';
 
 /*
  * @Author: tackchen
@@ -17,6 +17,7 @@ export interface ISelectItem {
     onClick?: (item: ISelectItem) => void;
     onSearchInput?: (text: string) => void;
     children?: ISelectItem[];
+    type?: SelectType | SelectType[];
 }
 
 

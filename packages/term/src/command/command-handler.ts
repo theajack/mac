@@ -3,7 +3,7 @@
  * @Date: 2022-11-10 18:29:42
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-05-02 20:29:00
+ * @LastEditTime: 2024-05-02 21:39:29
  */
 import { splitTwoPart } from '../utils/utils';
 import type { Dir, IJson } from 'webos-disk';
@@ -62,7 +62,6 @@ export class CommandManager {
 
     async initDir () {
         this.commandDir = await this.term.disk.createChildByPath(`/System/Command`, true, true) as Dir;
-        this.commandDir.isSystemFile = true;
     }
 
     getCommand (name: string) {

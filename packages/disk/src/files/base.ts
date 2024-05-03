@@ -39,6 +39,8 @@ export abstract class FileBase implements IFileBaseInfo {
     isDir = false;
     path: Path;
 
+    isHidden = false;
+
     isSystemFile = false;
 
     entry: any; // 第三方底层file对象，本项目中是filer中的entry
@@ -97,7 +99,14 @@ export abstract class FileBase implements IFileBaseInfo {
     }
 
     async rename (name: string) {
-        await fs().rename(this.pathString, name);
+        try {
+            console.log(`rename path=${this.pathString} name=${name}`);
+            await fs().rename(this.pathString, name);
+            // 更新path
+            this.path = this.path.rename(name);
+        } catch (e) {
+            console.error(e);
+        }
         this.name = name;
     }
 
@@ -122,6 +131,7 @@ export abstract class FileBase implements IFileBaseInfo {
         }
 
         await fs().mv(this.pathString, targetDirPath, name);
+        // todo disk中需要调整
         return name;
     }
 

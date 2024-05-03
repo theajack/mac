@@ -6,10 +6,11 @@
 import { defineStore } from 'pinia';
 import { createAppDataStore } from '@/ui/store/common';
 import { getDisk, getOS } from '@/core/os/os';
+import type { Dir } from 'webos-term';
 import { Path, type FileBase, FileUtils } from 'webos-term';
 import { useHistory } from '@/lib/history';
 import { nextTick } from 'vue';
-import { selectInputText } from 'webos-utils';
+import { selectInput } from 'webos-utils';
 
 export interface IFileInfo {
     name: string,
@@ -19,6 +20,7 @@ export interface IFileInfo {
 
     path: string,
     isEdit: boolean,
+    isSystemFile: boolean,
 
     // file: FileBase,
     // modTime: string,
@@ -40,7 +42,8 @@ export function generateFilesData (files: FileBase[]): IFileInfo[] {
             id: file.id,
             name: file.name,
             isDir: file.isDir,
-            path: file.path.path,
+            path: file.pathString,
+            isSystemFile: file.isSystemFile,
             curIndex: -1,
             isEdit: false,
         };
@@ -49,10 +52,10 @@ export function generateFilesData (files: FileBase[]): IFileInfo[] {
 
 export const useFinderStore = createAppDataStore(id => {
     const history = useHistory()(id);
-    window.hh = history;
     return defineStore(`finder-store-${id}`, {
         state: () => {
             return {
+                id,
                 leftPanelWidth: 150,
                 activeFinderItemName: '',
                 curDirName: '',
@@ -70,29 +73,6 @@ export const useFinderStore = createAppDataStore(id => {
             },
         },
         actions: {
-            async editFile (fileId?: string) {
-                if (fileId) {
-                    this.chooseSingleFile(fileId);
-                } else {
-                    if (this.activeIds.size > 0) {
-                        fileId = this.activeIds.values().next().value;
-                        if (this.activeIds.size > 1) {
-                            this.chooseSingleFile(fileId!);
-                        }
-                    } else {
-                        throw new Error(`edit file error`);
-                    }
-                }
-                const file = this.curDirInfo.find(file => file.id === fileId);
-                if (!file) {
-                    throw new Error(`edit file error`);
-                }
-                file.isEdit = true;
-                await nextTick();
-                const nameInput = document.getElementById(`file-name-input-${id}-${fileId}`)!;
-                selectInputText(nameInput);
-            },
-
             async saveFileName (e: Event, file: IFileInfo) {
                 file.isEdit = false;
                 // @ts-ignore
@@ -104,7 +84,10 @@ export const useFinderStore = createAppDataStore(id => {
                     value = FileUtils.ensureFileRepeatName('untitled_folder', targetFile?.parent?.children);
                 }
                 file.name = value;
-                targetFile?.rename(value);
+                console.log(`targetFile rename, old=${targetFile?.name} new=${value}`);
+                await targetFile?.rename(value);
+                // ! 更新file.path
+                file.path = targetFile?.pathString || '';
             },
 
             chooseSingleFile (id: string) {
@@ -141,7 +124,7 @@ export const useFinderStore = createAppDataStore(id => {
             },
             getCurPath () {
                 return history.current;
-            }
+            },
         },
     });
 });
@@ -239,3 +222,55 @@ function mockFilesInfo () {
         },
     ] as IFileInfo[];
 }
+
+export const FinderUtils = {
+    getStore () {
+        const id = getOS().currentWindow!.id;
+        return useFinderStore(id);
+    },
+    async getCurDir (): Promise<Dir> {
+        const store = this.getStore();
+        const path = store.getCurPath();
+        const os = getOS();
+        return await os.disk.findDirByPath(path) as Dir;
+    },
+    async getSelectedFiles (): Promise<FileBase[]> {
+        const store = this.getStore();
+        const dir = await this.getCurDir();
+        return dir.children.filter(child => {
+            return store.activeIds.has(child.id);
+        });
+    },
+    async editFile (fileId?: string) {
+        const store = this.getStore();
+        if (fileId) {
+            store.chooseSingleFile(fileId);
+        } else {
+            if (store.activeIds.size > 0) {
+                fileId = store.activeIds.values().next().value;
+                if (store.activeIds.size > 1) {
+                    store.chooseSingleFile(fileId!);
+                }
+            } else {
+                throw new Error(`edit file error`);
+            }
+        }
+        const file = store.curDirInfo.find(file => file.id === fileId);
+        if (!file) {
+            throw new Error(`edit file error`);
+        }
+        file.isEdit = true;
+        await nextTick();
+        const nameInput = document.getElementById(`file-name-input-${store.id}-${fileId}`)!;
+        selectInput(nameInput);
+    },
+    async newFile (isDir = false) {
+        const store = FinderUtils.getStore();
+        const dir = await FinderUtils.getCurDir();
+        const name = FileUtils.ensureFileRepeatName(`Untitled${isDir ? '_folder' : ''}`, dir.children);
+        const target = await dir[isDir ? 'createDir' : 'createFile']({ name });
+        await store.refreshDirInfo();
+        store.chooseSingleFile(target!.id);
+        this.editFile();
+    }
+};

@@ -88,7 +88,10 @@ export class AppManager {
 
     async initAppsDirectory () {
         const { disk } = this.parent;
-        const systemDir = await disk.ensureDir({ name: 'System', isSystemFile: true });
+        const systemDir = await disk.ensureDir({
+            name: StringText.system,
+            isSystemFile: true
+        });
 
         this.systemDir = systemDir as Dir;
         this.appDir = await this.systemDir.ensureDir({
@@ -97,7 +100,10 @@ export class AppManager {
         });
         await this.initAppConfig();
         await this.initApps();
-        await Promise.all([ 'Desktop', 'Documents', 'Downloads' ].map(async (name) => {
+        await Promise.all([
+            StringText.command, StringText.desktop,
+            StringText.docs, StringText.downloads,
+        ].map(async (name) => {
             await this.systemDir.ensureDir({ name, isSystemFile: true });
         }));
     }

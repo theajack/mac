@@ -104,6 +104,7 @@ export class DiskFiler {
         return promiseify(this.filer.mv)(source, target, newName);
     }
     rename (path: string, newName: string) {
+        console.log(`rename inner path=${path} dir=${FileUtils.extractDirPath(path)} newName=${newName}`);
         return promiseify(this.filer.mv)(path, FileUtils.extractDirPath(path), newName);
     }
 

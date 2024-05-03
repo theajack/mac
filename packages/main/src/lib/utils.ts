@@ -82,8 +82,8 @@ export function basePromiseify<T = any> (
             func(...args, (data: T) => {
                 resolve(data);
             }, (err: any) => {
-                reject(err);
                 console.error(err);
+                reject(err);
             });
         });
     };

@@ -3,7 +3,7 @@
  * @Date: 2022-11-13 00:05:14
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-01-21 01:02:28
+ * @LastEditTime: 2024-05-03 10:40:43
  */
 const Reg = /^(http|ws)s?:\/\//;
 
@@ -102,6 +102,10 @@ export class Path {
             p.filter(v => !!v).join(Path.Split) :
             p.trim();
         return (v.substring(v.length - 3) === Path.Back + Path.Split) ? v.substring(0, v.length - 1) : v;
+    }
+
+    rename (newName: string): Path {
+        return new Path(this.parentPath + newName);
     }
 
     static join (...paths: (string|string[])[]) {

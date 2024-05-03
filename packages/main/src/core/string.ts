@@ -7,4 +7,9 @@
 export const StringText = {
     appDir: 'Applications',
     appConfigFile: 'AppConfig.json',
+    system: 'System',
+    command: 'Command',
+    desktop: 'Desktop',
+    docs: 'Documents',
+    downloads: 'Downloads'
 };

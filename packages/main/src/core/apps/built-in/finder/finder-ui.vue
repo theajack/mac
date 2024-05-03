@@ -19,7 +19,7 @@ const props = defineProps<IWindowCompProp>();
 const store = useFinderStore(props.id);
 const finderContainer = ref();
 
-const { contextmenu } = useContextMenuRef(MainFinderMenu);
+const { contextmenu } = useContextMenuRef(() => MainFinderMenu);
 
 const manager = useFinderLayoutManager(props.id);
 

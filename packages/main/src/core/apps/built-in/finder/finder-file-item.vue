@@ -27,8 +27,9 @@ const fileContextMenu = (e: MouseEvent) => {
 
 const onNameKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
-        store.saveFileName(e, props.file);
         e.preventDefault();
+        // @ts-ignore
+        e.target.blur();
     }
 };
 
@@ -54,7 +55,10 @@ const onNameKeyDown = (e: KeyboardEvent) => {
     data-type="file"
     @contextmenu.capture.stop="fileContextMenu"
   >
-    <img :src="img" alt="" :style="`height: ${FileLength}px; width: ${FileLength}px`">
+    <div class="img-w relative">
+      <img :src="img" alt="" :style="`height: ${FileLength}px; width: ${FileLength}px`">
+      <i v-if="file.isSystemFile" class="ei-lock img-marker" />
+    </div>
     <div
       :id="`file-name-input-${props.id}-${file.id}`"
       class="file-name"
@@ -77,9 +81,16 @@ const onNameKeyDown = (e: KeyboardEvent) => {
     * {
         pointer-events: none;
     }
-    img{
-        padding: 3px;
-        border-radius: 5px;
+    .img-w{
+        img{
+            padding: 3px;
+        }
+        .img-marker{
+            position: absolute;
+            right: 2px;
+            bottom: 2px;
+            filter: drop-shadow(1px 1px 1px #222d) drop-shadow(-1px 1px 1px #222d);
+        }
     }
     .file-name{
         width: 100%;
