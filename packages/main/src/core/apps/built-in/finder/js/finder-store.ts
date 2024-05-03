@@ -283,5 +283,5 @@ export const FinderUtils = {
 
     isFileLocked (isSystemFile: boolean, path: string) {
         return isSystemFile || this.isInTrash(path);
-    }
+    },
 };

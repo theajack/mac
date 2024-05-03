@@ -18,6 +18,7 @@ import { FileUtils } from './file-utils';
 
 export interface IDirOption extends IFileBaseOption {
     children?: FileBase[];
+    hiddenChildren?: FileBase[];
 }
 
 export interface ICreateConfig {
@@ -30,16 +31,21 @@ interface IFileContentOptions extends IFileOption {
 
 export class Dir extends FileBase {
     children: FileBase[] = [];
+    hiddenChildren: FileBase[] = [];
     constructor (options: IDirOption) {
         super(options);
         this.type = 'dir';
         this.isDir = true;
-        this.initChildren(options.children || []);
+        this.initChildren(options.children || [], options.hiddenChildren || []);
     }
 
-    initChildren (children: FileBase[]) {
+    initChildren (children: FileBase[], hiddenChildren: FileBase[] = []) {
         this.children = children;
+        this.hiddenChildren = hiddenChildren;
         children.forEach(item => {
+            item.setParent(this);
+        });
+        hiddenChildren.forEach(item => {
             item.setParent(this);
         });
     }
@@ -58,7 +64,10 @@ export class Dir extends FileBase {
 
     async addChild<T extends FileBase> (file: T): Promise<T> {
         file.setParent(this);
-        this.children.push(file);
+
+        const children = file.isHiddenFile() ? this.hiddenChildren : this.children;
+
+        children.push(file);
 
         if (!file.entry) {
             const filePath = file.path.path;
@@ -140,7 +149,8 @@ export class Dir extends FileBase {
     }
 
     exists (name: string) {
-        return !!this.children.find(item => item.name === name);
+        return !!this.findChild(name) ||
+            !!this.findChild(name, true);
     }
 
     async paste (file: FileBase) {
@@ -164,14 +174,18 @@ export class Dir extends FileBase {
         // ! 当文件没有实际创建好时 等待初始化完成再返回
         // if (!this.entry) await this.onloaded();
         if (path.array.length === 0) return this;
-        const name = path.array.shift();
+        const name = path.array.shift() || '';
         if (name === Path.Back) {
             return (this.parent || this).findChildByPath(path.array);
         }
-        const file = this.children.find(file => file.name === name);
+        const file = this.findChild(name) || this.findChild(name, true);
         if (!file) return null;
         if (file.isDir) return (file as any as Dir).findChildByPath(path.array);
         return file as File;
+    }
+
+    private findChild (name: string, hidden = false) {
+        return (hidden ? this.hiddenChildren : this.children).find(file => file.name === name);
     }
 
     filerChild (query: string, deep = true) {

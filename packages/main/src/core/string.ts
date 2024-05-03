@@ -12,5 +12,5 @@ export const StringText = {
     desktop: 'Desktop',
     docs: 'Documents',
     downloads: 'Downloads',
-    trashDir: '/System/Trash'
+    trashDir: '/System/Trash',
 };

@@ -1,3 +1,4 @@
+import { DiskString } from '../constant';
 import { Path } from 'webos-path';
 
 /*
@@ -76,6 +77,9 @@ export const FileUtils = {
     extractFileName (path: string) {
         return this.splitLastStr(path, '/')[1];
     },
+    isHiddenFile (name: string) {
+        return name.endsWith(`.${DiskString.hiddenExt}`);
+    }
 };
 
 window.FiluUtils = FileUtils;

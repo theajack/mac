@@ -49,8 +49,8 @@ export class DiskFiler {
 
     // ! 从FileSystem中初始化所有文件
     async initFiles (parent: Dir) {
-        const files = await this._initDir(parent.path.path || '/');
-        parent.initChildren(files);
+        const [ files, hiddenFiles ] = await this._initDir(parent.path.path || '/');
+        parent.initChildren(files, hiddenFiles);
     }
 
     createFile (path: string) {
@@ -112,19 +112,32 @@ export class DiskFiler {
         return promiseify(this.filer.ls)(path);
     }
 
-    private async _initDir (path: string): Promise<FileBase[]> {
+    private async _initDir (path: string): Promise<[FileBase[], FileBase[]]> {
         log('travese', path);
         const files = await this.ls(path);
-        if (files.length === 0) return [];
-        // @ts-ignore
-        return Promise.all(files.map(async entry => {
+        if (files.length === 0) return [ [], [] ];
+        const children: FileBase[] = [];
+        const hiddenChildren: FileBase[] = [];
+        // // @ts-ignore
+        await Promise.all(files.map(async entry => {
             // console.warn('---', path, entry);
             const { isDirectory, name } = entry;
             const options = { name, entry, path: entry.fullPath };
-            return (isDirectory) ?
-                new Dir({ ...options, children: await this._initDir(entry.fullPath) }) :
-                new File(options);
+
+            let target: FileBase;
+            if (isDirectory) {
+                const [ children, hiddenChildren ] = await this._initDir(entry.fullPath);
+                target = new Dir({ ...options, children, hiddenChildren });
+            } else {
+                target = new File(options);
+            }
+            if (FileUtils.isHiddenFile(name)) {
+                hiddenChildren.push(target);
+            } else {
+                children.push(target);
+            }
         }));
+        return [ children, hiddenChildren ];
     }
     async getNativeFile (path: string): Promise<NFile> {
         const file = await promiseify(this.filer.open)(path);

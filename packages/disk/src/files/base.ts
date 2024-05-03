@@ -45,8 +45,6 @@ export abstract class FileBase implements IFileBaseInfo {
     isDir = false;
     path: Path;
 
-    isHidden = false;
-
     isSystemFile = false;
 
     entry: IFileEntry; // 第三方底层file对象，本项目中是filer中的entry
@@ -157,5 +155,9 @@ export abstract class FileBase implements IFileBaseInfo {
     async updateEntry (newEntry: IFileEntry) {
         this.path = new Path(newEntry.fullPath);
         this.setEntry(newEntry);
+    }
+
+    isHiddenFile () {
+        return FileUtils.isHiddenFile(this.name);
     }
 }

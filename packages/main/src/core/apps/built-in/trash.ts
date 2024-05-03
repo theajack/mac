@@ -7,13 +7,15 @@ import { appIcon } from '@/lib/utils';
 import { App } from '../app';
 import { AppNames } from '../app-config';
 import type { ISelectItem } from '@/core/types/component';
-import type { FileBase } from 'webos-term';
+import { DiskString, type File, type FileBase } from 'webos-term';
 import { FinderUtils } from './finder/js/finder-store';
 import { StringText } from '@/core/string';
 
 export class Trash extends App<Trash> {
 
     isVirtualApp = true;
+
+    configFile: File;
 
     dockMenu: ISelectItem[] = [
         {
@@ -45,13 +47,18 @@ export class Trash extends App<Trash> {
             iconRadius: 0,
             name: AppNames.trash
         });
-        this.manager.systemDir.ensureDir({
+    }
+
+    // 会在new之后执行
+    async init () {
+        this.dir = await this.manager.systemDir.ensureDir({
             name: 'Trash',
             isSystemFile: true,
-        }).then((dir) => {
-            this.dir = dir;
-            this.refreshTrashIcon();
         });
+        this.configFile = await this.dir.ensureFile({
+            name: `trash_config.${DiskString.hiddenExt}`
+        });
+        this.refreshTrashIcon();
     }
 
     private refreshTrashIcon () {

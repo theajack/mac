@@ -267,6 +267,10 @@ export abstract class App<This extends App = App<any>> implements IApp {
             name: upcaseFirstLetter(this.name),
         });
     }
+
+    async init () {
+
+    }
 }
 
 export function callApp (info: ICallAppInfo) {

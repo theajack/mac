@@ -132,13 +132,19 @@ export interface IAppConfig {
 export const InnerApps: IJson<typeof App> = {
 };
 
+async function initApp (AppClass: any) {
+    const app = new AppClass();
+    await app.init?.();
+    return app;
+}
+
 export async function createApp (config: IAppConfig) {
 
     const name = config.name;
     // @ts-ignore
     let AppClass = DefaultApps[name] || InnerApps[name];
     if (AppClass) {
-        return new AppClass();
+        return initApp(AppClass);
     }
 
     if (!config.url) return null;
@@ -147,7 +153,7 @@ export async function createApp (config: IAppConfig) {
 
     AppClass = window.__THIRD__APPS__[name];
     if (!AppClass) throw new Error();
-    return new AppClass();
+    return initApp(AppClass);
 }
 
 
