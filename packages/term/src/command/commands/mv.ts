@@ -3,7 +3,7 @@
  * @Date: 2022-11-10 18:37:32
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-05-02 14:53:13
+ * @LastEditTime: 2024-05-05 21:47:01
  */
 
 // import { div } from 'alins';
@@ -30,7 +30,7 @@ export class MoveCommand extends Command {
 
         if (!target.isDir) return this.fail('Target is not a directory');
 
-        const name = await source.moveTo(targetPath);
+        const name = await source.moveTo({ targetDirPath: targetPath });
 
         return this.success(`Move success ${source.pathString} => ${target.pathString}${name}`);
     }

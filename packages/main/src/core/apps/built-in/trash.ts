@@ -7,7 +7,7 @@ import { appIcon } from '@/lib/utils';
 import { App } from '../app';
 import { AppNames } from '../app-config';
 import type { ISelectItem } from '@/core/types/component';
-import { DiskString, parseJson, type File, type FileBase } from 'webos-term';
+import { DiskString, parseJson, type File, type FileBase, FileUtils } from 'webos-term';
 import { FinderUtils } from './finder/js/finder-store';
 import { StringText } from '@/core/string';
 import type { IJson } from '@/types';
@@ -104,11 +104,11 @@ export class Trash extends App<Trash> {
         for (let i = 0; i < items.length; i++) {
             const file = items[i];
             const originPath = file.pathString;
-            const newName = await file.moveTo(
-                this.manager.trash.dir.pathString,
-                true,
-                '.Recycle'
-            );
+            const newName = await file.moveTo({
+                targetDirPath: this.manager.trash.dir.pathString,
+                renameIfConflict: true,
+                repeatMark: '.Recycle'
+            });
             config[newName] = originPath;
         }
         await save();
@@ -122,11 +122,12 @@ export class Trash extends App<Trash> {
             const name = file.name;
             const originPath = config[name];
             if (originPath) {
-                await file.moveTo(
-                    originPath,
-                    true,
-                    '.PutBack'
-                );
+                await file.moveTo({
+                    targetDirPath: FileUtils.extractDirPath(originPath),
+                    renameIfConflict: true,
+                    newName: FileUtils.extractFileName(originPath),
+                    repeatMark: '.PutBack'
+                });
                 delete config[name];
             }
         }

@@ -130,17 +130,27 @@ export abstract class FileBase implements IFileBaseInfo {
         this.name = name;
     }
 
-    async moveTo (targetDirPath: string, renameIfConflict = false, repeatMark = '.Move') {
+    async moveTo ({
+        targetDirPath,
+        renameIfConflict = false,
+        repeatMark = '.Move',
+        newName,
+    }: {
+        targetDirPath: string,
+        renameIfConflict?: boolean,
+        newName?: string,
+        repeatMark?: string
+    }) {
         const dir = await getDisk().findDirByPath(targetDirPath);
 
         if (!dir) {
             throw new Error(`Could not find targer Dir: ${targetDirPath}`);
         }
 
-        let name = this.name;
-        if (!renameIfConflict) {
+        let name = newName || this.name;
+        if (renameIfConflict) {
             name = FileUtils.ensureFileRepeatName(
-                this.name,
+                name,
                 dir.children,
                 repeatMark
             );
