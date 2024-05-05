@@ -3,6 +3,7 @@
  * @Date: 2022-10-07 22:28:31
  * @Description: Coding something
  */
+import type { ISelectCondition } from '@/core/types/component';
 import { type ISelectItem, type ISelectList } from '@/core/types/component';
 import { ref } from 'vue';
 import { toast } from '../toast/toast';
@@ -10,8 +11,8 @@ import type { App } from '@/core/apps/app';
 import { CommonMargin, WinHeightNoDock, WindowWidth } from '@/ui/style/common';
 import { useGlobalStore } from '@/ui/store';
 import { FinderUtils } from '@/core/apps/built-in/finder/js/finder-store';
-import { SelectType } from '@/core/enum';
-import type { FileBase } from 'webos-term';
+import { FileUtils } from 'webos-term';
+import { StringText } from '@/core/string';
 
 const onClick = function (this: ISelectItem) {
     toast({
@@ -258,29 +259,31 @@ export function useContextMenuRef (listGene = DefaultMenuList) {
                 // 在finder中右键的
                 // console.log(files, list);
                 const files = await FinderUtils.getSelectedFiles();
-
                 const isAllFileLocked = !files.find(item => !(
                     FinderUtils.isFileLocked(item.isSystemFile, item.pathString)
                 ));
-                const isSingleFile = files.length === 1;
-                const isInTrash = FinderUtils.isInTrash(store.getCurPath() + '/');
+                const inTrash = FinderUtils.isInTrash(store.getCurPath() + '/');
+
+                const trashTop = (inTrash) ? !files.find(item => !(
+                    FileUtils.extractDirPath(item.pathString) !== StringText.trashDir
+                )) : false;
+
+                const options: ISelectCondition = {
+                    locked: isAllFileLocked,
+                    selectedCount: files.length,
+                    inTrash,
+                    trashTop
+                };
+                let isPrevSplit = true;
                 list.forEach(item => {
-                    item.disabled = false;
-                    const types = Array.isArray(item.type) ? item.type : [ item.type ];
-                    for (const type of types) {
-                        if (item.disabled) return;
-                        switch (type) {
-                            case SelectType.FileLocked:
-                                item.disabled = isAllFileLocked;
-                                break;
-                            case SelectType.SingleFile:
-                                item.disabled = !isSingleFile;
-                                break;
-                            case SelectType.NoTrash:
-                                item.disabled = isInTrash;
-                                break;
-                            default: break;
+                    item.disabled = item.isDisabled?.(options) || false;
+                    item.hidden = item.isHidden?.(options) || false;
+                    if (!item.hidden) {
+                        // ! 用于删除因hidden导致的连续两个split的情况
+                        if (item.isSplit && isPrevSplit) {
+                            item.hidden = true;
                         }
+                        isPrevSplit = item.isSplit || false;
                     }
                 });
             }

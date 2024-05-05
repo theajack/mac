@@ -7,7 +7,6 @@ import type { ISelectItem } from '@/core/types/component';
 import { checkContextCheckList, createSortByMenu } from '@/ui/components/common/context-menu/context-menu';
 import { underDevelopment } from '@/ui/components/common/toast/toast';
 import { FinderUtils } from './finder-store';
-import { SelectType } from '@/core/enum';
 import { getOS } from '@/core/os/os';
 
 const onClick = () => {
@@ -17,14 +16,18 @@ const onClick = () => {
 export const MainFinderMenu: ISelectItem[] = [
     {
         name: 'New Folder ✅',
-        type: SelectType.NoTrash,
+        isHidden ({ inTrash }) {
+            return inTrash;
+        },
         async onClick () {
             await FinderUtils.newFile(true);
         },
     },
     {
         name: 'New File ✅',
-        type: SelectType.NoTrash,
+        isHidden ({ inTrash }) {
+            return inTrash;
+        },
         async onClick () {
             await FinderUtils.newFile();
         },
@@ -83,13 +86,23 @@ const FileCommonMenu = () => [
     },
     {
         name: 'Move to Trash',
-        type: SelectType.FileLocked,
+        isHidden: ({ locked }) => locked,
         async onClick () {
             const files = await FinderUtils.getSelectedFiles();
             await getOS().appManager.trash.recycleFiles(files);
             await FinderUtils.getStore()!.refreshDirInfo();
         }
     },
+    {
+        name: 'Put Back',
+        isHidden: ({ trashTop }) => trashTop,
+        async onClick () {
+            const files = await FinderUtils.getSelectedFiles();
+            await getOS().appManager.trash.putFilesBack(files);
+            await FinderUtils.getStore()!.refreshDirInfo();
+        }
+    },
+
     {
         isSplit: true,
     },
@@ -99,10 +112,9 @@ const FileCommonMenu = () => [
     },
     {
         name: 'Rename ✅',
-        type: [
-            SelectType.SingleFile,
-            SelectType.FileLocked,
-        ],
+        isHidden ({ locked, selectedCount, inTrash }) {
+            return (selectedCount > 1 || locked || inTrash);
+        },
         onClick () {
             FinderUtils.editFile();
         }

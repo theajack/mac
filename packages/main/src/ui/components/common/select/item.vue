@@ -128,6 +128,9 @@ const onclick = (e: MouseEvent) => {
   &.is-split:hover {
     background-color: transparent;
   }
+  &.is-split + .is-split{
+    display: none;
+  }
   .os-select-split{
     border-top: 1px solid var(--color-white-200);
   }

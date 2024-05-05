@@ -7,6 +7,7 @@
 import { Dir } from './files/dir';
 import { Path } from 'webos-path';
 import { fs } from './saver/filer';
+import { createWaiter } from './lib/create';
 
 export interface IDiskOption {
     capacity?: number;
@@ -17,6 +18,9 @@ export class Disk extends Dir {
     static instance: Disk;
     capacity: number;
 
+    private wait = createWaiter();
+
+
     constructor ({
         capacity = 1024, // todo 容量
     }: IDiskOption = {}) {
@@ -26,6 +30,7 @@ export class Disk extends Dir {
         super({
             name: 'disk',
         });
+        // @ts-ignore
         this.entry = 'DISK';
         this.type = 'disk';
         this.capacity = capacity;
@@ -36,8 +41,11 @@ export class Disk extends Dir {
     }
 
     async initFileSystem () {
-        await fs().initFS();
-        await fs().initFiles(this);
+        console.log('initFileSystem');
+        await this.wait(async () => {
+            await fs().initFS();
+            await fs().initFiles(this);
+        });
     }
 
     clear () {

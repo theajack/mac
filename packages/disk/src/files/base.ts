@@ -58,14 +58,26 @@ export abstract class FileBase implements IFileBaseInfo {
         path
     }: IFileBaseOption) {
         this.id = timeId();
-        this.entry = entry;
-        this.isSystemFile = isSystemFile;
         this.name = name;
-        if (path) {
-            this.path = new Path(path);
-        }
+        this.initConstructOptions({ path, entry, isSystemFile, name });
     }
 
+    initConstructOptions ({
+        entry,
+        isSystemFile,
+        path
+    }: IFileBaseOption) {
+        if (typeof path !== 'undefined') {
+            this.path = new Path(path);
+        }
+        if (typeof isSystemFile !== 'undefined') {
+            this.isSystemFile = isSystemFile;
+        }
+        if (typeof entry !== 'undefined') {
+            this.entry = entry;
+        }
+        return this;
+    }
 
     setEntry (entry: any) {
         this.entry = entry;

@@ -11,9 +11,3 @@ export enum WindowSizeStatus {
     Resize = 'resize',
     Full = 'full',
 }
-
-export enum SelectType {
-    FileLocked,
-    SingleFile,
-    NoTrash,
-}

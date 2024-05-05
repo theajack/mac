@@ -33,6 +33,7 @@ const props = withDefaults(defineProps<{
   >
     <Item
       v-for="item in list"
+      v-show="!item.hidden"
       :key="item.name"
       :parent-over-screen="isOverScreen"
       :item="item"

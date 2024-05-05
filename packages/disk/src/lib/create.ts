@@ -27,3 +27,34 @@ export function createLocker () {
         }
     };
 }
+
+export function createWaiter<T = void> () {
+
+    let inProcess = false;
+    let done = false;
+    const waitList: any[] = [];
+    let result: T;
+
+    return async (process: ()=>Promise<T>) => {
+        if (done) {
+            console.log('done');
+            return result;
+        }
+        console.log(`inProcess=${inProcess}`);
+        if (inProcess) {
+            const { ready, resolve } = withResolve();
+            waitList.push(resolve);
+            return ready;
+        } else {
+            inProcess = true;
+            result = await process();
+            done = true;
+            console.log(`process finish`);
+            waitList.forEach(fn => {
+                fn(result);
+            });
+            return result;
+        }
+    };
+
+}

@@ -1,10 +1,17 @@
-import type { SelectType } from '../enum';
 
 /*
  * @Author: tackchen
  * @Date: 2022-10-04 21:48:42
  * @Description: Coding something
  */
+
+export interface ISelectCondition {
+    locked: boolean;
+    selectedCount: number;
+    inTrash: boolean;
+    trashTop: boolean;
+}
+
 export interface ISelectItem {
     id?: string;
     name?: string;
@@ -13,12 +20,14 @@ export interface ISelectItem {
     tip?: string; //
     isSplit?: boolean;
     checked?: boolean;
-    disabled?: boolean;
     isSearch?: boolean;
     onClick?: (item: ISelectItem) => void;
     onSearchInput?: (text: string) => void;
     children?: ISelectItem[];
-    type?: SelectType | SelectType[];
+    hidden?: boolean;
+    isHidden?(options: ISelectCondition): boolean;
+    disabled?: boolean;
+    isDisabled?(options: ISelectCondition): boolean;
 }
 
 

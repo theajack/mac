@@ -81,20 +81,23 @@ export class Dir extends FileBase {
 
 
     async createChildByPath<T extends Dir|File = Dir> (path: string, isDir: boolean, returnIfExists = false): Promise<T|null> {
-        const [ dirName, subName ] = split(path);
-        if (subName) {
-            if (!dirName) { // 根目录
-                return Disk.instance.createChildByPath(subName, isDir, returnIfExists);
-            } else {
-                const dir = await this.ensureDir({ name: dirName });
-                return dir.createChildByPath(subName, isDir, returnIfExists) || null;
-            }
+        let parent: Dir = this;
+        if (path[0] === '/') {
+            path = path.substring(1);
+            parent = Disk.instance;
         }
 
-        if (isDir) {
-            return this.createDir({ name: dirName }, { returnIfExists }) as Promise<T|null>;
+        if (path[path.length - 1] === '/') {
+            path = path.substring(0, path.length - 1);
         }
-        return this.createFile({ name: dirName }, { returnIfExists }) as Promise<T|null>;
+
+        const dirs = path.split('/');
+        while (dirs.length > 1) {
+            const curDir = dirs.shift()!;
+            parent = await parent.ensureDir({ name: curDir });
+        }
+        const name = dirs.shift()!;
+        return this[isDir ? 'createDir' : 'createFile']({ name }, { returnIfExists }) as Promise<T|null>;
     }
 
     ensureDir (options: IDirOption): Promise<Dir> {
@@ -106,13 +109,10 @@ export class Dir extends FileBase {
         returnIfExists: false,
     }): Promise<null | Dir> {
         // console.log('createDir', options, this, this.entry);
-        log('create dir', options.name);
+        log('createDir', options.name);
         if (this.exists(options.name)) {
             if (config.returnIfExists) {
-                const dir = await this.findDirByPath(options.name);
-                // @ts-ignore
-                dir!.isSystemFile = options.isSystemFile;
-                return dir;
+                return (await this.findDirByPath(options.name))!.initConstructOptions(options);
             }
             log('warn', '目录已经存在', `${this.path.path}/${options.name}`);
             return null;
@@ -123,19 +123,14 @@ export class Dir extends FileBase {
         // @ts-ignore
         return this.createFile(options, { returnIfExists: true });
     }
-    async createFile (options: IFileContentOptions, {
-        returnIfExists,
-    }: ICreateConfig = {
+    async createFile (options: IFileContentOptions, config: ICreateConfig = {
         returnIfExists: false,
     }): Promise<File | null> {
         // console.log('createFile', options, this, this.entry);
         log('create file', options.name);
         if (this.exists(options.name)) {
-            if (returnIfExists) {
-                const file = await this.findFileByPath(options.name) as File;
-                // @ts-ignore
-                file!.isSystemFile = options.isSystemFile;
-                return file;
+            if (config.returnIfExists) {
+                return (await this.findFileByPath(options.name))!.initConstructOptions(options);
             }
             log('warn', '文件已存在');
             return null;

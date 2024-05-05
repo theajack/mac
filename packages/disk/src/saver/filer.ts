@@ -49,6 +49,7 @@ export class DiskFiler {
 
     // ! 从FileSystem中初始化所有文件
     async initFiles (parent: Dir) {
+        console.warn('this.initFiles');
         const [ files, hiddenFiles ] = await this._initDir(parent.path.path || '/');
         parent.initChildren(files, hiddenFiles);
     }

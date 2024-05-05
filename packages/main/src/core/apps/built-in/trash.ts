@@ -7,9 +7,10 @@ import { appIcon } from '@/lib/utils';
 import { App } from '../app';
 import { AppNames } from '../app-config';
 import type { ISelectItem } from '@/core/types/component';
-import { DiskString, type File, type FileBase } from 'webos-term';
+import { DiskString, parseJson, type File, type FileBase } from 'webos-term';
 import { FinderUtils } from './finder/js/finder-store';
 import { StringText } from '@/core/string';
+import type { IJson } from '@/types';
 
 export class Trash extends App<Trash> {
 
@@ -79,24 +80,72 @@ export class Trash extends App<Trash> {
         if (store && FinderUtils.isInTrash(store.getCurPath())) {
             store.entryDir(StringText.trashDir);
         }
-        this.refreshTrashIcon();
+        await this.saveTrashConfig({});
+    }
+
+    async deleteFiles (items: FileBase[]) {
+        if (items.length === 0) return;
+        const { config, save } = await this.useTrashConfig();
+        for (const file of items) {
+
+            await file.remove();
+            if (config[file.name]) {
+                delete config[file.name];
+            }
+        }
+        await save();
     }
 
 
     async recycleFiles (items: FileBase[]) {
+        if (items.length === 0) return;
+        const { config, save } = await this.useTrashConfig();
         // this.manager.
         for (let i = 0; i < items.length; i++) {
             const file = items[i];
-            await file.moveTo(
+            const originPath = file.pathString;
+            const newName = await file.moveTo(
                 this.manager.trash.dir.pathString,
                 true,
                 '.Recycle'
             );
+            config[newName] = originPath;
         }
-        this.refreshTrashIcon();
+        await save();
     }
 
     async putFilesBack (items: FileBase[]) {
+        if (items.length === 0) return;
+        const { config, save } = await this.useTrashConfig();
+
+        for (const file of items) {
+            const name = file.name;
+            const originPath = config[name];
+            if (originPath) {
+                await file.moveTo(
+                    originPath,
+                    true,
+                    '.PutBack'
+                );
+                delete config[name];
+            }
+        }
+        await save();
+    }
+
+    private async saveTrashConfig (config: IJson) {
+        await this.configFile.writeText(JSON.stringify(config));
+        this.refreshTrashIcon();
+    }
+
+    private async useTrashConfig () {
+        const config = parseJson(await this.configFile.readText()) || {};
+        return {
+            config,
+            save: async () => {
+                await this.saveTrashConfig(config);
+            },
+        };
     }
 
 
