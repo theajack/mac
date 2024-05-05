@@ -95,11 +95,23 @@ const FileCommonMenu = () => [
     },
     {
         name: 'Put Back',
-        isHidden: ({ trashTop }) => trashTop,
+        isHidden: ({ trashTop }) => !trashTop,
         async onClick () {
             const files = await FinderUtils.getSelectedFiles();
             await getOS().appManager.trash.putFilesBack(files);
             await FinderUtils.getStore()!.refreshDirInfo();
+        }
+    },
+    {
+        name: 'Delete Immediately...',
+        isHidden: ({ inTrash }) => !inTrash,
+        async onClick () {
+        }
+    },
+    {
+        name: 'Empty Trash',
+        isHidden: ({ inTrash }) => !inTrash,
+        async onClick () {
         }
     },
 

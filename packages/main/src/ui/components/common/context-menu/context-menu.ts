@@ -264,9 +264,11 @@ export function useContextMenuRef (listGene = DefaultMenuList) {
                 ));
                 const inTrash = FinderUtils.isInTrash(store.getCurPath() + '/');
 
-                const trashTop = (inTrash) ? !files.find(item => !(
+                const trashTop = (inTrash) ? !files.find(item => (
                     FileUtils.extractDirPath(item.pathString) !== StringText.trashDir
                 )) : false;
+
+                console.log(`trashTop`, trashTop);
 
                 const options: ISelectCondition = {
                     locked: isAllFileLocked,
