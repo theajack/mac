@@ -16,6 +16,7 @@
     ],
     "dependencies": {
         "filer.js": "^0.4.5",
+        "eveit": "^0.0.1",
         "webos-path": "workspace:*"
     },
     "scripts": {

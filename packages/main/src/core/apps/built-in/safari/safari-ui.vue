@@ -7,12 +7,11 @@
 import { useSafariStore, type ITabItem } from './safari-store';
 import SafariStart from './safari-start.vue';
 import { createDragScope } from '@/ui/lib/drag-scope';
-import type { IWindowStatus } from '@/core/os/window/window';
+import type { IWindowCompProp } from '@/core/os/window/window';
 import IFrame from '@/ui/components/common/iframe.vue';
-const props = defineProps<{
-    status: IWindowStatus
-}>();
-const store = useSafariStore(props.status.id);
+import { onUnmounted } from 'vue';
+const props = defineProps<IWindowCompProp>();
+const store = useSafariStore(props.id);
 
 const TabHeight = 28;
 
@@ -33,6 +32,10 @@ const {
 function clickTab (item: ITabItem) {
     store.setActiveId(item.id);
 }
+
+onUnmounted(() => {
+    useSafariStore.remove(props.id);
+});
 </script>
 
 <template>

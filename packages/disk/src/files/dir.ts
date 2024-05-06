@@ -7,7 +7,6 @@
 import type { IJson } from '../type.d';
 import { log } from '../lib/utils';
 import { fs } from '../saver/filer';
-import { split } from '../utils';
 import type { IFileDisplayInfo, IFileBaseOption, IFileEntry } from './base';
 import { FileBase } from './base';
 import type { IFileOption } from './file';
@@ -65,7 +64,9 @@ export class Dir extends FileBase {
     async addChild<T extends FileBase> (file: T): Promise<T> {
         file.setParent(this);
 
-        const children = file.isHiddenFile() ? this.hiddenChildren : this.children;
+        const isHidden = file.isHiddenFile();
+
+        const children = isHidden ? this.hiddenChildren : this.children;
 
         children.push(file);
 
@@ -149,7 +150,7 @@ export class Dir extends FileBase {
     }
 
     async paste (file: FileBase) {
-        const name = FileUtils.ensureFileRepeatName(file.name, this.children, '_Copy');
+        const name = FileUtils.ensureFileRepeatName(file.name, this.allChildren, '_Copy');
         const entry = await fs().cp(file.pathString, this.pathString, name);
         const value = new (file.isDir ? Dir : File)({ name, entry });
         await this.addChild(value);
@@ -157,6 +158,10 @@ export class Dir extends FileBase {
             fs().initFiles(value as Dir);
         }
         return value;
+    }
+
+    get allChildren () {
+        return [ ...this.children, ...this.hiddenChildren ];
     }
 
     async findChildByPath (
@@ -186,9 +191,11 @@ export class Dir extends FileBase {
     filerChild (query: string, deep = true) {
         const result: FileBase[] = [];
 
-        const n = this.children.length;
+        const children = this.children;
+
+        const n = children.length;
         for (let i = 0; i < n; i++) {
-            const child = this.children[i];
+            const child = children[i];
             if (child.name.indexOf(query) !== -1) {
                 result.push(child);
             }

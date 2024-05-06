@@ -89,6 +89,9 @@ importers:
 
   packages/disk:
     dependencies:
+      eveit:
+        specifier: ^0.0.1
+        version: 0.0.1
       filer.js:
         specifier: ^0.4.5
         version: 0.4.5

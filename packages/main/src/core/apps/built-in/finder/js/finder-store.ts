@@ -10,7 +10,7 @@ import type { Dir } from 'webos-term';
 import { Path, type FileBase, FileUtils } from 'webos-term';
 import { useHistory } from '@/lib/history';
 import { nextTick } from 'vue';
-import { selectTextInput } from 'webos-utils';
+import { selectInput } from 'webos-utils';
 import { StringText } from '@/core/string';
 
 export interface IFileInfo {
@@ -82,13 +82,15 @@ export const useFinderStore = createAppDataStore(id => {
                 const targetFile = await getOS().disk.findChildByPath(file.path);
                 if (value === '') {
                     // @ts-ignore
-                    value = FileUtils.ensureFileRepeatName('untitled_folder', targetFile?.parent?.children);
+                    value = FileUtils.ensureFileRepeatName('untitled_folder', targetFile?.parent?.allChildren);
                 }
                 file.name = value;
                 console.log(`targetFile rename, old=${targetFile?.name} new=${value}`);
                 await targetFile?.rename(value);
                 // ! 更新file.path
                 file.path = targetFile?.pathString || '';
+
+                FinderUtils.refreshAllFinderDirInfo(); // 更新其他finder窗口的ui
             },
 
             chooseSingleFile (id: string) {
@@ -144,82 +146,15 @@ function parseDirName (path: string) {
 
 
 // window.parseDirName = parseDirName;
-// window.useFinderStore = useFinderStore;
+window.useFinderStore = useFinderStore;
 
 function mockFilesInfo () {
     let id = 0;
     return [
         {
             id: `${id++}`,
-            name: 'test1',
-            isDir: true
-        }, {
-            id: `${id++}`,
             name: 'looooooooooooooooog name test',
             isDir: true
-        },
-        {
-            id: `${id++}`,
-            name: 'test1',
-            isDir: false
-        }, {
-            id: `${id++}`,
-            name: 'test2',
-            isDir: false
-        },
-        {
-            id: `${id++}`,
-            name: 'test1',
-            isDir: false
-        }, {
-            id: `${id++}`,
-            name: 'test2',
-            isDir: false
-        },
-        {
-            id: `${id++}`,
-            name: 'test1',
-            isDir: true
-        }, {
-            id: `${id++}`,
-            name: 'test2',
-            isDir: false
-        },
-        {
-            id: `${id++}`,
-            name: 'test1',
-            isDir: true
-        }, {
-            id: `${id++}`,
-            name: 'test2',
-            isDir: false
-        },
-        {
-            id: `${id++}`,
-            name: 'test1',
-            isDir: true
-        }, {
-            id: `${id++}`,
-            name: 'test2',
-            isDir: false
-        },
-        {
-            id: `${id++}`,
-            name: 'test1',
-            isDir: true
-        }, {
-            id: `${id++}`,
-            name: 'test2',
-            isDir: false
-        },
-        {
-            id: `${id++}`,
-            name: 'test1',
-            isDir: true
-        }, {
-            id: `${id++}`,
-            name: 'test2',
-            isDir: false
         },
     ] as IFileInfo[];
 }
@@ -264,12 +199,12 @@ export const FinderUtils = {
         file.isEdit = true;
         await nextTick();
         const nameInput = document.getElementById(`file-name-input-${store.id}-${fileId}`)!;
-        selectTextInput(nameInput);
+        selectInput(nameInput);
     },
     async newFile (isDir = false) {
         const store = FinderUtils.getStore()!;
         const dir = await FinderUtils.getCurDir();
-        const name = FileUtils.ensureFileRepeatName(`Untitled${isDir ? '_folder' : ''}`, dir.children);
+        const name = FileUtils.ensureFileRepeatName(`Untitled${isDir ? '_folder' : ''}`, dir.allChildren);
         const target = await dir[isDir ? 'createDir' : 'createFile']({ name });
         await store.refreshDirInfo();
         store.chooseSingleFile(target!.id);
@@ -284,4 +219,15 @@ export const FinderUtils = {
     isFileLocked (isSystemFile: boolean, path: string) {
         return isSystemFile || this.isInTrash(path);
     },
+
+    async refreshAllFinderDirInfo (affectPaths?: string[]) {
+        const stores = useFinderStore.all();
+        const curStore = this.getStore();
+        for (const store of stores) {
+            if (store === curStore) continue;
+            if (!affectPaths || affectPaths.includes(store.getCurPath())) {
+                store.refreshDirInfo();
+            }
+        }
+    }
 };

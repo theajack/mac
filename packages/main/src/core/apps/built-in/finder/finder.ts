@@ -11,6 +11,7 @@ import FinderHeader from './finder-header.vue';
 import type { IWindowOptions } from '@/core/os/window/window';
 import type { ICallAppInfo } from '@/core/os/event-bus';
 import { FinderUtils } from './js/finder-store';
+import { DiskEvent } from 'webos-term';
 
 export class Finder extends App {
 
@@ -31,6 +32,10 @@ export class Finder extends App {
     constructor () {
         super({
             name: AppNames.finder,
+        });
+
+        DiskEvent.on('disk-dir-change', paths => {
+            FinderUtils.refreshAllFinderDirInfo(paths);
         });
     }
 

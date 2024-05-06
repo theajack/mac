@@ -10,6 +10,7 @@ import { fs } from '../saver/filer';
 import type { Dir } from './dir';
 import { FileUtils } from './file-utils';
 import { getDisk } from '../disk';
+import { DiskEvent } from '../lib/disk-event';
 
 export interface IFileBaseOption {
     name: string,
@@ -60,8 +61,6 @@ export abstract class FileBase implements IFileBaseInfo {
         this.id = timeId();
         this.name = name;
         this.initConstructOptions({ path, entry, isSystemFile, name });
-
-        // todo updateOther finder
     }
 
     initConstructOptions ({
@@ -87,18 +86,20 @@ export abstract class FileBase implements IFileBaseInfo {
 
     setParent (parent: Dir | null) {
         this.parent = parent;
-        if (parent && !this.path) {
-            this.path = parent.path.join(this.name);
-            // console.warn(this.path.path);
+        if (parent) {
+            if (!this.path) {
+                this.path = parent.path.join(this.name);
+            }
+            if (!this.isHiddenFile()) {
+                DiskEvent.emit('disk-dir-change', [ parent.pathString ]);
+            }
         }
     }
 
     async remove () {
         if (!this.parent) return false;
 
-        const list = this.parent.children;
-
-        const index = list.findIndex(child => child === this);
+        const { children, index } = this.findParentChildInfo();
 
         if (index === -1) {
             console.warn('文件未找到');
@@ -106,11 +107,32 @@ export abstract class FileBase implements IFileBaseInfo {
         }
 
         const result = await fs().rm(this.pathString); // , this.isDir
-        list.splice(index, 1);
+        children.splice(index, 1);
 
-        // todo updateOther finder
+        if (!this.isHiddenFile()) {
+            DiskEvent.emit('disk-dir-change', [ this.parent.pathString ]);
+        }
 
         return result;
+    }
+
+    protected findParentChildInfo (): {
+        children: FileBase[],
+        index: number,
+        } {
+        if (!this.parent) {
+            return { index: -1, children: [] };
+        }
+        let list = this.parent.children;
+        let index = list.findIndex(child => child === this);
+        if (index === -1) {
+            list = this.parent.hiddenChildren;
+            index = list.findIndex(child => child === this);
+        }
+        if (index === -1) {
+            list = [];
+        }
+        return { children: list, index };
     }
 
     pureRemove () {
@@ -156,11 +178,11 @@ export abstract class FileBase implements IFileBaseInfo {
         if (renameIfConflict) {
             name = FileUtils.ensureFileRepeatName(
                 name,
-                dir.children,
+                dir.allChildren,
                 repeatMark
             );
         } else {
-            if (dir.children.find(file => file.name === name)) {
+            if (dir.allChildren.find(file => file.name === name)) {
                 throw new Error(`File already exists: ${name}`);
             }
         }
@@ -171,12 +193,14 @@ export abstract class FileBase implements IFileBaseInfo {
         this.name = name;
         this.updateEntry(newEntry);
 
+        const { children, index } = this.findParentChildInfo();
         // 调整children
-        const children = this.parent?.children || [];
-        children.splice(children.indexOf(this), 1);
+        children.splice(index, 1);
         dir.addChild(this);
 
-        // todo updateOther finder
+        if (!this.isHiddenFile()) {
+            DiskEvent.emit('disk-dir-change', [ this.parent!.pathString ]);
+        }
 
         return name;
     }

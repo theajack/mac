@@ -5,7 +5,7 @@
  * @LastEditors: Please set LastEditors
  * @LastEditTime: 2023-01-12 23:15:53
  */
-import { IJson } from 'webos-disk';
+import type { IJson } from 'webos-disk';
 
 export function formatDateTime (date = new Date()) {
     return `${date.getFullYear()}-${fixNum(date.getMonth() + 1)}-${fixNum(date.getDate())} ${fixNum(date.getHours())}:${fixNum(date.getMinutes())}:${fixNum(date.getSeconds())}`;
@@ -32,7 +32,7 @@ export function delay (time = 0) {
 }
 
 const FuncArgExp = /\(.*?\)/;
-export function getFuncArgs (fn: Function) {
+export function getFuncArgs (fn: ()=>void) {
     return fn.toString().match(FuncArgExp)?.[0] || '';
 }
 
@@ -40,17 +40,17 @@ export function isStringTemplateArray (data: any) {
     return data instanceof Array && (data as any).raw instanceof Array;
 }
 
-export function splitTwoPart (str: string, sep: string = ' ') {
+export function splitTwoPart (str: string, sep = ' ') {
     const index = str.indexOf(sep);
     if (index === -1) return [ str, '' ];
     return [ str.substring(0, index).trim(), str.substring(index + 1).trim() ];
 }
-export function splitThreePart (str: string, sep: string = ' ') {
+export function splitThreePart (str: string, sep = ' ') {
     const [ name, args ] = splitTwoPart(str, sep);
     return [ name, args, splitLastValue(args, sep) ];
 }
 
-export function splitLastValue (str: string, sep: string = ' ') {
+export function splitLastValue (str: string, sep = ' ') {
     return str.substring(str.lastIndexOf(sep) + 1);
 }
 
