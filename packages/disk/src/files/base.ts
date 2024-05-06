@@ -60,6 +60,8 @@ export abstract class FileBase implements IFileBaseInfo {
         this.id = timeId();
         this.name = name;
         this.initConstructOptions({ path, entry, isSystemFile, name });
+
+        // todo updateOther finder
     }
 
     initConstructOptions ({
@@ -103,9 +105,12 @@ export abstract class FileBase implements IFileBaseInfo {
             return false;
         }
 
+        const result = await fs().rm(this.pathString); // , this.isDir
         list.splice(index, 1);
 
-        return fs().rm(this.pathString); // , this.isDir
+        // todo updateOther finder
+
+        return result;
     }
 
     pureRemove () {
@@ -170,6 +175,8 @@ export abstract class FileBase implements IFileBaseInfo {
         const children = this.parent?.children || [];
         children.splice(children.indexOf(this), 1);
         dir.addChild(this);
+
+        // todo updateOther finder
 
         return name;
     }

@@ -8,10 +8,31 @@ import { checkContextCheckList, createSortByMenu } from '@/ui/components/common/
 import { underDevelopment } from '@/ui/components/common/toast/toast';
 import { FinderUtils } from './finder-store';
 import { getOS } from '@/core/os/os';
+import type { FileBase } from 'webos-term';
+import type { Trash } from '../../trash';
+import { callApp } from '@/core/apps/app';
+import { AppNames } from '@/core/apps/app-config';
 
 const onClick = () => {
     underDevelopment();
 };
+
+const trashCommonExec = async (
+    fn: (trash: Trash, files: FileBase[])=>Promise<void>,
+    selectFiles = true
+) => {
+    const files = selectFiles ? await FinderUtils.getSelectedFiles() : [];
+    await fn(getOS().appManager.trash, files);
+    await FinderUtils.getStore()!.refreshDirInfo();
+};
+
+const EmptyTrashItem = () => ({
+    name: 'Empty Trash ✅',
+    isHidden: ({ inTrash }) => !inTrash,
+    async onClick () {
+        await trashCommonExec(trash => trash.emptyTrash(), false);
+    }
+});
 
 export const MainFinderMenu: ISelectItem[] = [
     {
@@ -32,6 +53,7 @@ export const MainFinderMenu: ISelectItem[] = [
             await FinderUtils.newFile();
         },
     },
+    EmptyTrashItem(),
     {
         isSplit: true,
     },
@@ -85,36 +107,27 @@ const FileCommonMenu = () => [
         isSplit: true,
     },
     {
-        name: 'Move to Trash',
+        name: 'Move to Trash ✅',
         isHidden: ({ locked }) => locked,
         async onClick () {
-            const files = await FinderUtils.getSelectedFiles();
-            await getOS().appManager.trash.recycleFiles(files);
-            await FinderUtils.getStore()!.refreshDirInfo();
+            await trashCommonExec((trash, files) => trash.recycleFiles(files));
         }
     },
     {
-        name: 'Put Back',
+        name: 'Put Back ✅',
         isHidden: ({ trashTop }) => !trashTop,
         async onClick () {
-            const files = await FinderUtils.getSelectedFiles();
-            await getOS().appManager.trash.putFilesBack(files);
-            await FinderUtils.getStore()!.refreshDirInfo();
+            await trashCommonExec((trash, files) => trash.putFilesBack(files));
         }
     },
     {
-        name: 'Delete Immediately...',
+        name: 'Delete Immediately... ✅',
         isHidden: ({ inTrash }) => !inTrash,
         async onClick () {
+            await trashCommonExec((trash, files) => trash.deleteFiles(files));
         }
     },
-    {
-        name: 'Empty Trash',
-        isHidden: ({ inTrash }) => !inTrash,
-        async onClick () {
-        }
-    },
-
+    EmptyTrashItem(),
     {
         isSplit: true,
     },
@@ -169,8 +182,21 @@ const FileCommonMenu = () => [
 
 export const FolderMenu: ()=>ISelectItem[] = () => [
     {
-        name: 'Open in New Tab',
-        onClick,
+        name: 'Open in New Tab ✅',
+        isHidden: ({ allFolder }) => !allFolder,
+        async onClick () {
+            const files = await FinderUtils.getSelectedFiles();
+            const finder = getOS().appManager.finder;
+            for (const file of files) {
+                callApp({
+                    name: AppNames.finder,
+                    from: finder,
+                    data: {
+                        path: file.pathString,
+                    }
+                });
+            }
+        }
     },
     ...FileCommonMenu(),
     {
@@ -194,10 +220,12 @@ export const FolderMenu: ()=>ISelectItem[] = () => [
 export const FileMenu: ()=>ISelectItem[] = () => [
     {
         name: 'Open',
+        isHidden: ({ allFiles }) => !allFiles,
         onClick,
     },
     {
         name: 'Open With',
+        isHidden: ({ allFiles }) => !allFiles,
         onClick,
         children: [
             {

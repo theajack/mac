@@ -10,7 +10,7 @@ import type { Dir } from 'webos-term';
 import { Path, type FileBase, FileUtils } from 'webos-term';
 import { useHistory } from '@/lib/history';
 import { nextTick } from 'vue';
-import { selectInput } from 'webos-utils';
+import { selectTextInput } from 'webos-utils';
 import { StringText } from '@/core/string';
 
 export interface IFileInfo {
@@ -264,7 +264,7 @@ export const FinderUtils = {
         file.isEdit = true;
         await nextTick();
         const nameInput = document.getElementById(`file-name-input-${store.id}-${fileId}`)!;
-        selectInput(nameInput);
+        selectTextInput(nameInput);
     },
     async newFile (isDir = false) {
         const store = FinderUtils.getStore()!;

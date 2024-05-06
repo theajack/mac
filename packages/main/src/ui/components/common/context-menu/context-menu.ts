@@ -259,23 +259,24 @@ export function useContextMenuRef (listGene = DefaultMenuList) {
                 // 在finder中右键的
                 // console.log(files, list);
                 const files = await FinderUtils.getSelectedFiles();
-                const isAllFileLocked = !files.find(item => !(
-                    FinderUtils.isFileLocked(item.isSystemFile, item.pathString)
-                ));
                 const inTrash = FinderUtils.isInTrash(store.getCurPath() + '/');
 
-                const trashTop = (inTrash) ? !files.find(item => (
-                    FileUtils.extractDirPath(item.pathString) !== StringText.trashDir
-                )) : false;
-
-                console.log(`trashTop`, trashTop);
-
                 const options: ISelectCondition = {
-                    locked: isAllFileLocked,
                     selectedCount: files.length,
                     inTrash,
-                    trashTop
+                    trashTop: true,
+                    allFiles: true,
+                    allFolder: true,
+                    locked: true,
                 };
+
+                for (const item of files) {
+                    if (options.locked) options.locked = FinderUtils.isFileLocked(item.isSystemFile, item.pathString);
+                    if (options.allFiles) options.allFiles = item.type === 'file';
+                    if (options.allFolder) options.allFolder = item.type === 'dir';
+                    if (options.trashTop) options.trashTop = FileUtils.extractDirPath(item.pathString) === StringText.trashDir;
+                }
+
                 let isPrevSplit = true;
                 list.forEach(item => {
                     item.disabled = item.isDisabled?.(options) || false;

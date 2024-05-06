@@ -7,6 +7,8 @@
 
 export interface ISelectCondition {
     locked: boolean;
+    allFolder: boolean;
+    allFiles: boolean;
     selectedCount: number;
     inTrash: boolean;
     trashTop: boolean;
