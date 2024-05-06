@@ -25,7 +25,7 @@ defineProps<{
       top: status.inited ? 0: '50%',
       transition: status.animation ? 'all .3s ease': 'none',
     }"
-    @mousedown="status.$bringToTop"
+    @mousedown="() => status.$bringToTop(true)"
   >
     <WindowHeader :status="status" />
     <div

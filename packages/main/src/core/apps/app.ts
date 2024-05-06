@@ -134,7 +134,7 @@ export abstract class App<This extends App = App<any>> implements IApp {
         });
     }
 
-    private _initAppStatus () {
+    initAppStatus () {
         if (this.name === AppNames.trash) {
             useGlobalStore().statusMenu = this.manager.finder.statusMenu;
         } else if (!this.isVirtualApp) {
@@ -145,7 +145,7 @@ export abstract class App<This extends App = App<any>> implements IApp {
     onOpenCustom?: ()=> void;
 
     onOpen (): Window|null|void {
-        this._initAppStatus();
+        this.initAppStatus();
         if (this.link) {
             window.open(this.link);
         } else {
@@ -251,6 +251,7 @@ export abstract class App<This extends App = App<any>> implements IApp {
     }
 
     showAllWindows () {
+        this.initAppStatus();
         this.windows.forEach(win => {
             win.status.$bringToTop();
             win.status.visible = true;

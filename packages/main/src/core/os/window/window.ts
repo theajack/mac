@@ -17,6 +17,7 @@ import type { WindowSizeStatus } from '@/core/enum';
 import { useGlobalStore } from '@/ui/store';
 import type { IJson } from '@/core/type';
 import { refreshCurrentWindow } from '../event-bus';
+import { getOS } from '../os';
 
 export interface IWindowOptions {
     events?: IJson<()=>void>, // header 按钮的事件
@@ -122,12 +123,15 @@ export function createWindowStatus (
                 this.animation = false;
             }, 310);
         },
-        $bringToTop () {
+        $bringToTop (updateMenu = false) {
             const store = useGlobalStore();
             if (this.zIndex !== store.windowMaxZIndex) {
                 this.zIndex = ++store.windowMaxZIndex;
             }
             refreshCurrentWindow();
+            if (updateMenu) {
+                getOS().currentApp?.initAppStatus();
+            }
         },
         $getTotalCount: options.$getTotalCount || (() => 0),
     };
