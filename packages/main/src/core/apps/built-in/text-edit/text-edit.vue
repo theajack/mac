@@ -5,14 +5,12 @@
 -->
 <script setup lang="ts">
 import keyDown from './keydown-event';
-import type { IWindowStatus } from '@/core/os/window/window';
+import type { IWindowCompProp } from '@/core/os/window/window';
 import { useTextEditStore } from './text-edit-store';
 
-const props = defineProps<{
-    status: IWindowStatus
-}>();
+const props = defineProps<IWindowCompProp>();
 
-const store = useTextEditStore(props.status.id);
+const store = useTextEditStore(props.id);
 
 function keydown (e: KeyboardEvent) {
     keyDown.call(e.target, e, '    ');
@@ -34,6 +32,7 @@ function keydown (e: KeyboardEvent) {
         border: none;
         outline: none;
         font-family: Menlo, Monaco, "Courier New", monospace;
+        resize: none;
     }
 }
 </style>

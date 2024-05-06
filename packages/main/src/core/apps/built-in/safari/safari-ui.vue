@@ -9,7 +9,6 @@ import SafariStart from './safari-start.vue';
 import { createDragScope } from '@/ui/lib/drag-scope';
 import type { IWindowCompProp } from '@/core/os/window/window';
 import IFrame from '@/ui/components/common/iframe.vue';
-import { onUnmounted } from 'vue';
 const props = defineProps<IWindowCompProp>();
 const store = useSafariStore(props.id);
 
@@ -33,9 +32,6 @@ function clickTab (item: ITabItem) {
     store.setActiveId(item.id);
 }
 
-onUnmounted(() => {
-    useSafariStore.remove(props.id);
-});
 </script>
 
 <template>

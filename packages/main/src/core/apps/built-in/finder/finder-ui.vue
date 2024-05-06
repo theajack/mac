@@ -32,7 +32,6 @@ onMounted(async () => {
 });
 onUnmounted(() => {
     manager.releaseEvent();
-    useFinderStore.remove(props.id);
 });
 </script>
 

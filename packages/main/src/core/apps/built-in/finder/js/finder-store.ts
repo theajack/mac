@@ -51,8 +51,9 @@ export function generateFilesData (files: FileBase[]): IFileInfo[] {
     });
 }
 
-export const useFinderStore = createAppDataStore(id => {
+export const useFinderStore = createAppDataStore((id) => {
     const history = useHistory()(id);
+
     return defineStore(`finder-store-${id}`, {
         state: () => {
             return {

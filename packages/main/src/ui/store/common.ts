@@ -43,6 +43,9 @@
  * @Date: 2024-01-06 22:12:46
  * @Description: Coding something
  */
+
+import { onUnmounted } from 'vue';
+
 export function createAppDataStore<T> (
     createSingleStore: (id: number) => (()=>T)
 ) {
@@ -53,10 +56,14 @@ export function createAppDataStore<T> (
 
         if (storeMap[id]) return storeMap[id]();
 
+
         const useStore = createSingleStore(id);
 
         storeMap[id] = useStore;
 
+        onUnmounted(() => {
+            delete storeMap[id];
+        });
         return useStore();
     }
 
