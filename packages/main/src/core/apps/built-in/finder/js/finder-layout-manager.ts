@@ -11,6 +11,7 @@ import { getLatestWindow, getOS } from '@/core/os/os';
 import { createUseInstance } from '@/lib/use-instance';
 import { isMouseLeft } from '@/lib/is';
 import { callApp } from '@/core/apps/app';
+import { isCtrlKey } from 'webos-term';
 
 export const FileLength = 70;
 
@@ -121,8 +122,24 @@ class FinderLayoutManager {
     private isSelf () {
         return getOS().currentWindow?.id === this.id;
     }
+
+    // 处理按下command时再滑动的场景
+    private _lockedSelected: Set<string> = new Set();
+
     onMouseDown (e: MouseEvent) {
         if (!isMouseLeft(e)) return;
+
+
+        const isLockSelected = isCtrlKey(e);
+
+        this._lockedSelected.clear();
+        if (isLockSelected) {
+            const store = useFinderStore(this._finderId);
+            for (const id of store.activeIds) {
+                this._lockedSelected.add(id);
+            }
+        }
+
         this.mouseDownPos = this.parsePos(e);
         this.mouseDownClient = this.parseClientPos(e);
         if (this.parseTargetType(e) === 'finder') {
@@ -144,8 +161,13 @@ class FinderLayoutManager {
     }
 
     onMouseMove (e: MouseEvent) {
+
         if (!isMouseLeft(e) || !this.isSelf()) return;
         if (!this._isSelectAreaActive) return;
+
+        if (!isCtrlKey(e)) {
+            this._lockedSelected.clear();
+        }
 
         const pos = this.countOffsetPos(e);
 
@@ -235,10 +257,11 @@ class FinderLayoutManager {
         areaPos.y += scrollPos.y;
 
         this.filesLayouts.forEach(pos => {
+            const isLocked = this._lockedSelected.has(pos.id);
             if (isTwoRectIntersect(pos, halfLen, halfLen, areaPos, halfWidth, halfHeight)) {
-                store.activeIds.add(pos.id);
+                store.activeIds[isLocked ? 'delete' : 'add'](pos.id);
             } else {
-                store.activeIds.delete(pos.id);
+                store.activeIds[isLocked ? 'add' : 'delete'](pos.id);
             }
         });
     }
