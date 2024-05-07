@@ -27,3 +27,14 @@ At present many features are still under development, welcome interested develop
 <img src='https://shiyix.cn/images/macos.jpg' width='600px'/>
 
 <img src='https://shiyix.cn/images/design.png' width='600px'/>
+
+### Todo
+
+- [ ] Vscode with JsBox
+- [ ] Finder Update
+- [ ] Preference Settings
+- [ ] AppStore And Custom App
+- [ ] textEdit
+- [ ] Status Bar
+- [ ] Notes
+- [ ] Siri
