@@ -10,6 +10,7 @@ export interface ISelectCondition {
     allFolder: boolean;
     allFiles: boolean;
     selectedCount: number;
+    names: string[];
     inTrash: boolean;
     trashTop: boolean;
 }
@@ -17,6 +18,7 @@ export interface ISelectCondition {
 export interface ISelectItem {
     id?: string;
     name?: string;
+    nameCreator?: ((config: ISelectCondition)=>string);
     hotKey?: string[]; // 快捷键
     icon?: string;
     tip?: string; //

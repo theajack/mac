@@ -15,6 +15,7 @@ import { Disk } from '../disk';
 import { Path } from 'webos-path';
 import { FileUtils } from './file-utils';
 import { NameConflictChoose } from '../constant';
+import { ZipUtils } from '../lib/zip';
 
 export interface IDirOption extends IFileBaseOption {
     children?: FileBase[];
@@ -63,13 +64,14 @@ export class Dir extends FileBase {
     }
 
     async addChild<T extends FileBase> (file: T): Promise<T> {
-        file.setParent(this);
 
         const isHidden = file.isHiddenFile();
 
         const children = isHidden ? this.hiddenChildren : this.children;
 
         children.push(file);
+
+        file.setParent(this);
 
         if (!file.entry) {
             const filePath = file.path.path;
@@ -329,5 +331,18 @@ export class Dir extends FileBase {
             file.updateEntry(entry);
         }
 
+    }
+
+    async zipFiles (files: FileBase[], filename?: string) {
+        if (!files.length) return;
+
+        if (!filename) {
+            filename = files.length === 1 ? `${files[0].name}.zip` : 'Archive.zip';
+        }
+
+        // 压缩包文件名
+        filename = FileUtils.ensureFileRepeatName(filename, this.allChildren);
+        const content = await ZipUtils.zip(files);
+        await this.createFile({ name: filename, content });
     }
 }

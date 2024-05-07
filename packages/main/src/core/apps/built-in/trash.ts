@@ -78,7 +78,7 @@ export class Trash extends App<Trash> {
         await this.dir.clearDir();
         const store = FinderUtils.getStore();
         if (store && FinderUtils.isInTrash(store.getCurPath())) {
-            store.entryDir(StringText.trashDir);
+            store.refreshDirInfo(StringText.trashDir);
         }
         await this.saveTrashConfig({});
     }

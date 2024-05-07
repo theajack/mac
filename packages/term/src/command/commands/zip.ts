@@ -3,7 +3,7 @@
  * @Date: 2022-11-10 18:37:32
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-05-06 19:24:44
+ * @LastEditTime: 2024-05-07 21:10:53
  */
 
 import { FileUtils, type FileBase, Path, ZipUtils } from 'webos-disk';
@@ -38,15 +38,9 @@ export class ZipCommand extends Command {
         // [目标目录, 文件名称]
         // eslint-disable-next-line prefer-const
         let [ dirname, filename ] = Path.join(curPath, targetPath);
-
         // 压缩包存放的目录
         const dir = await this.curDir.ensureDirByPath(dirname);
-
-        if (!filename) filename = 'Archive.zip';
-        // 压缩包文件名
-        filename = FileUtils.ensureFileRepeatName(filename, dir?.allChildren);
-        const content = await ZipUtils.zip(files);
-        await dir.createFile({ name: filename, content });
+        await dir.zipFiles(files);
         return this.success(`Zip success ${Path.join(dir.pathString, filename)}.`);
     }
 }

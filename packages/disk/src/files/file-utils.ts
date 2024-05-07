@@ -1,11 +1,11 @@
-import { DiskString } from '../constant';
-import { Path } from 'webos-path';
-
 /*
  * @Author: chenzhongsheng
  * @Date: 2024-04-29 14:42:04
  * @Description: Coding something
  */
+import { DiskString } from '../constant';
+import { Path } from 'webos-path';
+
 export const FileUtils = {
 
     getExtension (filename: string) {
@@ -19,9 +19,12 @@ export const FileUtils = {
         const reg = new RegExp(`^(.*?)${repeatMark}(\\(([0-9]*)\\))?$`, 'i');
         let numTail = '';
         while (list.find(item => item.name === name)) {
-            const arr = FileUtils.splitFileName(name);
-            let head = arr[0];
-            const ext = arr[1];
+            let head = '', ext = '';
+            if (repeatMark && name.endsWith(repeatMark)) {
+                head = name;
+            } else {
+                [ head, ext ] = FileUtils.splitFileName(name);
+            }
             const result = head.match(reg);
             if (result) {
                 head = result[1];
@@ -86,6 +89,9 @@ export const FileUtils = {
     isHiddenFile (name: string) {
         return name.endsWith(`.${DiskString.hiddenExt}`);
     },
+    isZip (name: string) {
+        return name.endsWith('.zip');
+    }
 };
 
 window.FiluUtils = FileUtils;

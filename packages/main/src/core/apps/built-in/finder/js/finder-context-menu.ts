@@ -8,7 +8,8 @@ import { checkContextCheckList, createSortByMenu } from '@/ui/components/common/
 import { underDevelopment } from '@/ui/components/common/toast/toast';
 import { FinderUtils } from './finder-utils';
 import { getOS } from '@/core/os/os';
-import type { FileBase } from 'webos-term';
+import type { File } from 'webos-term';
+import { FileUtils, type FileBase } from 'webos-term';
 import type { Trash } from '../../trash';
 import { callApp } from '@/core/apps/app';
 import { AppNames } from '@/core/apps/app-config';
@@ -145,8 +146,30 @@ const FileCommonMenu = () => [
         }
     },
     {
-        name: 'Compress "xxx"',
-        onClick,
+        isHidden ({ names, selectedCount }) {
+            return selectedCount === 1 && FileUtils.isZip(names[0]);
+        },
+        nameCreator ({ names }) {
+            const rest = (names.length === 1) ? `"${names}"` : `${names.length} items`;
+            return `Compress ${rest} ✅`;
+        },
+        async onClick () {
+            const files = await FinderUtils.getSelectedFiles();
+            await (await FinderUtils.getCurDir()).zipFiles(files);
+        },
+    },
+    {
+        isHidden ({ names, selectedCount }) {
+            return selectedCount > 1 || !FileUtils.isZip(names[0]);
+        },
+        nameCreator ({ names }) {
+            return `Unzip ${names[0]} ✅`;
+        },
+        async onClick () {
+            const files = await FinderUtils.getSelectedFiles();
+            // @ts-ignore
+            await (files[0] as File).unzipTo(await FinderUtils.getCurDir());
+        },
     },
     {
         name: 'Duplicate',

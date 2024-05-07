@@ -268,6 +268,7 @@ export function useContextMenuRef (listGene = DefaultMenuList) {
                     allFiles: true,
                     allFolder: true,
                     locked: true,
+                    names: [],
                 };
 
                 for (const item of files) {
@@ -275,6 +276,8 @@ export function useContextMenuRef (listGene = DefaultMenuList) {
                     if (options.allFiles) options.allFiles = item.type === 'file';
                     if (options.allFolder) options.allFolder = item.type === 'dir';
                     if (options.trashTop) options.trashTop = FileUtils.extractDirPath(item.pathString) === StringText.trashDir;
+
+                    options.names.push(item.name);
                 }
 
                 let isPrevSplit = true;
@@ -287,6 +290,10 @@ export function useContextMenuRef (listGene = DefaultMenuList) {
                             item.hidden = true;
                         }
                         isPrevSplit = item.isSplit || false;
+                    }
+
+                    if (item.nameCreator) {
+                        item.name = item.nameCreator(options);
                     }
                 });
             }

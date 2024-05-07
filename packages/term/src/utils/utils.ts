@@ -3,7 +3,7 @@
  * @Date: 2022-11-10 16:06:19
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-01-12 23:15:53
+ * @LastEditTime: 2024-05-07 21:44:02
  */
 import type { IJson } from 'webos-disk';
 
@@ -67,6 +67,10 @@ export function parseJSON (data: any): IJson | null {
 
 export function isMac () {
     return navigator.userAgent.indexOf('Macintosh') !== -1;
+}
+
+export function isCtrlKey (e: any) {
+    return isMac() ? e.metaKey : e.ctrlKey;
 }
 
 export function focusToEnd (obj: any) {

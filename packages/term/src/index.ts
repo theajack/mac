@@ -8,3 +8,5 @@ export * from './term';
 export * from 'webos-disk';
 
 export * from 'webos-module';
+
+export { isMac, isCtrlKey } from './utils/utils';

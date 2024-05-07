@@ -133,7 +133,7 @@ export class File extends FileBase {
     }
 
     get isZip () {
-        return this.ext === 'zip';
+        return FileUtils.isZip(this.name);
     }
 
     async unzipTo (dir: Dir) {
