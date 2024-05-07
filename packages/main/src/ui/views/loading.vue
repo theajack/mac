@@ -7,8 +7,6 @@
 import { fetchProcess, resource } from '@/lib/utils';
 import { onMounted, ref } from 'vue';
 
-// const url = 'https://cdn.jsdelivr.net/gh/theajack/mac@gh-pages/assets/desktop-bg.jpg';
-
 const url = resource('desktop-bg.jpg');
 
 const process = ref(0);

@@ -190,7 +190,7 @@ export function createDoubleClick (gap = 400) {
 }
 
 export function resource (name: string) {
-    const base = isDev ? '/mac/' : 'https://cdn.jsdelivr.net/gh/theajack/mac@gh-pages/';
+    const base = isDev ? '/mac/' : 'https://cdn.shiyix.cn/mac/';
     return `${base}assets/${name}`;
 }
 

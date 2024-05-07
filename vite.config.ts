@@ -42,7 +42,7 @@ export default defineConfig(({ mode }: {mode: string}) => {
             __APP__: `${isDev || buildMode === Mode.BuildApp}`,
             __VERSION__: `"${getVersion()}"`,
         },
-        base: isDev ? '/mac' : 'https://cdn.jsdelivr.net/gh/theajack/mac@gh-pages/',
+        base: isDev ? '/mac' : 'https://cdn.shiyix.cn/mac',
         plugins: [
         ],
         resolve: {

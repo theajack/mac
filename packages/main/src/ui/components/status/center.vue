@@ -21,7 +21,6 @@ import Date from './default-center/date.vue';
     <Info />
     <Siri />
     <Date />
-    <!-- <img src="/assets/center-all.png" alt=""> -->
   </div>
 </template>
 

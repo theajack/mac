@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
 
+import { resource } from '@/lib/utils';
 import { toast } from '../../common/toast/toast';
 
 const onClick = () => {
@@ -20,7 +21,7 @@ const onClick = () => {
   <div class="center-item">
     <img
       class="center-icon"
-      src="/assets/center/siri.png"
+      :src="resource('center/siri.png')"
       @click="onClick"
     >
     <div class="center-block">

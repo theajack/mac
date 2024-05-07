@@ -4,7 +4,3 @@
  * @Description: Coding something
  */
 import 'webos-main';
-
-if (__DEV__) {
-    console.log('1111');
-}
