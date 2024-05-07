@@ -7,3 +7,9 @@
 export const DiskString = {
     hiddenExt: 'WEBOS_HIDDEN',
 };
+
+export enum NameConflictChoose {
+    Return,
+    Rename,
+    Null,
+}

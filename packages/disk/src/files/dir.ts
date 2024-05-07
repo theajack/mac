@@ -14,6 +14,7 @@ import { File } from './file';
 import { Disk } from '../disk';
 import { Path } from 'webos-path';
 import { FileUtils } from './file-utils';
+import { NameConflictChoose } from '../constant';
 
 export interface IDirOption extends IFileBaseOption {
     children?: FileBase[];
@@ -21,7 +22,7 @@ export interface IDirOption extends IFileBaseOption {
 }
 
 export interface ICreateConfig {
-    returnIfExists?: boolean;
+    conflictChoose?: NameConflictChoose;
 }
 
 interface IFileContentOptions extends IFileOption {
@@ -80,61 +81,95 @@ export class Dir extends FileBase {
         return file;
     }
 
+    async ensureDirByPath (
+        path: string,
+        conflictChoose = NameConflictChoose.Return
+    ): Promise<Dir> {
+        // @ts-ignore
+        return this.createChildByPath(path, true, conflictChoose);
+    }
+    async ensureFileByPath (
+        path: string,
+        conflictChoose = NameConflictChoose.Return
+    ): Promise<File> {
+        // @ts-ignore
+        return this.createChildByPath(path, false, conflictChoose);
+    }
 
-    async createChildByPath<T extends Dir|File = Dir> (path: string, isDir: boolean, returnIfExists = false): Promise<T|null> {
-        let parent: Dir = this;
-        if (path[0] === '/') {
-            path = path.substring(1);
+    async createChildByPath<T extends Dir|File = Dir> (
+        path: string,
+        isDir: boolean,
+        conflictChoose = NameConflictChoose.Null,
+    ): Promise<T|null> {
+        if (path === '/') return Disk.instance as any;
+        let absolutePath = Path.join(this.pathString, path);
+        let parent: Dir;
+        if (absolutePath.startsWith(this.pathString)) {
+            parent = this;
+            absolutePath = absolutePath.substring(this.pathString.length);
+        } else {
             parent = Disk.instance;
         }
-
-        if (path[path.length - 1] === '/') {
-            path = path.substring(0, path.length - 1);
-        }
-
-        const dirs = path.split('/');
+        absolutePath = Path.trim(absolutePath);
+        const dirs = absolutePath.split('/');
         while (dirs.length > 1) {
             const curDir = dirs.shift()!;
             parent = await parent.ensureDir({ name: curDir });
         }
         const name = dirs.shift()!;
-        return this[isDir ? 'createDir' : 'createFile']({ name }, { returnIfExists }) as Promise<T|null>;
+        return parent[isDir ? 'createDir' : 'createFile']({ name }, { conflictChoose }) as Promise<T|null>;
     }
 
-    ensureDir (options: IDirOption): Promise<Dir> {
+    ensureDir (
+        options: IDirOption,
+        conflictChoose: NameConflictChoose = NameConflictChoose.Return
+    ): Promise<Dir> {
         // @ts-ignore
-        return this.createDir(options, { returnIfExists: true });
+        return this.createDir(options, { conflictChoose });
     }
 
-    async createDir (options: IDirOption, config: ICreateConfig = {
-        returnIfExists: false,
-    }): Promise<null | Dir> {
+    async createDir (options: IDirOption, config: ICreateConfig = {}): Promise<null | Dir> {
         // console.log('createDir', options, this, this.entry);
-        log('createDir', options.name);
+        log('createDir', options.name, config.conflictChoose);
         if (this.exists(options.name)) {
-            if (config.returnIfExists) {
-                return (await this.findDirByPath(options.name))!.initConstructOptions(options);
+            switch (config.conflictChoose) {
+                case NameConflictChoose.Return: {
+                    return (await this.findDirByPath(options.name))!.initConstructOptions(options);
+                }
+                case NameConflictChoose.Rename: {
+                    options.name = FileUtils.ensureFileRepeatName(options.name, this.allChildren);
+                }
+                default: {
+                    log('warn', '目录已经存在', `${this.path.path}/${options.name}`);
+                    return null;
+                }
             }
-            log('warn', '目录已经存在', `${this.path.path}/${options.name}`);
-            return null;
         }
         return this.addChild(new Dir(options));
     }
-    ensureFile (options: IFileContentOptions): Promise<File> {
+    ensureFile (
+        options: IFileContentOptions,
+        conflictChoose: NameConflictChoose = NameConflictChoose.Return
+    ): Promise<File> {
         // @ts-ignore
-        return this.createFile(options, { returnIfExists: true });
+        return this.createFile(options, { conflictChoose });
     }
-    async createFile (options: IFileContentOptions, config: ICreateConfig = {
-        returnIfExists: false,
-    }): Promise<File | null> {
+    async createFile (options: IFileContentOptions, config: ICreateConfig = {}): Promise<File | null> {
         // console.log('createFile', options, this, this.entry);
         log('create file', options.name);
         if (this.exists(options.name)) {
-            if (config.returnIfExists) {
-                return (await this.findFileByPath(options.name))!.initConstructOptions(options);
+            switch (config.conflictChoose) {
+                case NameConflictChoose.Return: {
+                    return (await this.findFileByPath(options.name))!.initConstructOptions(options);
+                }
+                case NameConflictChoose.Rename: {
+                    options.name = FileUtils.ensureFileRepeatName(options.name, this.allChildren);
+                }
+                default: {
+                    log('warn', '文件已存在');
+                    return null;
+                }
             }
-            log('warn', '文件已存在');
-            return null;
         }
         const file = await this.addChild(new File(options));
         // 先 addChild，add 会在 FileSystem 中创建文件

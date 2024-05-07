@@ -3,7 +3,7 @@
  * @Date: 2022-11-10 18:29:42
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-05-02 21:39:29
+ * @LastEditTime: 2024-05-06 19:15:56
  */
 import { splitTwoPart } from '../utils/utils';
 import type { Dir, IJson } from 'webos-disk';
@@ -24,6 +24,8 @@ import { FindCommand } from './commands/find';
 import { getApplications } from './applications/applications';
 import type { Term } from '../term';
 import { MoveCommand } from './commands/mv';
+import { ZipCommand } from './commands/zip';
+import { UnZipCommand } from './commands/unzip';
 
 const CommandClassList: (typeof Command)[] = [
     ClearCommand,
@@ -35,6 +37,8 @@ const CommandClassList: (typeof Command)[] = [
     VimCommand,
     CatCommand,
     RmCommand,
+    ZipCommand,
+    UnZipCommand,
     CpCommand,
     PingCommand,
     HelpCommand,
@@ -61,7 +65,7 @@ export class CommandManager {
     }
 
     async initDir () {
-        this.commandDir = await this.term.disk.createChildByPath(`/System/Command`, true, true) as Dir;
+        this.commandDir = await this.term.disk.ensureDirByPath(`/System/Command`);
     }
 
     getCommand (name: string) {

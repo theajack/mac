@@ -5,16 +5,18 @@
  * @Description: Coding something
 -->
 <script setup lang="ts">
-import { resource } from '@/lib/utils';
-import { useFinderStore, type IFileInfo, FinderUtils } from './js/finder-store';
+import { useFinderStore, type IFileInfo } from './js/finder-store';
+import { FinderUtils } from './js/finder-utils';
 import { useContextMenuRef } from '@/ui/components/common/context-menu/context-menu';
 import { FileMenu, FolderMenu } from './js/finder-context-menu';
 import { FileLength } from './js/finder-layout-manager';
+import { computed } from 'vue';
 const props = defineProps<{
     id: number,
     file: IFileInfo
 }>();
-const img = resource(props.file.isDir ? 'folder.png' : 'file.png');
+
+const img = computed(() => FinderUtils.chooseFileImage(props.file));
 const { contextmenu } = useContextMenuRef(props.file.isDir ? FolderMenu : FileMenu);
 
 const store = useFinderStore(props.id);

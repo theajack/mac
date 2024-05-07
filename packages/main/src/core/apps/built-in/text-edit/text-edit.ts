@@ -3,7 +3,7 @@
  * @Date: 2022-10-03 15:30:44
  * @Description: Coding something
  */
-import { markRaw } from 'vue';
+import { markRaw, nextTick } from 'vue';
 import { App } from '../../app';
 import { AppNames, createEmptyStatus } from '../../app-config';
 import TextEditUI from './text-edit.vue';
@@ -25,8 +25,9 @@ export class TextEdit extends App {
         });
     }
 
-    onAppCall ({ data }: ICallAppInfo): void {
+    async onAppCall ({ data }: ICallAppInfo) {
         const window = this.ref.openNewWindow();
+        await nextTick();
         const text = data.content;
         if (typeof text === 'string') {
             useTextEditStore(window.id).content = text;

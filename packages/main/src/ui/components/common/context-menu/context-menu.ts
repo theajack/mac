@@ -10,7 +10,7 @@ import { toast } from '../toast/toast';
 import type { App } from '@/core/apps/app';
 import { CommonMargin, WinHeightNoDock, WindowWidth } from '@/ui/style/common';
 import { useGlobalStore } from '@/ui/store';
-import { FinderUtils } from '@/core/apps/built-in/finder/js/finder-store';
+import { FinderUtils } from '@/core/apps/built-in/finder/js/finder-utils';
 import { FileUtils } from 'webos-term';
 import { StringText } from '@/core/string';
 

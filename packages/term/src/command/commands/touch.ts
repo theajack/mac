@@ -3,11 +3,12 @@
  * @Date: 2022-11-10 18:37:32
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-02-02 09:01:00
+ * @LastEditTime: 2024-05-06 20:02:30
  */
 
 import { div, text } from 'alins';
-import { Dir, Disk } from 'webos-disk';
+import type { Dir } from 'webos-disk';
+import { Disk } from 'webos-disk';
 import { Command } from './command-base';
 
 export async function touchFile (name: string, dir: Dir = Disk.instance) {

@@ -3,7 +3,7 @@
  * @Date: 2022-11-13 00:05:14
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-05-03 10:40:43
+ * @LastEditTime: 2024-05-06 19:24:13
  */
 const Reg = /^(http|ws)s?:\/\//;
 
@@ -162,6 +162,27 @@ export class Path {
             value = Path.Split + value;
         }
         return value;
+    }
+
+    static trim (path: string): string {
+        return this.trimStart(this.trimEnd(path));
+    }
+    static trimStart (path: string): string {
+        while (path.length > 0 && path[0] === '/') {
+            path = path.substring(1);
+        }
+        return path;
+    }
+    static trimEnd (path: string): string {
+        while (path.length > 0 && path[path.length - 1] === '/') {
+            path = path.substring(0, path.length - 1);
+        }
+        return path;
+    }
+    static fullDir (path: string) {
+        if (path[0] !== '/') path = `/${path}`;
+        if (path[path.length - 1] !== '/') path += '/';
+        return path;
     }
     // static join (...paths: (string|string[])[]) {
     //     console.warn('【join start】', paths);

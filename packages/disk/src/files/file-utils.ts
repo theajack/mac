@@ -39,6 +39,12 @@ export const FileUtils = {
         if (i === -1) return [ str, '' ];
         return [ str.substring(0, i), str.substring(i + 1) ];
     },
+    parseFilePath (path: string) {
+        if (path.indexOf('/') === -1) {
+            return [ '', path ];
+        }
+        return this.splitLastStr(path, '/');
+    },
     // ! 去除转义符
     split (str: string, split = ' ') {
         const arr: string[] = [];
@@ -79,7 +85,7 @@ export const FileUtils = {
     },
     isHiddenFile (name: string) {
         return name.endsWith(`.${DiskString.hiddenExt}`);
-    }
+    },
 };
 
 window.FiluUtils = FileUtils;

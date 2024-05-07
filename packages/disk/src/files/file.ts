@@ -10,6 +10,11 @@ import type { IFileBaseOption } from './base';
 import { FileBase } from './base';
 import { fileParser } from './file-parser';
 import { createLocker } from '../lib/create';
+import { FileUtils } from './file-utils';
+import { ZipUtils } from '../lib/zip';
+import type { Dir } from './dir';
+import { Path } from 'webos-path';
+import { NameConflictChoose } from '../constant';
 
 export interface IFileOption extends IFileBaseOption {
     mimetype?: string;
@@ -120,6 +125,47 @@ export class File extends FileBase {
 
 
     export () {
+
+    }
+
+    get ext () {
+        return FileUtils.splitLastStr(this.name, '.')[1];
+    }
+
+    get isZip () {
+        return this.ext === 'zip';
+    }
+
+    async unzipTo (dir: Dir) {
+        if (!this.isZip) return;
+        const targetPath = dir.pathString;
+        const files = await ZipUtils.unzip(this);
+
+        const dirNames = new Set([] as string[]);
+
+        for (const file of files) {
+            const filePath = Path.trim(file.path);
+            // [相对路径, 名称]
+            const firstName = filePath.split('/')[0];
+
+            const isRootFile = filePath === firstName;
+
+            console.warn(`unzipTo: targetPath=${targetPath}, firstName=${firstName}`);
+            if (file.isDir || !isRootFile) {
+            // 处理命名冲突
+                if (!dirNames.has(firstName)) {
+                    await dir.ensureDirByPath(Path.join(targetPath, firstName), NameConflictChoose.Rename);
+                    dirNames.add(firstName);
+                }
+            }
+            if (file.isDir) {
+                await dir.ensureDirByPath(Path.join(targetPath, filePath));
+            } else {
+                // 释放解压文件
+                const targetFile = await dir.ensureFileByPath(Path.join(targetPath, filePath));
+                await targetFile.write(file.data);
+            }
+        }
 
     }
 }

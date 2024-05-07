@@ -6,7 +6,7 @@
 import type { ISelectItem } from '@/core/types/component';
 import { checkContextCheckList, createSortByMenu } from '@/ui/components/common/context-menu/context-menu';
 import { underDevelopment } from '@/ui/components/common/toast/toast';
-import { FinderUtils } from './finder-store';
+import { FinderUtils } from './finder-utils';
 import { getOS } from '@/core/os/os';
 import type { FileBase } from 'webos-term';
 import type { Trash } from '../../trash';

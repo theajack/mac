@@ -15,8 +15,9 @@
         "dist"
     ],
     "dependencies": {
-        "filer.js": "^0.4.5",
         "eveit": "^0.0.1",
+        "filer.js": "^0.4.5",
+        "jszip": "^3.10.1",
         "webos-path": "workspace:*"
     },
     "scripts": {

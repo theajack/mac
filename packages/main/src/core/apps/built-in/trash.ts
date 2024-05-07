@@ -8,7 +8,7 @@ import { App } from '../app';
 import { AppNames } from '../app-config';
 import type { ISelectItem } from '@/core/types/component';
 import { DiskString, parseJson, type File, type FileBase, FileUtils } from 'webos-term';
-import { FinderUtils } from './finder/js/finder-store';
+import { FinderUtils } from './finder/js/finder-utils';
 import { StringText } from '@/core/string';
 import type { IJson } from '@/types';
 

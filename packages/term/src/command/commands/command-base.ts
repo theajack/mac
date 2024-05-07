@@ -120,12 +120,12 @@ export abstract class Command {
 
 
     async createSoftwareDir (name = this.commandName) {
-        this.softwareDir = await this.term.disk.createChildByPath(`/System/Command/${name}`, true, true) as Dir;
+        this.softwareDir = await this.term.disk.ensureDirByPath(`/System/Command/${name}`);
     }
     async createSoftwareFile (name: string) {
         if (!name) throw new Error('File name is Empty: ' + name);
         if (name in this.files) throw new Error('File is already exists: ' + name);
-        this.files[name] = await this.term.disk.createChildByPath(`/System/Command/${this.commandName}/${name}`, false, true) as File;
+        this.files[name] = await this.term.disk.ensureFileByPath(`/System/Command/${this.commandName}/${name}`);
         return this.files[name];
     }
 

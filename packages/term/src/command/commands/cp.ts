@@ -1,3 +1,4 @@
+
 /*
  * @Author: chenzhongsheng
  * @Date: 2022-11-10 18:37:32
@@ -7,7 +8,7 @@
  */
 
 // import { div } from 'alins';
-import { Dir } from 'webos-disk';
+import type { Dir } from 'webos-disk';
 import { catFile } from './cat';
 import { Command } from './command-base';
 
