@@ -132,7 +132,7 @@ export class Dir extends FileBase {
 
     async createDir (options: IDirOption, config: ICreateConfig = {}): Promise<null | Dir> {
         // console.log('createDir', options, this, this.entry);
-        log('createDir', options.name, config.conflictChoose);
+        // log('createDir', options.name, config.conflictChoose);
         if (this.exists(options.name)) {
             switch (config.conflictChoose) {
                 case NameConflictChoose.Return: {
@@ -140,7 +140,7 @@ export class Dir extends FileBase {
                 }
                 case NameConflictChoose.Rename: {
                     options.name = FileUtils.ensureFileRepeatName(options.name, this.allChildren);
-                }
+                } break;
                 default: {
                     log('warn', '目录已经存在', `${this.path.path}/${options.name}`);
                     return null;
@@ -158,7 +158,7 @@ export class Dir extends FileBase {
     }
     async createFile (options: IFileContentOptions, config: ICreateConfig = {}): Promise<File | null> {
         // console.log('createFile', options, this, this.entry);
-        log('create file', options.name);
+        // log('create file', options.name);
         if (this.exists(options.name)) {
             switch (config.conflictChoose) {
                 case NameConflictChoose.Return: {
@@ -166,7 +166,7 @@ export class Dir extends FileBase {
                 }
                 case NameConflictChoose.Rename: {
                     options.name = FileUtils.ensureFileRepeatName(options.name, this.allChildren);
-                }
+                } break;
                 default: {
                     log('warn', '文件已存在');
                     return null;

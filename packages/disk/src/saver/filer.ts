@@ -114,7 +114,7 @@ export class DiskFiler {
     }
 
     private async _initDir (path: string): Promise<[FileBase[], FileBase[]]> {
-        log('travese', path);
+        // log('travese', path);
         const files = await this.ls(path);
         if (files.length === 0) return [ [], [] ];
         const children: FileBase[] = [];

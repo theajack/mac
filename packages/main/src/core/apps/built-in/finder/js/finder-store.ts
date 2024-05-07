@@ -97,7 +97,6 @@ export const useFinderStore = createAppDataStore((id) => {
             },
 
             clearSelect () {
-                console.trace();
                 this.activeIds.clear();
             },
 

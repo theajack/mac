@@ -150,19 +150,23 @@ export class File extends FileBase {
 
             const isRootFile = filePath === firstName;
 
+
             console.warn(`unzipTo: targetPath=${targetPath}, firstName=${firstName}`);
-            if (file.isDir || !isRootFile) {
-            // 处理命名冲突
+            if (!isRootFile) {
+                // 处理命名冲突
                 if (!dirNames.has(firstName)) {
                     await dir.ensureDirByPath(Path.join(targetPath, firstName), NameConflictChoose.Rename);
                     dirNames.add(firstName);
                 }
             }
+
+            const conflictChoose = isRootFile ? NameConflictChoose.Rename : NameConflictChoose.Return;
             if (file.isDir) {
-                await dir.ensureDirByPath(Path.join(targetPath, filePath));
+                await dir.ensureDirByPath(Path.join(targetPath, filePath), conflictChoose);
             } else {
                 // 释放解压文件
-                const targetFile = await dir.ensureFileByPath(Path.join(targetPath, filePath));
+                const targetFile = await dir.ensureFileByPath(Path.join(targetPath, filePath), conflictChoose);
+                debugger;
                 await targetFile.write(file.data);
             }
         }
