@@ -22,7 +22,7 @@ export class Terminal extends App {
     constructor () {
         super({
             name: AppNames.terminal,
-            msgCount: 1,
+            msgCount: 19,
         });
     }
 

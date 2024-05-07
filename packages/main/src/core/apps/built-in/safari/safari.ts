@@ -26,7 +26,7 @@ export class Safari extends App {
     constructor () {
         super({
             name: AppNames.safari,
-            msgCount: 1,
+            msgCount: 10,
         });
     }
 

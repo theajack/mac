@@ -26,12 +26,13 @@ export class Finder extends App {
             component: FinderHeader,
             height: 50,
             bgColor: 'transparent'
-        }
+        },
     });
 
     constructor () {
         super({
             name: AppNames.finder,
+            msgCount: 99,
         });
 
         DiskEvent.on('disk-dir-change', paths => {

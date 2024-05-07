@@ -13,7 +13,6 @@ export class SystemPreferences extends App {
         super({
             title: 'System Settings',
             name: AppNames.systemPreferences,
-            msgCount: 3,
         });
     }
     onOpen () {

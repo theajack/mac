@@ -1,5 +1,5 @@
 
-export function selectInput (dom: HTMLElement) {
+export function selectTextInput (dom: HTMLElement) {
     // @ts-ignore
     if (document.selection) {
         // @ts-ignore

@@ -5,7 +5,7 @@
  */
 
 import { encodeTextToU8s, type Dir, type File, parseJson } from 'webos-term';
-import { getOS, type OS } from '../os/os';
+import { type OS } from '../os/os';
 import type { IAppConfig } from './app-config';
 import { AppNames } from './app-config';
 import { createApp, createDefaultApps } from './app-config';

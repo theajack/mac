@@ -13,7 +13,6 @@ export class WeChat extends WebApp {
             title: 'WeChat',
             name: AppNames.wechat,
             url: 'https://wx.qq.com/',
-            msgCount: 99,
         });
     }
     onOpen (): void {
