@@ -11,13 +11,13 @@ import { createPinia } from 'pinia';
 import './style/common.less';
 import './style/tailwind-output.css';
 
-export function initUI () {
+export function initUI (container: string) {
 
     initFullscreen();
 
     const app = createApp(Entry);
     app.use(router)
         .use(createPinia())
-        .mount('#app');
+        .mount(container);
 }
 

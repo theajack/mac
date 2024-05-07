@@ -12,13 +12,18 @@ import AppManager from '../components/app-manager.vue';
 import Loading from './loading.vue';
 import Launcher from './launcher.vue';
 import { useContextMenuRef } from '../components/common/context-menu/context-menu';
+import { resource } from '@/lib/utils';
 
 const { contextmenu } = useContextMenuRef();
 
 </script>
 
 <template>
-  <div class="desktop-container bg-cover" @contextmenu.self="contextmenu">
+  <div
+    class="desktop-container bg-cover"
+    :style="{'background-image': `url(${resource('desktop-bg.jpg')})`}"
+    @contextmenu.self="contextmenu"
+  >
     <Launcher />
     <Loading />
     <StatusBar />
@@ -37,6 +42,5 @@ const { contextmenu } = useContextMenuRef();
   position: absolute;
   left: 0;
   top: 0;
-  background-image: url('/assets/desktop-bg.jpg');
 }
 </style>

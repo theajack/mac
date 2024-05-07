@@ -11,9 +11,9 @@ import { initUI } from './ui';
 import * as Context from './core/context';
 import { toast } from './ui/components/common/toast/toast';
 
-async function main () {
+export async function initMacOS (container = '#app') {
     const os = await createOS();
-    initUI();
+    initUI(container);
     initDevHelper(os);
 }
 
@@ -46,5 +46,3 @@ function initDevHelper (os: OS) {
         }
     };
 }
-
-main();
