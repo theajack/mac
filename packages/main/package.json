@@ -15,6 +15,7 @@
         "dist"
     ],
     "dependencies": {
+        "@weoos/disk": "^0.0.4",
         "easy-dom-util": "0.0.29",
         "eveit": "^0.0.1",
         "html2canvas": "^1.4.1",
