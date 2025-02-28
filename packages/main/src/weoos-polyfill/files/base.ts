@@ -153,6 +153,7 @@ export abstract class FileBase implements IFileBaseInfo {
     async rename (name: string) {
         try {
             console.log(`rename path=${this.pathString} name=${name}`);
+            // (await useDisk()).move;
             await fs().rename(this.pathString, name);
             // 更新path
             this.path = this.path.rename(name);
@@ -173,6 +174,10 @@ export abstract class FileBase implements IFileBaseInfo {
         newName?: string,
         repeatMark?: string
     }) {
+        (await useDisk()).move(
+            this.pathString,
+            targetDirPath,
+        );
         const dir = await getDisk().findDirByPath(targetDirPath);
 
         if (!dir) {

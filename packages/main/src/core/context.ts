@@ -74,5 +74,5 @@ export function getFile (path: string) {
     return getOSRef().value.disk.findFileByPath(path);
 }
 
-export const isDev = __DEV__;
-// export const isDev = location.host.indexOf('localhost:') === 0;
+// export const isDev = __DEV__;
+export const isDev = location.host.indexOf('localhost:') === 0;      
