@@ -35,7 +35,6 @@ export class Finder extends App {
             msgCount: 99,
         });
 
-        // todo 实现 refresh 逻辑
         DiskEvent.on('disk-dir-change', paths => {
             FinderUtils.refreshAllFinderDirInfo(paths);
         });

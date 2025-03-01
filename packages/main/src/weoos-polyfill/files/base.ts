@@ -10,6 +10,7 @@ import { getFileName, pt } from '@/weoos-polyfill/temp/os';
 import { DiskEvent } from '../disk-event';
 import { useDisk } from '../disk';
 import { FileUtils, isSystemPath } from '../utils';
+import { getDisk } from '@/core/os/os';
 
 
 export interface IFileBaseOption {
@@ -80,9 +81,9 @@ export abstract class FileBase implements IFileBaseInfo {
 
         const result = await (await useDisk()).remove(this.pathString); // , this.isDir
 
-        if (!this.isHiddenFile()) {
-            DiskEvent.emit('disk-dir-change', [ this.parent.pathString ]);
-        }
+        this.emitDirChange();
+
+        this.parent?.removeEntry(this);
 
         return result;
     }
@@ -92,7 +93,8 @@ export abstract class FileBase implements IFileBaseInfo {
     }
 
     async rename (name: string) {
-        const errInfo = (await useDisk()).rename(
+        const oldName = this.name;
+        const errInfo = await (await useDisk()).rename(
             this.pathString,
             name,
             (newPath) => {
@@ -104,6 +106,10 @@ export abstract class FileBase implements IFileBaseInfo {
         if (errInfo) {
             throw new Error(`Rename fail: ${errInfo}`);
         }
+        if (this.isHiddenFile() !== this.isHiddenFile(oldName)) {
+            this.parent?.removeEntry(this, oldName);
+            this.parent?.addEntry(this);
+        }
     }
 
     async moveTo ({
@@ -113,7 +119,8 @@ export abstract class FileBase implements IFileBaseInfo {
         targetDirPath: string,
         newName?: string,
     }) {
-        const errInfo = (await useDisk()).move(
+        const oldName = this.name;
+        const errInfo = await (await useDisk()).move(
             this.pathString,
             pt.join(targetDirPath, newName || this.name),
             (newPath) => {
@@ -126,14 +133,22 @@ export abstract class FileBase implements IFileBaseInfo {
             throw new Error(`Could not find targer Dir: ${errInfo}`);
         }
 
-        if (!this.isHiddenFile()) {
-            DiskEvent.emit('disk-dir-change', [ this.parent!.pathString ]);
-        }
+        this.emitDirChange();
+        // 需要从children中删除，并增加到新数组中
+        this.parent?.removeEntry(this, oldName);
+        (await getDisk().findDirByPath(targetDirPath))?.addEntry(this);
 
         return this.name;
     }
 
-    isHiddenFile () {
-        return FileUtils.isHiddenFile(this.name);
+    isHiddenFile (name = this.name) {
+        return FileUtils.isHiddenFile(name);
+    }
+
+    emitDirChange () {
+        // 触发目录变化事件
+        if (this.parent && !this.isHiddenFile()) {
+            DiskEvent.emit('disk-dir-change', [ this.parent.pathString ]);
+        }
     }
 }

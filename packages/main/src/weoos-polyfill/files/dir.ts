@@ -113,10 +113,11 @@ export class Dir extends FileBase {
     getChildren (name: string) {
         return FileUtils.isHiddenFile(name) ? this.hiddenChildren : this.children;
     }
-    private createEntry<T extends boolean> (name: string, isDir: T): T extends true ? Dir: File {
+    createEntry<T extends boolean> (name: string, isDir: T): T extends true ? Dir: File {
         const entry = new (isDir ? Dir : File)({ name, path: pt.join(this.path, name) });
         this.getChildren(name).push(entry);
         entry.parent = this;
+        this.emitDirChange();
         // @ts-ignore
         return entry;
     }
@@ -186,6 +187,8 @@ export class Dir extends FileBase {
         }
         const disk = await useDisk();
         disk.zip(files.map(file => file.path), filename);
+
+        this.createEntry(pt.join(this.path, filename), false);
     }
 
     async findChildByPath (path: string): Promise<FileBase|null> {
@@ -214,5 +217,20 @@ export class Dir extends FileBase {
         const target = await this.findChildByPath(path);
         if (!target) return null;
         return target.isDir ? target as Dir : null;
+    }
+
+    removeEntry (entry: FileBase, name = entry.name) {
+        entry.parent = null;
+        const list = this.getChildren(name);
+        const index = list.findIndex(item => item == entry);
+        if (index === -1) return;
+        list.splice(index, 1);
+    }
+
+    addEntry (entry: FileBase) {
+        const list = this.getChildren(entry.name);
+        if (list.includes(entry)) return;
+        entry.parent = this;
+        list.push(entry);
     }
 }

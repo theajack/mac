@@ -5,11 +5,12 @@
  */
 
 // import {createLocker} from '../utils';
-import { decode, encode, getFileExt } from '@/weoos-polyfill/temp/os';
+import { decode, encode, getFileExt, getFileName, getParentPath } from '@/weoos-polyfill/temp/os';
 import { useDisk } from '../disk';
 import type { IFileBaseOption } from './base';
 import { FileBase } from './base';
 import type { Dir } from './dir';
+import { getDisk } from '@/core/os/os';
 
 export interface IFileOption extends IFileBaseOption {
     mimetype?: string;
@@ -66,7 +67,17 @@ export class File extends FileBase {
         return getFileExt(this.name);
     }
 
+    // todo 测试嵌套文件夹
     async unzipTo (dir: Dir) {
-        return (await useDisk()).unzip(this.path, dir.path);
+        const disk = await useDisk();
+        const result = await disk.unzip(this.path, dir.path);
+        result.sort((a, b) => a.path > b.path ? 1 : -1);
+
+        for (const { path, isDir } of result) {
+            (await getDisk().findDirByPath(getParentPath(path)))!.createEntry(
+                getFileName(path), isDir
+            );
+        }
+        return result;
     }
 }
