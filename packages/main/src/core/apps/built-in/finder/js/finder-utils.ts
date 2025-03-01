@@ -4,9 +4,9 @@
  * @Description: Coding something
  */
 
-import {  getOS } from '@/core/os/os';
-import type { Dir } from 'webos-term';
-import { type FileBase, FileUtils } from 'webos-term';
+import { getOS } from '@/core/os/os';
+import type { Dir } from '@/weoos-polyfill/files/dir';
+import { type FileBase, FileUtils } from '@/weoos-polyfill';
 import { nextTick } from 'vue';
 import { selectInput } from 'webos-utils';
 import { StringText } from '@/core/string';
@@ -26,7 +26,7 @@ export const FinderUtils = {
         const store = this.getStore();
         const path = store!.getCurPath();
         const os = getOS();
-        return await os.disk.findDirByPath(path) as Dir;
+        return await os.findDirByPath(path) as Dir;
     },
     async getSelectedFiles (): Promise<FileBase[]> {
         const store = this.getStore();

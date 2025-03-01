@@ -8,8 +8,7 @@ import { checkContextCheckList, createSortByMenu } from '@/ui/components/common/
 import { underDevelopment } from '@/ui/components/common/toast/toast';
 import { FinderUtils } from './finder-utils';
 import { getOS } from '@/core/os/os';
-import type { File } from 'webos-term';
-import { FileUtils, type FileBase } from 'webos-term';
+import { FileUtils, type FileBase, type File } from '@/weoos-polyfill';
 import type { Trash } from '../../trash';
 import { callApp } from '@/core/apps/app';
 import { AppNames } from '@/core/apps/app-config';

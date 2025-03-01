@@ -11,7 +11,7 @@ import FinderHeader from './finder-header.vue';
 import type { IWindowOptions } from '@/core/os/window/window';
 import type { ICallAppInfo } from '@/core/os/event-bus';
 import { FinderUtils } from './js/finder-utils';
-import { DiskEvent } from 'webos-term';
+import { DiskEvent } from '@/weoos-polyfill';
 
 export class Finder extends App {
 
@@ -35,6 +35,7 @@ export class Finder extends App {
             msgCount: 99,
         });
 
+        // todo 实现 refresh 逻辑
         DiskEvent.on('disk-dir-change', paths => {
             FinderUtils.refreshAllFinderDirInfo(paths);
         });

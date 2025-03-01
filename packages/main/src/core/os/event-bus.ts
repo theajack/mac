@@ -7,8 +7,8 @@ import Eveit from 'eveit';
 import type { IAppMessage } from '../apps/type';
 import type { OS } from './os';
 import type { AppNames } from '../apps/app-config';
-import type { IJson } from 'webos-term';
 import type { App } from '../apps/app';
+import type { IJson } from '../type';
 
 export const ApiSymbol = Symbol('api');
 // todo 当有新事件加入时 请在下面加入声明

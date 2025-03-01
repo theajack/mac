@@ -11,7 +11,7 @@ import type { App } from '@/core/apps/app';
 import { CommonMargin, WinHeightNoDock, WindowWidth } from '@/ui/style/common';
 import { useGlobalStore } from '@/ui/store';
 import { FinderUtils } from '@/core/apps/built-in/finder/js/finder-utils';
-import { FileUtils } from 'webos-term';
+import { FileUtils } from '@/weoos-polyfill';
 import { StringText } from '@/core/string';
 
 const onClick = function (this: ISelectItem) {
@@ -254,6 +254,7 @@ export function useContextMenuRef (listGene = DefaultMenuList) {
         async contextmenu (e: MouseEvent) {
             const list = listGene();
             const store = FinderUtils.getStore();
+            debugger;
 
             if (store) {
                 // 在finder中右键的

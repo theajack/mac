@@ -6,7 +6,8 @@
 
 import { AppManager } from '../apps/app-manager';
 import { initAudioPlayer } from '../audio';
-import { Disk } from 'webos-term';
+import type { IDirOption } from '@/weoos-polyfill';
+import { Dir, Disk, File, getFileName, pt, useDisk } from '@/weoos-polyfill';
 import './os.d';
 import { MacEvent } from './event-bus';
 
@@ -18,10 +19,13 @@ export class OS {
 
     appManager: AppManager;
 
-    disk: Disk;
+    _disk: Disk;
+
+    disk: Dir;
     constructor () {
         if (OS.instance) return OS.instance;
-        this.disk = new Disk();
+        this._disk = new Disk({ enableSync: true });
+        this.disk = new Dir({ path: '/', name: '' });
         OS.instance = this;
         // @ts-ignore
         window.os = this;
@@ -32,7 +36,10 @@ export class OS {
     // 安装基础app
     async init () {
         initAudioPlayer();
-        await this.disk.initFileSystem();
+        await this._disk.ready;
+        await this._disk.traverse('/', ({ path, name }) => {
+
+        });
         this.appManager = new AppManager(this);
         await this.appManager.initAppsDirectory();
         // console.log(this.disk.deepLs());
@@ -43,6 +50,32 @@ export class OS {
     }
     get currentWindow () {
         return this.appManager.currentWindow;
+    }
+
+    async findChildByPath (path: string) {
+        const type = await (await useDisk()).getType(path);
+
+        if (type === 'empty') return null;
+        if (type === 'dir') {
+            return new Dir({ path });
+        }
+        return new File({ path });
+    }
+    async findFileByPath (path: string) {
+        const type = await (await useDisk()).getType(path);
+        if (type === 'dir' || type === 'empty') return null;
+        return new File({ path });
+    }
+    async findDirByPath (path: string) {
+        const type = await (await useDisk()).getType(path);
+        if (type !== 'dir') return null;
+        return new Dir({ path });
+    }
+
+    async ensureDir (options: IDirOption) {
+        const path = options.path || pt.join('/', options.name!);
+        (await useDisk()).createDir(path, { ensure: true });
+        return new Dir({ name: getFileName(path), path });
     }
 }
 

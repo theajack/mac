@@ -11,7 +11,7 @@ import { getLatestWindow, getOS } from '@/core/os/os';
 import { createUseInstance } from '@/lib/use-instance';
 import { isMouseLeft } from '@/lib/is';
 import { callApp } from '@/core/apps/app';
-import { isCtrlKey } from 'webos-term';
+import { isCtrlKey } from '@/weoos-polyfill';
 
 export const FileLength = 70;
 

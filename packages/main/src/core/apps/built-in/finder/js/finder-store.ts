@@ -5,8 +5,8 @@
  */
 import { defineStore } from 'pinia';
 import { createAppDataStore } from '@/ui/store/common';
-import { getDisk, getOS } from '@/core/os/os';
-import { Path, type FileBase, FileUtils } from 'webos-term';
+import { getOS } from '@/core/os/os';
+import { type FileBase, FileUtils, getFileName } from '@/weoos-polyfill';
 import { useHistory } from '@/lib/history';
 import { FinderUtils } from './finder-utils';
 
@@ -27,7 +27,7 @@ export interface IFileInfo {
 }
 
 export async function loadFilesInDir (path: string) {
-    const dir = await getDisk().findDirByPath(path);
+    const dir = await getOS().findDirByPath(path);
     if (!dir) {
         throw new Error('目录不存在');
     }
@@ -77,7 +77,7 @@ export const useFinderStore = createAppDataStore((id) => {
                 // @ts-ignore
                 let value = e.target?.innerText;
                 if (value === file.name) return;
-                const targetFile = await getOS().disk.findChildByPath(file.path);
+                const targetFile = await getOS().findChildByPath(file.path);
                 if (value === '') {
                     // @ts-ignore
                     value = FileUtils.ensureFileRepeatName('untitled_folder', targetFile?.parent?.allChildren);
@@ -107,9 +107,10 @@ export const useFinderStore = createAppDataStore((id) => {
             },
             async refreshDirInfo (path?: string) {
                 if (!path) {
-                    path = this.getCurPath();
+                    path = this.getCurPath() as string;
                 }
                 const files = await loadFilesInDir(path);
+                debugger;
                 this.curDirInfo = generateFilesData(files);
                 this.curDirName = parseDirName(path);
             },
@@ -131,7 +132,7 @@ export const useFinderStore = createAppDataStore((id) => {
 });
 
 export async function getFileContent (path: string) {
-    const file = await getDisk().findFileByPath(path);
+    const file = await getOS().findFileByPath(path);
     if (!file) {
         throw 'file not exist' + path;
     }
@@ -139,11 +140,12 @@ export async function getFileContent (path: string) {
 }
 
 function parseDirName (path: string) {
-    return Path.from(path).last || 'Home';
+    return getFileName(path) || 'Home';
 }
 
 
 // window.parseDirName = parseDirName;
+// @ts-ignore
 window.useFinderStore = useFinderStore;
 
 function mockFilesInfo () {

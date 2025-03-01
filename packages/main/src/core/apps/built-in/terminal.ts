@@ -6,7 +6,7 @@
 import type { IWindowOptions } from '@/core/os/window/window';
 import { App } from '../app';
 import { AppNames, createEmptyStatus } from '../app-config';
-import { createTerm } from 'webos-term';
+import { WebOS } from '@/weoos-polyfill/temp/os';
 import { markRaw, nextTick } from 'vue';
 
 
@@ -30,7 +30,7 @@ export class Terminal extends App {
         this.msgCount = 0;
         const window = super.openNewWindow();
         nextTick().then(() => {
-            createTerm({ container: window.dom });
+            new WebOS({ container: window.dom });
         });
         return window;
     }

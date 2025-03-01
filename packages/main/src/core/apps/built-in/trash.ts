@@ -7,7 +7,7 @@ import { appIcon } from '@/lib/utils';
 import { App } from '../app';
 import { AppNames } from '../app-config';
 import type { ISelectItem } from '@/core/types/component';
-import { DiskString, parseJson, type File, type FileBase, FileUtils } from 'webos-term';
+import { DiskString, parseJson, type File, type FileBase, FileUtils } from '@/weoos-polyfill';
 import { FinderUtils } from './finder/js/finder-utils';
 import { StringText } from '@/core/string';
 import type { IJson } from '@/types';
@@ -54,7 +54,6 @@ export class Trash extends App<Trash> {
     async init () {
         this.dir = await this.manager.systemDir.ensureDir({
             name: 'Trash',
-            isSystemFile: true,
         });
         this.configFile = await this.dir.ensureFile({
             name: `trash_config.${DiskString.hiddenExt}`
@@ -106,8 +105,6 @@ export class Trash extends App<Trash> {
             const originPath = file.pathString;
             const newName = await file.moveTo({
                 targetDirPath: this.manager.trash.dir.pathString,
-                renameIfConflict: true,
-                repeatMark: '.Recycle'
             });
             config[newName] = originPath;
         }
@@ -124,9 +121,7 @@ export class Trash extends App<Trash> {
             if (originPath) {
                 await file.moveTo({
                     targetDirPath: FileUtils.extractDirPath(originPath),
-                    renameIfConflict: true,
                     newName: FileUtils.extractFileName(originPath),
-                    repeatMark: '.PutBack'
                 });
                 delete config[name];
             }

@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { encodeTextToU8s, type Dir, type File, parseJson } from 'webos-term';
+import { encode, type Dir, type File, parseJson } from '@/weoos-polyfill';
 import { type OS } from '../os/os';
 import type { IAppConfig } from './app-config';
 import { AppNames } from './app-config';
@@ -20,10 +20,10 @@ import type { Finder } from './built-in/finder/finder';
 import { MacEvent } from '../os/event-bus';
 
 export class AppManager {
-    static DIR_NAME = StringText.appDir;
+    static DIR_NAME = StringText.applications;
     static CONFIG_FILE_NAME = StringText.appConfigFile;
 
-    appDir: Dir;
+    applications: Dir;
     systemDir: Dir;
     appConfigFile: File;
 
@@ -87,16 +87,13 @@ export class AppManager {
     }
 
     async initAppsDirectory () {
-        const { disk } = this.parent;
-        const systemDir = await disk.ensureDir({
+        const systemDir = await this.parent.ensureDir({
             name: StringText.system,
-            isSystemFile: true
         });
 
-        this.systemDir = systemDir as Dir;
-        this.appDir = await this.systemDir.ensureDir({
+        this.systemDir = systemDir;
+        this.applications = await this.systemDir.ensureDir({
             name: AppManager.DIR_NAME,
-            isSystemFile: true,
         });
         await this.initAppConfig();
         await this.initApps();
@@ -104,7 +101,7 @@ export class AppManager {
             StringText.command, StringText.desktop,
             StringText.docs, StringText.downloads,
         ].map(async (name) => {
-            await this.systemDir.ensureDir({ name, isSystemFile: true });
+            await this.systemDir.ensureDir({ name });
         }));
     }
 
@@ -113,9 +110,9 @@ export class AppManager {
     }
 
     private async initAppConfig () {
-        this.appConfigFile = await this.appDir.ensureFile({
+        this.appConfigFile = await this.applications.ensureFile({
             name: AppManager.CONFIG_FILE_NAME,
-            content: encodeTextToU8s(JSON.stringify(createDefaultApps()))
+            content: encode(JSON.stringify(createDefaultApps()))
         });
     }
 

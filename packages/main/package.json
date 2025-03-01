@@ -15,14 +15,13 @@
         "dist"
     ],
     "dependencies": {
-        "@weoos/disk": "^0.0.4",
+        "@weoos/os": "^0.0.4",
         "easy-dom-util": "0.0.29",
         "eveit": "^0.0.1",
         "html2canvas": "^1.4.1",
         "pinia": "^2.0.33",
         "vue": "^3.2.47",
         "vue-router": "^4.0.12",
-        "webos-term": "workspace:*",
         "webos-utils": "workspace:*"
     },
     "scripts": {

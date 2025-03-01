@@ -19,7 +19,7 @@ import { useGlobalStore } from '@/ui/store';
 import { createDockAppMenuList } from '../../ui/components/common/context-menu/context-menu';
 import { getOSRef } from '../context';
 import type { IJson } from '../type';
-import type { Dir } from 'webos-term';
+import type { Dir } from '@/weoos-polyfill';
 
 export enum AppType {
     Normal,
@@ -264,7 +264,7 @@ export abstract class App<This extends App = App<any>> implements IApp {
     }
 
     async initDir () {
-        this.dir = await this.manager.appDir.ensureDir({
+        this.dir = await this.manager.applications.ensureDir({
             name: upcaseFirstLetter(this.name),
         });
     }

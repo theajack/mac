@@ -4,24 +4,17 @@
  * @Description: Coding something
  */
 
+import { timeId } from '@/lib/utils';
 import type { Dir } from './dir';
-
-
-// import { Path } from 'webos-path';
-import { timeId } from '../../lib/utils';
-import { path } from '@weoos/disk';
-// import { fs } from '../saver/filer';
-// import type { Dir } from './dir';
-// import { FileUtils } from './file-utils';
-// import { getDisk } from '../disk';
+import { getFileName, pt } from '@/weoos-polyfill/temp/os';
 import { DiskEvent } from '../disk-event';
 import { useDisk } from '../disk';
+import { FileUtils, isSystemPath } from '../utils';
+
 
 export interface IFileBaseOption {
-    name: string,
-    entry?: any,
+    name?: string,
     path?: string,
-    isSystemFile?: boolean,
 }
 
 export interface IFileBaseInfo {
@@ -51,68 +44,41 @@ export abstract class FileBase implements IFileBaseInfo {
     isDir = false;
     path: string;
 
-    isSystemFile = false;
-
-    entry: IFileEntry; // 第三方底层file对象，本项目中是filer中的entry
+    get isSystemFile () {
+        return isSystemPath(this.path);
+    }
 
     parent: Dir | null;
 
+    abstract getSize(): Promise<number>;
+    abstract getType(): Promise<string>;
+
     constructor ({
         name = '',
-        entry = null,
-        isSystemFile = false,
         path
     }: IFileBaseOption) {
         this.id = timeId();
+        if (!name) {
+            name = getFileName(path!);
+        }
         this.name = name;
-        this.initConstructOptions({ path, entry, isSystemFile, name });
+        this.initConstructOptions({ path });
     }
 
     initConstructOptions ({
-        entry,
-        isSystemFile,
         path
     }: IFileBaseOption) {
         if (typeof path !== 'undefined') {
             this.path = path;
         }
-        if (typeof isSystemFile !== 'undefined') {
-            this.isSystemFile = isSystemFile;
-        }
-        if (typeof entry !== 'undefined') {
-            this.entry = entry;
-        }
         return this;
     }
 
-    setEntry (entry: any) {
-        this.entry = entry;
-    }
-
-    setParent (parent: Dir | null) {
-        this.parent = parent;
-        if (parent) {
-            if (!this.path) {
-                this.path = path.join(parent.path, this.name);
-            }
-            if (!this.isHiddenFile()) {
-                DiskEvent.emit('disk-dir-change', [ parent.pathString ]);
-            }
-        }
-    }
 
     async remove () {
         if (!this.parent) return false;
 
-        const { children, index } = this.findParentChildInfo();
-
-        if (index === -1) {
-            console.warn('文件未找到');
-            return false;
-        }
-
         const result = await (await useDisk()).remove(this.pathString); // , this.isDir
-        children.splice(index, 1);
 
         if (!this.isHiddenFile()) {
             DiskEvent.emit('disk-dir-change', [ this.parent.pathString ]);
@@ -121,103 +87,50 @@ export abstract class FileBase implements IFileBaseInfo {
         return result;
     }
 
-    protected findParentChildInfo (): {
-        children: FileBase[],
-        index: number,
-        } {
-        if (!this.parent) {
-            return { index: -1, children: [] };
-        }
-        let list = this.parent.children;
-        let index = list.findIndex(child => child === this);
-        if (index === -1) {
-            list = this.parent.hiddenChildren;
-            index = list.findIndex(child => child === this);
-        }
-        if (index === -1) {
-            list = [];
-        }
-        return { children: list, index };
-    }
-
-    async pureRemove () {
-        return await (await useDisk()).remove(this.pathString);
-    }
-
-    abstract getSize(): Promise<number>;
-    abstract getType(): Promise<string>;
     get pathString () {
         return this.path;
     }
 
     async rename (name: string) {
-        try {
-            console.log(`rename path=${this.pathString} name=${name}`);
-            // (await useDisk()).move;
-            await fs().rename(this.pathString, name);
-            // 更新path
-            this.path = this.path.rename(name);
-        } catch (e) {
-            console.error(e);
+        const errInfo = (await useDisk()).rename(
+            this.pathString,
+            name,
+            (newPath) => {
+                // 修改name和path
+                this.name = getFileName(newPath);
+                this.path = newPath;
+            }
+        );
+        if (errInfo) {
+            throw new Error(`Rename fail: ${errInfo}`);
         }
-        this.name = name;
     }
 
     async moveTo ({
         targetDirPath,
-        renameIfConflict = false,
-        repeatMark = '.Move',
         newName,
     }: {
         targetDirPath: string,
-        renameIfConflict?: boolean,
         newName?: string,
-        repeatMark?: string
     }) {
-        (await useDisk()).move(
+        const errInfo = (await useDisk()).move(
             this.pathString,
-            targetDirPath,
-        );
-        const dir = await getDisk().findDirByPath(targetDirPath);
-
-        if (!dir) {
-            throw new Error(`Could not find targer Dir: ${targetDirPath}`);
-        }
-
-        let name = newName || this.name;
-        if (renameIfConflict) {
-            name = FileUtils.ensureFileRepeatName(
-                name,
-                dir.allChildren,
-                repeatMark
-            );
-        } else {
-            if (dir.allChildren.find(file => file.name === name)) {
-                throw new Error(`File already exists: ${name}`);
+            pt.join(targetDirPath, newName || this.name),
+            (newPath) => {
+                // 修改name和path
+                this.name = getFileName(newPath);
+                this.path = newPath;
             }
+        );
+        if (errInfo) {
+            throw new Error(`Could not find targer Dir: ${errInfo}`);
         }
-
-        const newEntry = await fs().mv(this.pathString, targetDirPath, name);
-
-        // 修改name和path
-        this.name = name;
-        this.updateEntry(newEntry);
-
-        const { children, index } = this.findParentChildInfo();
-        // 调整children
-        children.splice(index, 1);
-        dir.addChild(this);
 
         if (!this.isHiddenFile()) {
             DiskEvent.emit('disk-dir-change', [ this.parent!.pathString ]);
         }
 
-        return name;
-    }
-
-    async updateEntry (newEntry: IFileEntry) {
-        this.path = new Path(newEntry.fullPath);
-        this.setEntry(newEntry);
+        return this.name;
     }
 
     isHiddenFile () {

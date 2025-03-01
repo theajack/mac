@@ -26,7 +26,7 @@ function initDevHelper (os: OS) {
         ...Context,
         async clearAppConfig () {
             // todo 自动刷新或者每次重新取值
-            (await os.disk.findFileByPath(`${StringText.appDir}/${StringText.appConfigFile}`))?.remove();
+            (await os.findFileByPath(`${StringText.applications}/${StringText.appConfigFile}`))?.remove();
         },
         clear () {
             os.disk.clear();

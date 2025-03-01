@@ -5,12 +5,13 @@
  */
 
 export const StringText = {
-    appDir: 'Applications',
+    applications: 'Applications',
     appConfigFile: 'AppConfig.json',
     system: 'System',
     command: 'Command',
     desktop: 'Desktop',
     docs: 'Documents',
+    trash: 'Trash',
     downloads: 'Downloads',
     trashDir: '/System/Trash',
 };
