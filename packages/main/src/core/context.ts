@@ -71,7 +71,7 @@ window.getOS = getOS;
 export function getFile (path: string) {
     // return getStore('app-config', getOSRef().appManager.appConfig);
     // todo
-    return getOSRef().value.findFileByPath(path);
+    return getOSRef().value.disk.findFileByPath(path);
 }
 
 // export const isDev = __DEV__;

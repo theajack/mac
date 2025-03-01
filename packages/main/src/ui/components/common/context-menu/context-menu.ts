@@ -254,7 +254,6 @@ export function useContextMenuRef (listGene = DefaultMenuList) {
         async contextmenu (e: MouseEvent) {
             const list = listGene();
             const store = FinderUtils.getStore();
-            debugger;
 
             if (store) {
                 // 在finder中右键的

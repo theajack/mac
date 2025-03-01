@@ -26,7 +26,7 @@ export const FinderUtils = {
         const store = this.getStore();
         const path = store!.getCurPath();
         const os = getOS();
-        return await os.findDirByPath(path) as Dir;
+        return await os.disk.findDirByPath(path) as Dir;
     },
     async getSelectedFiles (): Promise<FileBase[]> {
         const store = this.getStore();

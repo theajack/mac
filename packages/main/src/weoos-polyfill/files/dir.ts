@@ -4,12 +4,14 @@
  * @Description: Coding something
  */
 
-import { getFileName, pt } from '@/weoos-polyfill/temp/os';
+import { createPromises, getFileName, pt } from '@/weoos-polyfill/temp/os';
 import { useDisk } from '../disk';
 import { FileBase } from './base';
 import type { IFileBaseOption, IFileDisplayInfo } from './base';
 import { File, type IFileOption } from './file';
 import type { IJson } from '@/core/type';
+import { FileUtils } from '../utils';
+import { getDisk } from '@/core/os/os';
 
 export type IDirOption = IFileBaseOption
 
@@ -22,7 +24,9 @@ interface IFileContentOptions extends IFileOption {
 }
 
 export class Dir extends FileBase {
-
+    get isRoot () {
+        return this.path === '/';
+    }
     children: FileBase[] = [];
     hiddenChildren: FileBase[] = [];
     get allChildren () {
@@ -34,8 +38,26 @@ export class Dir extends FileBase {
         this.isDir = true;
     }
 
-    initChildren () {
+    async initChildren () {
+        const names = await (await useDisk()).ls(this.path);
 
+        if (!names) return;
+
+        const { add, run } = createPromises();
+        for (const name of names) {
+            add(this.initSyncChildren(name));
+        }
+        await run();
+    }
+
+    private async initSyncChildren (name: string) {
+        const path = pt.join(this.path, name);
+        const type = await (await useDisk()).getType(path);
+        const isDir = type === 'dir';
+        const target = this.createEntry(name, isDir);
+        if (isDir) {
+            await (target as Dir).initChildren();
+        }
     }
 
     async lsDetail (): Promise<IFileDisplayInfo[]> {
@@ -67,8 +89,12 @@ export class Dir extends FileBase {
     }
     async createDir (options: IDirOption, ensure = false): Promise<Dir> {
         const path = options.path || pt.join(this.path, options.name!);
-        (await useDisk()).createDir(path, { ensure });
-        return new Dir({ name: getFileName(path), path });
+        const disk = await useDisk();
+        if (await disk.exist(path)) {
+            return (await this.findDirByPath(path))!;
+        }
+        await disk.createDir(path, { ensure });
+        return this.createEntry(getFileName(path), true);
     }
     async ensureFile (
         options: IFileContentOptions,
@@ -77,8 +103,22 @@ export class Dir extends FileBase {
     }
     async createFile (options: IFileContentOptions, ensure = false): Promise<File> {
         const path = options.path || pt.join(this.path, options.name!);
-        (await useDisk()).createFile(path, undefined, { ensure });
-        return new File({ name: getFileName(path), path });
+        const disk = await useDisk();
+        if (await disk.exist(path)) {
+            return (await this.findFileByPath(path))!;
+        }
+        await disk.createFile(path, undefined, { ensure });
+        return this.createEntry(getFileName(path), false);
+    }
+    getChildren (name: string) {
+        return FileUtils.isHiddenFile(name) ? this.hiddenChildren : this.children;
+    }
+    private createEntry<T extends boolean> (name: string, isDir: T): T extends true ? Dir: File {
+        const entry = new (isDir ? Dir : File)({ name, path: pt.join(this.path, name) });
+        this.getChildren(name).push(entry);
+        entry.parent = this;
+        // @ts-ignore
+        return entry;
     }
 
     filerChild (query: string, deep = true) {
@@ -136,17 +176,43 @@ export class Dir extends FileBase {
         const disk = await useDisk();
         await disk.remove(this.path);
         await disk.createDir(this.path);
+        this.children = this.hiddenChildren = [];
     }
 
     async zipFiles (files: FileBase[], filename?: string) {
         if (!files.length) return;
-
         if (!filename) {
             filename = files.length === 1 ? `${files[0].name}.zip` : 'Archive.zip';
         }
-
         const disk = await useDisk();
-
         disk.zip(files.map(file => file.path), filename);
+    }
+
+    async findChildByPath (path: string): Promise<FileBase|null> {
+
+        if (path[0] === '/' && !this.isRoot) return getDisk().findChildByPath(path);
+
+        const paths = path.split('/');
+        if (paths[0] === '') paths.shift(); // 排除根目录
+        const name = paths.shift();
+
+        const target = this.allChildren.find(item => item.name === name);
+        if (!target) return null;
+        if (paths.length === 0) return target;
+        if (target.isDir) {
+            return (target as Dir).findChildByPath(paths.join('/'));
+        }
+        return null;
+    }
+    async findFileByPath (path: string) {
+        const target = await this.findChildByPath(path);
+        if (!target) return null;
+        return target.isDir ? null : target as File;
+    }
+    async findDirByPath (path: string) {
+        if (path === '/' || !path) return getDisk();
+        const target = await this.findChildByPath(path);
+        if (!target) return null;
+        return target.isDir ? target as Dir : null;
     }
 }

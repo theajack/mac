@@ -37,9 +37,7 @@ export class OS {
     async init () {
         initAudioPlayer();
         await this._disk.ready;
-        await this._disk.traverse('/', ({ path, name }) => {
-
-        });
+        await this.disk.initChildren();
         this.appManager = new AppManager(this);
         await this.appManager.initAppsDirectory();
         // console.log(this.disk.deepLs());
@@ -50,32 +48,6 @@ export class OS {
     }
     get currentWindow () {
         return this.appManager.currentWindow;
-    }
-
-    async findChildByPath (path: string) {
-        const type = await (await useDisk()).getType(path);
-
-        if (type === 'empty') return null;
-        if (type === 'dir') {
-            return new Dir({ path });
-        }
-        return new File({ path });
-    }
-    async findFileByPath (path: string) {
-        const type = await (await useDisk()).getType(path);
-        if (type === 'dir' || type === 'empty') return null;
-        return new File({ path });
-    }
-    async findDirByPath (path: string) {
-        const type = await (await useDisk()).getType(path);
-        if (type !== 'dir') return null;
-        return new Dir({ path });
-    }
-
-    async ensureDir (options: IDirOption) {
-        const path = options.path || pt.join('/', options.name!);
-        (await useDisk()).createDir(path, { ensure: true });
-        return new Dir({ name: getFileName(path), path });
     }
 }
 

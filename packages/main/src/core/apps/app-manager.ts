@@ -87,7 +87,7 @@ export class AppManager {
     }
 
     async initAppsDirectory () {
-        const systemDir = await this.parent.ensureDir({
+        const systemDir = await this.parent.disk.ensureDir({
             name: StringText.system,
         });
 

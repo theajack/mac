@@ -27,7 +27,7 @@ export interface IFileInfo {
 }
 
 export async function loadFilesInDir (path: string) {
-    const dir = await getOS().findDirByPath(path);
+    const dir = await getOS().disk.findDirByPath(path);
     if (!dir) {
         throw new Error('目录不存在');
     }
@@ -77,7 +77,7 @@ export const useFinderStore = createAppDataStore((id) => {
                 // @ts-ignore
                 let value = e.target?.innerText;
                 if (value === file.name) return;
-                const targetFile = await getOS().findChildByPath(file.path);
+                const targetFile = await getOS().disk.findChildByPath(file.path);
                 if (value === '') {
                     // @ts-ignore
                     value = FileUtils.ensureFileRepeatName('untitled_folder', targetFile?.parent?.allChildren);
@@ -110,7 +110,6 @@ export const useFinderStore = createAppDataStore((id) => {
                     path = this.getCurPath() as string;
                 }
                 const files = await loadFilesInDir(path);
-                debugger;
                 this.curDirInfo = generateFilesData(files);
                 this.curDirName = parseDirName(path);
             },
@@ -132,7 +131,7 @@ export const useFinderStore = createAppDataStore((id) => {
 });
 
 export async function getFileContent (path: string) {
-    const file = await getOS().findFileByPath(path);
+    const file = await getOS().disk.findFileByPath(path);
     if (!file) {
         throw 'file not exist' + path;
     }

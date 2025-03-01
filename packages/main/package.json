@@ -15,6 +15,7 @@
         "dist"
     ],
     "dependencies": {
+        "@types/node": "^20.12.7",
         "@weoos/os": "^0.0.4",
         "easy-dom-util": "0.0.29",
         "eveit": "^0.0.1",
