@@ -12,6 +12,7 @@ import { File, type IFileOption } from './file';
 import type { IJson } from '@/core/type';
 import { FileUtils } from '../utils';
 import { getDisk } from '@/core/os/os';
+import { toastText } from '@/ui/components/common/toast/toast';
 
 export type IDirOption = IFileBaseOption
 
@@ -113,11 +114,12 @@ export class Dir extends FileBase {
     getChildren (name: string) {
         return FileUtils.isHiddenFile(name) ? this.hiddenChildren : this.children;
     }
-    createEntry<T extends boolean> (name: string, isDir: T): T extends true ? Dir: File {
+    createEntry<T extends boolean> (name: string, isDir: T, emitChange = true): T extends true ? Dir: File {
         const entry = new (isDir ? Dir : File)({ name, path: pt.join(this.path, name) });
         this.getChildren(name).push(entry);
         entry.parent = this;
-        this.emitDirChange();
+        debugger;
+        if (emitChange) this.emitDirChange();
         // @ts-ignore
         return entry;
     }
@@ -186,9 +188,13 @@ export class Dir extends FileBase {
             filename = files.length === 1 ? `${files[0].name}.zip` : 'Archive.zip';
         }
         const disk = await useDisk();
-        disk.zip(files.map(file => file.path), filename);
+        const { success, info } = await disk.zip(files.map(file => file.path), filename);
 
-        this.createEntry(pt.join(this.path, filename), false);
+        if (!success) {
+            toastText(`zip fail: ${info}`);
+            return;
+        }
+        this.createEntry(getFileName(info), false);
     }
 
     async findChildByPath (path: string): Promise<FileBase|null> {

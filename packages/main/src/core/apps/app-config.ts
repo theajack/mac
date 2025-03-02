@@ -31,6 +31,7 @@ import type { IAppStatusTitle } from './type';
 import { TextEdit } from './built-in/text-edit/text-edit';
 import { BomberMan } from './third/bomberman';
 import { PlaneGame } from './third/plane-game';
+import { ExcaliDraw } from './third/excalidraw';
 
 export enum AppNames {
     finder = 'finder',
@@ -49,6 +50,7 @@ export enum AppNames {
     github = 'github',
     vscode = 'vscode',
     bilibili = 'bilibili',
+    excalidraw = 'excalidraw',
     meitu = 'meitu',
     wechat = 'wechat',
     kwai = 'kwai',
@@ -72,6 +74,7 @@ export const DefaultApps: {
     [AppNames.siri]: Siri,
     [AppNames.textEdit]: TextEdit,
     // 三方App
+    [AppNames.excalidraw]: ExcaliDraw,
     [AppNames.github]: Github,
     [AppNames.bilibili]: Bilibili,
     [AppNames.meitu]: Meitu,
@@ -100,6 +103,7 @@ export function createDefaultApps ():
         [AppNames.calculator]: app(AppNames.calculator),
         [AppNames.textEdit]: app(AppNames.textEdit),
 
+        [AppNames.excalidraw]: app(AppNames.excalidraw),
         [AppNames.meitu]: app(AppNames.meitu),
         [AppNames.bilibili]: app(AppNames.bilibili),
         [AppNames.qqmusic]: app(AppNames.qqmusic),

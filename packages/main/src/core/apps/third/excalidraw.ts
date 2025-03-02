@@ -6,12 +6,13 @@
 import { WebApp } from '../web-app';
 import { AppNames } from '../app-config';
 
-export class Bilibili extends WebApp {
+export class ExcaliDraw extends WebApp {
 
     constructor () {
         super({
-            name: AppNames.bilibili,
-            url: 'https://www.bilibili.com/',
+            iconType: 'svg',
+            name: AppNames.excalidraw,
+            url: 'https://excalidraw.com/',
         });
     }
 }

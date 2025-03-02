@@ -45,11 +45,24 @@ export function generateFilesData (files: FileBase[]): IFileInfo[] {
             curIndex: -1,
             isEdit: false,
         };
+    }).sort((a, b) => {
+        if (a.isDir === b.isDir) {
+            return (a.name > b.name) ? -1 : 1;
+        } else {
+            return a.isDir ? -1 : 1;
+        }
     });
 }
 
+let latestId = 0;
+window.getLatestFinderStore = () => {
+    return useFinderStore(latestId);
+};
+
 export const useFinderStore = createAppDataStore((id) => {
     const history = useHistory()(id);
+
+    latestId = id;
 
     return defineStore(`finder-store-${id}`, {
         state: () => {
@@ -103,7 +116,6 @@ export const useFinderStore = createAppDataStore((id) => {
             async entryDir (path: string) {
                 await this.refreshDirInfo(path);
                 this.historyIndex = history.add(path);
-                // this.curDirInfo = mockFilesInfo();
             },
             async refreshDirInfo (path?: string) {
                 if (!path) {

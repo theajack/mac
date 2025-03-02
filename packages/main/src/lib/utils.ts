@@ -194,8 +194,8 @@ export function resource (name: string) {
     return `${base}assets/${name}`;
 }
 
-export function appIcon (name: string) {
-    return resource(`icons/${name}.png`);
+export function appIcon (name: string, iconType = 'png') {
+    return resource(`icons/${name}.${iconType}`);
 }
 
 export function handleComponent (data: any) {
@@ -262,7 +262,7 @@ export function upcaseFirstLetter (v: string) {
 export function getHost () {
     const host = location.host;
 
-    const def = 'theajack.gitee.io';
+    const def = 'theajack.github.io';
 
     if ([
         def,

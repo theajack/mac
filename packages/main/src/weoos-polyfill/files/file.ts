@@ -75,9 +75,12 @@ export class File extends FileBase {
 
         for (const { path, isDir } of result) {
             (await getDisk().findDirByPath(getParentPath(path)))!.createEntry(
-                getFileName(path), isDir
+                getFileName(path),
+                isDir,
+                false
             );
         }
+        this.emitDirChange(dir.path);
         return result;
     }
 }

@@ -145,10 +145,20 @@ export abstract class FileBase implements IFileBaseInfo {
         return FileUtils.isHiddenFile(name);
     }
 
-    emitDirChange () {
+    emitDirChange (path?: string) {
+
+        if (path) {
+            DiskEvent.emit('disk-dir-change', [ path ]);
+            return;
+        }
+
         // 触发目录变化事件
         if (this.parent && !this.isHiddenFile()) {
-            DiskEvent.emit('disk-dir-change', [ this.parent.pathString ]);
+            DiskEvent.emit('disk-dir-change', [ this.parent.path ]);
+        }
+
+        if (this.isDir) {
+            DiskEvent.emit('disk-dir-change', [ this.path ]);
         }
     }
 }

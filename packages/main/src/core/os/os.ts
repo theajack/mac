@@ -6,8 +6,7 @@
 
 import { AppManager } from '../apps/app-manager';
 import { initAudioPlayer } from '../audio';
-import type { IDirOption } from '@/weoos-polyfill';
-import { Dir, Disk, File, getFileName, pt, useDisk } from '@/weoos-polyfill';
+import { Dir, Disk } from '@/weoos-polyfill';
 import './os.d';
 import { MacEvent } from './event-bus';
 

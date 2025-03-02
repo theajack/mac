@@ -36,6 +36,7 @@ export interface IAppOptions {
     link?: string;
     msgCount?: number;
     appType?: AppType;
+    iconType?: string;
     statusMenu?: IAppStatusTitle[]; // 顶部 status bar的标题和菜单
 }
 export abstract class App<This extends App = App<any>> implements IApp {
@@ -74,6 +75,9 @@ export abstract class App<This extends App = App<any>> implements IApp {
     firstWindowOpen?: boolean; // 用于显示docker动画
     dockMenu: ISelectItem[]; // dock 的标题和菜单
     statusMenu: IAppStatusTitle[]; // 顶部 status bar的标题和菜单
+
+    iconType: string;
+
     constructor ({
         name = '',
         icon = '',
@@ -83,7 +87,9 @@ export abstract class App<This extends App = App<any>> implements IApp {
         link = '',
         msgCount = 0,
         appType = AppType.Normal,
+        iconType = 'png',
     }: IAppOptions) {
+        this.iconType = iconType;
         this.link = link;
         if (link) appType = AppType.Link;
         this.name = name;
@@ -91,7 +97,7 @@ export abstract class App<This extends App = App<any>> implements IApp {
         this.appType = appType;
 
         this.manager = OS.instance.appManager;
-        this.icon = icon || appIcon(name);
+        this.icon = icon || appIcon(name, this.iconType);
         this.iconRadius = iconRadius < 1 ? `${iconRadius * 100}%` : `${iconRadius}px`;
         this.title = title || appNameToTitle(name);
         this.iconScale = typeof iconScale === 'number' ? iconScale : (iconScale ? 1.22 : 1);
