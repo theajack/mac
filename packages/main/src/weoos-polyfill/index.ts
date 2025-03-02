@@ -5,7 +5,7 @@
  */
 
 export * from './utils';
-export * from './disk';
+export * from './disk-provider';
 export * from './files/base';
 export * from './files/dir';
 export * from './files/file';

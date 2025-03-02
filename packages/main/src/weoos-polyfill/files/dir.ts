@@ -5,7 +5,7 @@
  */
 
 import { createPromises, getFileName, pt } from '@/weoos-polyfill/temp/os';
-import { useDisk } from '../disk';
+import { useDisk } from '../disk-provider';
 import { FileBase } from './base';
 import type { IFileBaseOption, IFileDisplayInfo } from './base';
 import { File, type IFileOption } from './file';
@@ -40,7 +40,7 @@ export class Dir extends FileBase {
     }
 
     async initChildren () {
-        const names = await (await useDisk()).ls(this.path);
+        const names = await useDisk().ls(this.path);
 
         if (!names) return;
 
@@ -53,7 +53,7 @@ export class Dir extends FileBase {
 
     private async initSyncChildren (name: string) {
         const path = pt.join(this.path, name);
-        const type = await (await useDisk()).getType(path);
+        const type = await useDisk().getType(path);
         const isDir = type === 'dir';
         const target = this.createEntry(name, isDir);
         if (isDir) {
@@ -90,7 +90,7 @@ export class Dir extends FileBase {
     }
     async createDir (options: IDirOption, ensure = false): Promise<Dir> {
         const path = options.path || pt.join(this.path, options.name!);
-        const disk = await useDisk();
+        const disk = useDisk();
         if (await disk.exist(path)) {
             return (await this.findDirByPath(path))!;
         }
@@ -104,7 +104,7 @@ export class Dir extends FileBase {
     }
     async createFile (options: IFileContentOptions, ensure = false): Promise<File> {
         const path = options.path || pt.join(this.path, options.name!);
-        const disk = await useDisk();
+        const disk = useDisk();
         if (await disk.exist(path)) {
             return (await this.findFileByPath(path))!;
         }
@@ -176,10 +176,11 @@ export class Dir extends FileBase {
     }
 
     async clearDir () {
-        const disk = await useDisk();
+        const disk = useDisk();
         await disk.remove(this.path);
         await disk.createDir(this.path);
         this.children = this.hiddenChildren = [];
+        this.emitDirChange();
     }
 
     async zipFiles (files: FileBase[], filename?: string) {
@@ -187,7 +188,7 @@ export class Dir extends FileBase {
         if (!filename) {
             filename = files.length === 1 ? `${files[0].name}.zip` : 'Archive.zip';
         }
-        const disk = await useDisk();
+        const disk = useDisk();
         const { success, info } = await disk.zip(files.map(file => file.path), filename);
 
         if (!success) {

@@ -8,7 +8,7 @@ import { timeId } from '@/lib/utils';
 import type { Dir } from './dir';
 import { getFileName, pt } from '@/weoos-polyfill/temp/os';
 import { DiskEvent } from '../disk-event';
-import { useDisk } from '../disk';
+import { useDisk } from '../disk-provider';
 import { FileUtils, isSystemPath } from '../utils';
 import { getDisk } from '@/core/os/os';
 
@@ -79,7 +79,7 @@ export abstract class FileBase implements IFileBaseInfo {
     async remove () {
         if (!this.parent) return false;
 
-        const result = await (await useDisk()).remove(this.pathString); // , this.isDir
+        const result = await useDisk().remove(this.pathString); // , this.isDir
 
         this.emitDirChange();
 
@@ -94,7 +94,7 @@ export abstract class FileBase implements IFileBaseInfo {
 
     async rename (name: string) {
         const oldName = this.name;
-        const errInfo = await (await useDisk()).rename(
+        const errInfo = await useDisk().rename(
             this.pathString,
             name,
             (newPath) => {
@@ -120,7 +120,7 @@ export abstract class FileBase implements IFileBaseInfo {
         newName?: string,
     }) {
         const oldName = this.name;
-        const errInfo = await (await useDisk()).move(
+        const errInfo = await useDisk().move(
             this.pathString,
             pt.join(targetDirPath, newName || this.name),
             (newPath) => {

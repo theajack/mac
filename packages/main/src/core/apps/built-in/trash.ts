@@ -75,11 +75,6 @@ export class Trash extends App<Trash> {
     async emptyTrash () {
         if (this.dir.isEmpty) return;
         await this.dir.clearDir();
-        const store = FinderUtils.getStore();
-        if (store && FinderUtils.isInTrash(store.getCurPath())) {
-            store.refreshDirInfo(StringText.trashDir);
-        }
-        await this.saveTrashConfig({});
     }
 
     async deleteFiles (items: FileBase[]) {

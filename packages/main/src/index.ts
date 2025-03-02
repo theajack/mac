@@ -10,6 +10,7 @@ import { log } from './lib/utils';
 import { initUI } from './ui';
 import * as Context from './core/context';
 import { toast } from './ui/components/common/toast/toast';
+import { useDisk } from './weoos-polyfill/disk-provider';
 
 export async function initMacOS (container = '#app') {
     const os = await createOS();
@@ -28,8 +29,8 @@ function initDevHelper (os: OS) {
             // todo 自动刷新或者每次重新取值
             (await os.disk.findFileByPath(`${StringText.applications}/${StringText.appConfigFile}`))?.remove();
         },
-        clear () {
-            os._disk.clear();
+        async clear () {
+            useDisk().clear();
             location.reload();
         },
         toast (content = 'Some content', duration = 3000) {

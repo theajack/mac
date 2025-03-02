@@ -6,7 +6,7 @@
 
 // import {createLocker} from '../utils';
 import { decode, encode, getFileExt, getFileName, getParentPath } from '@/weoos-polyfill/temp/os';
-import { useDisk } from '../disk';
+import { useDisk } from '../disk-provider';
 import type { IFileBaseOption } from './base';
 import { FileBase } from './base';
 import type { Dir } from './dir';
@@ -24,13 +24,13 @@ export class File extends FileBase {
     }
 
     async getSize () {
-        return (await (await useDisk()).stat(this.path)).size / 1024;
+        return (await useDisk().stat(this.path)).size / 1024;
     }
     async getType () {
-        return (await (await useDisk()).stat(this.path)).type;
+        return (await useDisk().stat(this.path)).type;
     }
     async readText (): Promise<string> {
-        return (await (await useDisk()).readText(this.path)) || '';
+        return (await useDisk().readText(this.path)) || '';
     }
 
     async readRawString () {
@@ -40,7 +40,7 @@ export class File extends FileBase {
 
     // ! 读原始的Uint8Array
     async read (): Promise<Uint8Array> {
-        return (await (await useDisk()).read(this.path)) || new Uint8Array(0);
+        return (await useDisk().read(this.path)) || new Uint8Array(0);
     }
 
     // ! 写原始的Uint8Array
@@ -49,7 +49,7 @@ export class File extends FileBase {
         append = false
     ) {
         const fn = append ? 'append' : 'write';
-        return (await useDisk())[fn](this.path, content);
+        return (useDisk())[fn](this.path, content);
     }
 
     async writeText (
@@ -69,7 +69,7 @@ export class File extends FileBase {
 
     // todo 测试嵌套文件夹
     async unzipTo (dir: Dir) {
-        const disk = await useDisk();
+        const disk = useDisk();
         const result = await disk.unzip(this.path, dir.path);
         result.sort((a, b) => a.path > b.path ? 1 : -1);
 

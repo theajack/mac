@@ -6,9 +6,11 @@
 
 import { AppManager } from '../apps/app-manager';
 import { initAudioPlayer } from '../audio';
-import { Dir, Disk } from '@/weoos-polyfill';
+import { Dir } from '@/weoos-polyfill';
 import './os.d';
 import { MacEvent } from './event-bus';
+import type { IDiskProvider } from '@/weoos-polyfill/disk-provider';
+import { createDiskProvider } from '@/weoos-polyfill/disk-provider';
 
 const OsName = Symbol('os');
 
@@ -18,12 +20,12 @@ export class OS {
 
     appManager: AppManager;
 
-    _disk: Disk;
+    _disk: IDiskProvider;
 
     disk: Dir;
     constructor () {
         if (OS.instance) return OS.instance;
-        this._disk = new Disk({ enableSync: true });
+        this._disk = createDiskProvider();
         this.disk = new Dir({ path: '/', name: '' });
         OS.instance = this;
         // @ts-ignore

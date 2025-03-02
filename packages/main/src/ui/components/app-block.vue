@@ -36,7 +36,8 @@ const dotRadius = isNormalDot ? '10px' : '20px';
       :style="{
         'border-radius': app.iconRadius,
         scale: app.iconScale,
-        height: height+'px',
+        height: '8vh',
+        'max-height': height+'px',
         margin: '0 auto',
       }"
       @click="$emit('click')"

@@ -79,6 +79,7 @@ export const FinderUtils = {
 
     async refreshAllFinderDirInfo (affectPaths?: string[]) {
         const stores = useFinderStore.all();
+        debugger;
         for (const store of stores) {
             if (!affectPaths || affectPaths.includes(store.getCurPath())) {
                 store.refreshDirInfo();
