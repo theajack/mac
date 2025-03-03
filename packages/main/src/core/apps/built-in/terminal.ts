@@ -30,8 +30,24 @@ export class Terminal extends App {
         this.msgCount = 0;
         const window = super.openNewWindow();
         nextTick().then(() => {
-            new WebOS({ container: window.dom });
+            new WebOS({
+                container: window.dom,
+                title: this.getOSTitle(),
+            });
         });
         return window;
+    }
+
+    getOSTitle () {
+        const KEY = 'macos_last-login';
+
+        const time = localStorage.getItem(KEY);
+        localStorage.setItem(KEY, `${Date.now()}`);
+        return [
+            time ?
+                `Welcome to MacOS! Last login: ${new Date(parseInt(time)).toLocaleString()} on console\n` :
+                'First Login, Welcome MacOS\n',
+            'Terminal & FileSystem is Powered by <a target="_blank" style="text-decoration: underline;" href="https://github.com/weoos/os">@weoos/os</a>, try "help" to get more info',
+        ].join('\n');
     }
 }

@@ -93,8 +93,8 @@ importers:
         specifier: ^20.12.7
         version: 20.12.7
       '@weoos/os':
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.0.5
+        version: 0.0.5
       easy-dom-util:
         specifier: 0.0.29
         version: 0.0.29
@@ -2322,6 +2322,10 @@ packages:
     resolution: {integrity: sha512-LdmPs1cu/UCorY9BKsc0urzhwBGNOdKcF33c5EvhtmKyhQpsjxJ67UmcZ548hNuLiaqDWctf0kXsMfn0EXnDwA==}
     dev: false
 
+  /@tcbox/command-parser@0.0.2:
+    resolution: {integrity: sha512-92OK34LC9OFNF6EVA05GUnpPS+jA4n0vxbLDZY4BdyQoWbdQpqvVUdycYnoXbTyIvf/lRRWUhjoSRQ9bSJILPg==}
+    dev: false
+
   /@tootallnate/once@2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
@@ -2688,17 +2692,17 @@ packages:
   /@vue/shared@3.4.26:
     resolution: {integrity: sha512-Fg4zwR0GNnjzodMt3KRy2AWGMKQXByl56+4HjN87soxLNU9P5xcJkstAlIeEF3cU6UYOzmJl1tV0dVPGIljCnQ==}
 
-  /@weoos/cmd@0.0.4:
-    resolution: {integrity: sha512-fMexSmizC/YMGcGkN7MrKrAWAA5ERTUruoLLvwkk6hBDJN3MtmXML1EWxTU4Wg/ShGh5vNV1SJMcPy8eAzb7rA==}
+  /@weoos/cmd@0.0.5:
+    resolution: {integrity: sha512-Eo0ZIDQu6C4uLp+QoivfvMo/EHqr4KGM6Fb+CHiCA8QC+pfg/7TTPSDO237c4xeEN72Y47iv4ZYPltfPoNjY6Q==}
     dependencies:
-      '@weoos/disk': 0.0.4
-      '@weoos/utils': 0.0.4
+      '@weoos/disk': 0.0.5
+      '@weoos/utils': 0.0.5
     dev: false
 
-  /@weoos/disk@0.0.4:
-    resolution: {integrity: sha512-AbPpvRrSIZiTpFmh6v+Rod8Mks1T6RdJibqhVgTyR8HPMKpJg9DiMmpmNrqYI0rsMdj3BvA0/xoBI4jjv226uQ==}
+  /@weoos/disk@0.0.5:
+    resolution: {integrity: sha512-9UA2rWYRSgoYLoNEPF5eD/zfEzfNqsACZCyjOr4+NcLolkZwzxiXsU6wrAoX6w2E6AN/7u2T0nSUhgPP4L7yYw==}
     dependencies:
-      '@weoos/utils': 0.0.4
+      '@weoos/utils': 0.0.5
       buffer: 6.0.3
       events: 3.3.0
       jszip: 3.10.1
@@ -2707,16 +2711,16 @@ packages:
       path-browserify: 1.0.1
     dev: false
 
-  /@weoos/os@0.0.4:
-    resolution: {integrity: sha512-22gFFJsfflMx8gYWBCE5c/GA7kyV77mpOAMDx/PW6/FwltJAaSF/TsUXzgob1vZ4aDAW5o3PCaW0Bz+D+bQEWQ==}
+  /@weoos/os@0.0.5:
+    resolution: {integrity: sha512-wxKe6DEemjF3txWTQlGrGO5LrlvcKKOFQQ8vKzABZVyML1EuwCkuaAqkSC1wVSm98SrnMpus0dIzfUmQ6svxBA==}
     dependencies:
-      '@weoos/cmd': 0.0.4
-      '@weoos/utils': 0.0.4
-      web-term-ui: 0.0.13
+      '@weoos/cmd': 0.0.5
+      '@weoos/utils': 0.0.5
+      web-term-ui: 0.0.14
     dev: false
 
-  /@weoos/utils@0.0.4:
-    resolution: {integrity: sha512-ZWzPPEaiXU9hHLgizGBwKTsZzecDWytgahWKmXob5c97u9hiFQtATTWBYiMObhXJgqx4Ps/50Ncul7RweF7oyw==}
+  /@weoos/utils@0.0.5:
+    resolution: {integrity: sha512-ywbHa3b/C6QWlvf+nupsfRjamnhRLJYAb1w6vuBJGG+WqrJuvww4NdZisMjbYPbcO1uiRtDxblRltuPWpAGb1w==}
     dependencies:
       web-term-ui: 0.0.13
     dev: false
@@ -8019,6 +8023,16 @@ packages:
     resolution: {integrity: sha512-jj1UqO6iqWrWikOBDBB8Nkc94WLhK+bHfxbQMSRsffFyHigX708ENy8LDs8lJXrm8QO+AqhTQiIiVR3vrTmuVg==}
     dependencies:
       '@tcbox/command-parser': 0.0.1
+      eveit: 0.0.4
+      history-stack: 0.0.8
+      link-dom: 0.0.8
+      tab-text: 0.0.4
+    dev: false
+
+  /web-term-ui@0.0.14:
+    resolution: {integrity: sha512-G6QAmL5pGvucUJ6LEnjBhqsE8tPbe2UHVz4t67kNBHrn/7b7t7GJaT1ZgYxMPozXbuijulXX4x34JOmDbUtNqQ==}
+    dependencies:
+      '@tcbox/command-parser': 0.0.2
       eveit: 0.0.4
       history-stack: 0.0.8
       link-dom: 0.0.8

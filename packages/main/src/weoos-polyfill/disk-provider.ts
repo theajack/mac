@@ -3,7 +3,7 @@
  * @Date: 2025-03-02 18:28:06
  * @Description: Coding something
  */
-import { Disk } from './temp/dist';
+import { Disk } from './temp/os';
 
 export interface IDiskProvider {
     clear: Disk['clear'],
